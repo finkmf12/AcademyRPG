@@ -1,0 +1,59 @@
+ACADEMIA RPG — GOOGLE LOGIN + ARMAZENAMENTO EM NUVEM
+
+O pacote está preparado, mas precisa das credenciais do seu projeto Supabase e do OAuth Google para funcionar.
+
+1) SUPABASE
+- Crie um projeto em https://supabase.com/
+- Abra SQL Editor > New query. Cole todo o arquivo setup.sql e clique Run. Isso cria a tabela de arquivos, o bucket privado e as regras de acesso por usuário.
+- Em Project Settings > API Keys (ou Settings > API), copie Project URL e Publishable key (ou a chave anon/public antiga).
+- Abra index.html num editor de texto. No começo do script, substitua COLE_AQUI_A_PROJECT_URL e COLE_AQUI_A_PUBLISHABLE_KEY pelos valores do seu projeto. Salve.
+- Use somente a Publishable/anon key no HTML. Nunca coloque service_role/secret key ou senha do banco no site.
+
+2) GOOGLE LOGIN
+- Entre em https://console.cloud.google.com/ e crie/selecione um projeto.
+- Na Google Auth Platform, configure a tela de consentimento e crie um OAuth Client ID tipo Web application.
+- Em Authorized JavaScript origins, adicione https://academiarpg.netlify.app
+- No Supabase, abra Authentication > Sign In / Providers > Google e copie o Callback URL exibido.
+- No Google Cloud, cole esse callback em Authorized redirect URIs exatamente como foi exibido pelo Supabase (normalmente termina em /auth/v1/callback).
+- Copie Client ID e Client Secret do Google para os campos do provedor Google no Supabase. Ative e salve. Não coloque Client Secret no index.html.
+- No Supabase > Authentication > URL Configuration, defina Site URL como https://academiarpg.netlify.app e adicione essa mesma URL em Redirect URLs.
+- Se o OAuth Google estiver em modo Testing, adicione seu Gmail como usuário de teste.
+
+3) PUBLICAR NO NETLIFY
+- Mantenha index.html na raiz da pasta academia-rpg-cloud.
+- No painel do site academiarpg.netlify.app, abra Deploys e arraste a pasta academia-rpg-cloud para a área de deploy manual.
+- Após publicar, abra o endereço, entre com Google e envie um arquivo. Depois entre em outro dispositivo com a mesma conta para verificar a sincronização.
+
+SEGURANÇA E LIMITES
+- O bucket study-files é privado. As políticas limitam cada usuário aos próprios documentos.
+- O setup define limite de 50 MB por arquivo; o plano do Supabase pode impor limites menores ou limites de armazenamento/transferência. Confira o painel do projeto.
+- Os arquivos antigos do site anterior ficaram no armazenamento local do navegador e não migram automaticamente. Baixe-os antes de substituir o site e envie-os novamente após configurar a nuvem.
+
+LOGIN CHATGPT
+O botão aparece desativado intencionalmente: Sign in with ChatGPT para sites está em teste limitado para parceiros comerciais selecionados e exige aprovação de OAuth client e backend. Informações: https://developers.openai.com/siwc/website e https://developers.openai.com/siwc/request-client-id
+
+DOCUMENTAÇÃO
+Google no Supabase: https://supabase.com/docs/guides/auth/social-login/auth-google
+Storage/RLS: https://supabase.com/docs/guides/storage/security/access-control
+Redirect URLs: https://supabase.com/docs/guides/auth/redirect-urls
+
+
+ATUALIZACAO DO LAYOUT — LOGIN CENTRALIZADO
+- O cartao de login foi centralizado horizontal e verticalmente na tela.
+- A imagem do castelo permanece como plano de fundo; os botoes continuam sendo elementos HTML clicaveis.
+- Para atualizar, publique novamente a pasta academia-rpg-cloud no Netlify (Deploys > deploy manual).
+
+
+ATUALIZACAO DO LAYOUT — LOGIN NO ESTILO DA REFERENCIA
+- Marca Academia RPG com emblema ilustrado em HTML/SVG, acima do formulario.
+- Formulario Google/ChatGPT em painel central separado do fundo, com controles clicaveis.
+- Faixa de disciplinas e lema abaixo do login, seguindo a composicao da imagem de referencia.
+- Credito "Desenvolvido por Yuri Donega" mantido no canto inferior esquerdo.
+- Layout responsivo para desktop, tablet e celular.
+
+ATUALIZACAO — ENTRAR COMO CONVIDADO
+- A tela inicial agora possui o botao "Entrar como convidado".
+- O modo convidado abre as tres disciplinas e permite adicionar, baixar e excluir arquivos sem fazer login.
+- Nesse modo, os arquivos ficam salvos no armazenamento local do navegador (IndexedDB), somente neste computador/perfil do navegador. Eles nao sincronizam com celular ou outro computador.
+- Para armazenar na nuvem e acessar em outros dispositivos, configure o Supabase e entre com Google.
+- Ao sair do modo convidado, os arquivos locais permanecem salvos neste navegador.
