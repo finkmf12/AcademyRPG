@@ -6,6 +6,12 @@ const sh = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(p
 const need = L => 50 * L * (L - 1);                       // XP acumulado para chegar ao nível L (nível 2 = 100, 3 = 300, 4 = 600...)
 const levelOf = xp => { let L = 1; while (xp >= need(L + 1)) L++; return L; };
 const AVATARS = ['🧙', '⚔️', '🏹', '🛡️', '🐉', '🦉', '🧝', '🧪'];
+const CLASSES = {
+  guerreiro: { name: 'Guerreiro', icon: '⚔️', desc: 'Resistente e persistente.' },
+  mago: { name: 'Mago', icon: '🔮', desc: 'Curioso e estudioso.' },
+  arqueiro: { name: 'Arqueiro', icon: '🏹', desc: 'Preciso e focado.' },
+  assassino: { name: 'Assassino', icon: '🗡️', desc: 'Rápido e estratégico.' }
+};
 const ALL = ['programacao', 'banco', 'modelagem', 'geral'], SIM_N = 10;
 const CATS = {
   programacao: { name: 'Programação', icon: '⌘', desc: 'Lógica, Java, Portugol, variáveis, loops e orientação a objetos.' },
@@ -64,7 +70,7 @@ const HEAD = {
   sala: ['TREINAMENTO', 'Sala de Treinamento', 'Teste seus conhecimentos, ganhe XP e evolua de nível.'],
   perfil: ['JOGADOR', 'Perfil do Jogador', 'Acompanhe seu nível, suas conquistas e o histórico de XP.']
 };
-let S = null, quiz = null, resultHtml = null, view = 'sala', tab = 'conquistas', err = null, lastKey = null, isOpen = false;
+let S = null, quiz = null, resultHtml = null, view = 'sala', tab = 'conquistas', err = null, lastKey = null, isOpen = false, editing = false, pickClass = null;
 
 const info = () => { const xp = S.p.total_xp, L = levelOf(xp), a = need(L), b = need(L + 1); return { xp, L, a, b, pct: Math.round((xp - a) / (b - a) * 100) }; };
 const box = t => `<div class="panel"><div class="empty">${t}</div></div>`;
@@ -72,7 +78,7 @@ const box = t => `<div class="panel"><div class="empty">${t}</div></div>`;
 function mini() {
   const el = $('xpMini'); if (!S) { el.innerHTML = ''; return; }
   const i = info();
-  el.innerHTML = `<div class="xm-top"><span class="xm-av">${esc(S.p.avatar)}</span><div><b>Nível ${i.L}</b>${i.xp} XP no total</div></div><div class="bar"><i style="width:${i.pct}%"></i></div>Faltam ${i.b - i.xp} XP para o nível ${i.L + 1}`;
+  el.innerHTML = `<div class="xm-top"><span class="xm-av">${esc(S.p.avatar)}</span><div><b>${esc(S.p.adventurer_name || 'Aventureiro')}</b>Nível ${i.L}${CLASSES[S.p.class] ? ' · ' + CLASSES[S.p.class].name : ''}</div></div><div class="bar"><i style="width:${i.pct}%"></i></div>${i.xp} XP · faltam ${i.b - i.xp} para o nível ${i.L + 1}`;
 }
 
 async function fetchAll() {
@@ -214,11 +220,30 @@ function renderPerfil() {
   const body = tab === 'conquistas'
     ? `<div class="ach-grid">${Object.entries(ACH).map(([id, a]) => `<div class="ach ${S.unlocked.has(id) ? '' : 'lock'}"><span>${a[0]}</span><div><b>${a[1]}</b><small>${a[2]}</small></div></div>`).join('')}</div>`
     : `<div class="file-list">${S.events.length ? S.events.map(ev => `<div class="file-row"><div class="file-icon">✨</div><div class="file-info"><strong>${esc(ev.description || ev.source)}</strong><small>${new Date(ev.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</small></div><span class="xp-plus">+${ev.xp} XP</span></div>`).join('') : '<div class="empty"><b>Nenhum XP ganho ainda.</b>Complete um quiz na Sala de Treinamento para começar.</div>'}</div>`;
-  el.innerHTML = `<div class="panel pf"><div class="pf-av">${esc(S.p.avatar)}</div><div class="pf-info"><h3>${esc(S.p.display_name || C().user.email)}</h3><div class="sub">Nível ${i.L} · ${i.xp} XP</div>
+  el.innerHTML = `${S.p.adventurer_name && !editing ? '' : charForm()}<div class="panel pf"><div class="pf-av">${esc(S.p.avatar)}</div><div class="pf-info"><h3>${esc(S.p.adventurer_name || 'Aventureiro sem nome')}</h3><div class="sub">${CLASSES[S.p.class] ? CLASSES[S.p.class].icon + ' ' + CLASSES[S.p.class].name + ' · ' : ''}Nível ${i.L} · ${i.xp} XP</div>${S.p.adventurer_name && !editing ? '<button class="secondary" data-act="editchar" style="width:auto;margin:8px 0 0;padding:7px 14px">Editar personagem</button>' : ''}
   <div class="bar big"><i style="width:${i.pct}%"></i></div><small class="sub">${i.xp - i.a} de ${i.b - i.a} XP neste nível · faltam ${i.b - i.xp} para o nível ${i.L + 1}</small>
   <div class="av-pick">${AVATARS.map(a => `<button data-act="avatar" data-v="${a}" class="${a === S.p.avatar ? 'on' : ''}" aria-label="Avatar ${a}">${a}</button>`).join('')}</div></div></div>
   <div class="rpg-stats">${stats}</div>
   <div class="rpg-tabs"><button data-tab="conquistas" class="${tab === 'conquistas' ? 'on' : ''}">Conquistas (${S.unlocked.size}/${Object.keys(ACH).length})</button><button data-tab="historico" class="${tab === 'historico' ? 'on' : ''}">Histórico de XP</button></div>${body}`;
+}
+
+function charForm() {
+  pickClass = pickClass || S.p.class || 'guerreiro';
+  const has = !!S.p.adventurer_name;
+  return `<div class="panel cf"><h3>${has ? 'Editar personagem' : 'Crie seu personagem'}</h3>
+  <label class="sub" for="advName">Nome de aventureiro (3 a 20 caracteres: letras, números, espaço, _ ou -). Ele poderá aparecer no ranking: não use seu nome completo.</label>
+  <input class="search" id="advName" maxlength="20" value="${esc(S.p.adventurer_name || '')}" placeholder="Ex.: Aprendiz do Norte">
+  <div class="cls-grid">${Object.entries(CLASSES).map(([k, c]) => `<button type="button" class="cls ${k === pickClass ? 'on' : ''}" data-act="class" data-v="${k}"><span>${c.icon}</span><b>${c.name}</b><small>${c.desc}</small></button>`).join('')}</div>
+  <small class="sub">As classes são só visuais: nenhuma dá vantagem de XP.</small>
+  <button class="primary" data-act="savechar">Salvar personagem</button>${has ? '<button class="secondary" data-act="cancelchar">Cancelar</button>' : ''}</div>`;
+}
+
+async function saveChar() {
+  const name = $('advName').value.trim().replace(/\s+/g, ' ');
+  if (!/^[\p{L}\p{N} _-]{3,20}$/u.test(name)) { C().toast('Nome inválido: use de 3 a 20 caracteres (letras, números, espaço, _ ou -).'); return; }
+  const r = await C().supabase.rpc('set_character', { p_name: name, p_class: pickClass });
+  if (r.error) { C().toast(/set_character/.test(r.error.message) ? 'Execute o arquivo supabase-personagem.sql no Supabase.' : `Não foi possível salvar: ${r.error.message}`); return; }
+  S.p.adventurer_name = name; S.p.class = pickClass; editing = false; mini(); render(); C().toast('Personagem salvo!');
 }
 
 async function setAvatar(v) {
@@ -236,6 +261,10 @@ $('rpgView').addEventListener('click', e => {
   else if (a === 'next') next();
   else if (a === 'exit') { quiz = null; resultHtml = null; render(); }
   else if (a === 'avatar') setAvatar(b.dataset.v);
+  else if (a === 'class') { pickClass = b.dataset.v; document.querySelectorAll('.cls').forEach(x => x.classList.toggle('on', x === b)); }
+  else if (a === 'editchar') { editing = true; pickClass = S.p.class; render(); }
+  else if (a === 'cancelchar') { editing = false; render(); }
+  else if (a === 'savechar') saveChar();
 });
 document.addEventListener('click', e => { const b = e.target.closest('[data-rpg]'); if (b) openRpg(b.dataset.rpg); });
 // Ao clicar em qualquer item do menu/cards antigos, esta área é escondida e o site funciona como antes.
@@ -245,7 +274,7 @@ document.querySelectorAll('.nav button,[data-open]').forEach(b => b.addEventList
 function check() {
   const c = C(); if (!c) return;
   if ($('app').style.display !== 'block') {
-    if (lastKey) { lastKey = null; S = null; quiz = null; resultHtml = null; err = null; closeRpg(); mini(); }
+    if (lastKey) { lastKey = null; S = null; quiz = null; resultHtml = null; err = null; editing = false; pickClass = null; closeRpg(); mini(); }
     return;
   }
   const key = c.guest ? 'guest' : c.user?.id;

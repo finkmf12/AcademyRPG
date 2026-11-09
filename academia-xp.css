@@ -44,3 +44,10 @@
 .ach.lock{border-color:var(--line);opacity:.45;filter:grayscale(1)}
 .xp-plus{color:var(--gold2);font-weight:800;font-size:13px;white-space:nowrap}
 @media(max-width:650px){.rpgnav{display:flex;overflow:auto;gap:5px;padding-top:6px}.rpgnav button{white-space:nowrap;width:auto;padding:10px}.xpmini{display:none}.qz-q{font-size:18px}}
+/* personagem: nome e classe */
+.cf{margin-bottom:20px}.cf h3{font-family:Georgia,serif;margin:0 0 12px;font-size:20px}
+.cf .search{display:block;width:100%;margin:8px 0 16px}
+.cls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.cls{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 10px;border-radius:11px;border:1px solid var(--line);background:#0e1826;color:var(--text);text-align:center}
+.cls span{font-size:30px}.cls small{color:var(--muted);font-size:11px}
+.cls:hover{border-color:#947343}.cls.on{border-color:var(--gold);background:#1b2a3d}
