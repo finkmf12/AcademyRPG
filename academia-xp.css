@@ -1,0 +1,46 @@
+/* Academia RPG · XP, níveis, conquistas e Sala de Treinamento (arquivo novo, não altera o CSS existente) */
+.sidebar{overflow-y:auto}
+.rpgnav button{width:100%;text-align:left;color:#bac6d5;background:transparent;border:1px solid transparent;border-radius:9px;padding:13px 12px;margin:3px 0;display:flex;gap:12px;align-items:center}
+.rpgnav button:hover,.rpgnav button.active{background:#1b2a3d;border-color:#35475e;color:var(--gold2)}
+.rpgnav .ico{width:22px;text-align:center;font-size:17px}
+.xpmini{margin:14px 2px 0;padding:12px;border:1px solid var(--line);border-radius:11px;background:#101b2b;cursor:pointer;font-size:11px;color:var(--muted)}
+.xpmini:empty{display:none}.xpmini:hover{border-color:#947343}
+.xm-top{display:flex;gap:10px;align-items:center;margin-bottom:8px}.xm-top b{display:block;color:var(--gold2);font-size:14px}.xm-av{font-size:24px}
+.bar{height:9px;border-radius:9px;background:#0b1320;border:1px solid var(--line);overflow:hidden;margin:7px 0}
+.bar.big{height:14px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#b9843f,#f1d69a);border-radius:9px;transition:width .5s}
+.rpg-note{border:1px solid #725b3c;background:#1c2432;border-radius:10px;padding:12px 15px;font-size:13px;line-height:1.5;color:#e8ca89;margin-bottom:18px}
+.rpg-card button{display:block}
+.xp-chip{display:inline-block;margin-top:12px;background:var(--gold);color:#17120b;border-radius:20px;padding:3px 9px;font-size:11px;font-weight:800}
+.rpg-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:18px 0}
+/* quiz */
+.qz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:12px}
+.qz-exit{background:none;border:0;color:#e5a2a2;font-size:12px;padding:0}
+.qz-q{font-family:Georgia,serif;font-size:21px;line-height:1.4;margin:18px 0}
+.qz-opts{display:grid;gap:10px}
+.qz-opt{display:flex;gap:13px;align-items:center;text-align:left;padding:14px;border-radius:10px;border:1px solid #26364a;background:#0e1826;color:var(--text);font-size:14px;line-height:1.4}
+.qz-opt b{width:28px;height:28px;border-radius:7px;background:#1d2c40;display:grid;place-items:center;color:var(--gold2);flex:none}
+.qz-opt:hover:not(:disabled){border-color:#947343}
+.qz-opt:disabled{cursor:default}.qz-opt:disabled:not(.ok):not(.bad){opacity:.55}
+.qz-opt.ok{border-color:#3f9b6a;background:#12281f}.qz-opt.bad{border-color:#b45a5a;background:#2a1717}
+.qz-exp{margin-top:16px;padding:13px 15px;border-radius:10px;font-size:13px;line-height:1.55;border:1px solid}
+.qz-exp.ok{border-color:#3f9b6a;background:#12281f}.qz-exp.bad{border-color:#b45a5a;background:#2a1717}
+.res{text-align:center;padding:30px 20px}.res .big{font-size:54px}.res h3{font-family:Georgia,serif;font-size:26px;margin:6px 0}
+.res-xp{font-size:34px;font-weight:800;color:var(--gold2);margin-top:16px}
+.res .secondary{margin-top:10px}.res .rpg-note{margin:16px 0 0;text-align:left}
+/* perfil */
+.pf{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.pf-av{width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:#0e1826;display:grid;place-items:center;font-size:44px}
+.pf-info{flex:1;min-width:230px}.pf-info h3{font-family:Georgia,serif;margin:0 0 4px;font-size:22px}
+.av-pick{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.av-pick button{width:40px;height:40px;border-radius:9px;border:1px solid var(--line);background:#0e1826;font-size:20px}
+.av-pick button.on{border-color:var(--gold);background:#1b2a3d}
+.rpg-tabs{display:flex;gap:8px;margin:26px 0 14px}
+.rpg-tabs button{border:1px solid var(--line);background:#172438;color:#cbd6e4;border-radius:8px;padding:10px 16px;font-weight:700;font-size:13px}
+.rpg-tabs button.on{border-color:var(--gold);color:var(--gold2)}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.ach{display:flex;gap:12px;align-items:center;padding:14px;background:var(--panel);border:1px solid #725b3c;border-radius:11px}
+.ach>span{font-size:30px}.ach b{display:block;font-size:14px;color:var(--gold2)}.ach small{color:var(--muted);font-size:11px;line-height:1.4}
+.ach.lock{border-color:var(--line);opacity:.45;filter:grayscale(1)}
+.xp-plus{color:var(--gold2);font-weight:800;font-size:13px;white-space:nowrap}
+@media(max-width:650px){.rpgnav{display:flex;overflow:auto;gap:5px;padding-top:6px}.rpgnav button{white-space:nowrap;width:auto;padding:10px}.xpmini{display:none}.qz-q{font-size:18px}}
