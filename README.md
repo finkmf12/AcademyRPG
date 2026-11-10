@@ -12,12 +12,12 @@ Neste mundo, os jogadores assumem o papel de estudantes/heróis em uma academia 
 
 ---
 
-## ✨ Funcionalidades Principais
+## ✨ Funcionalidades Principais ✨ ##
 
 - ⚔️ **Criação e Personalização de Personagens:** Escolha classes, vista equipamentos e aproveite sua jornada.
 - 🏫 **Sistema de Academia:** Aulas, treinamentos diários e progressão de nível baseados em desempenho e tempo.
-- 🗺️ **Missões e Batalhas (Quests):** Explore calabouços, enfrente monstros e complete missões para ganhar ouro, EXP e itens raros.
-- 🛒 **Loja e Inventário:** Compre poções, armas e armaduras para melhorar o seu poder de combate.
+- 🗺️ **Missões e Batalhas (Quests):** Explore dungeon's, enfrente monstros e complete missões para ganhar ouro, EXP e itens raros.
+- 🛒 **Loja e Inventário:** Compre dicas, armas e armaduras para para personalizar seu personagem e mostrar quem manda no ranking!!!!.
 - 📊 **Ranking Global:** Veja quem são os alunos mais fortes da academia.
 
 ---
