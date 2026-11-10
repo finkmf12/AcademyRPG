@@ -12,9 +12,10 @@
     ranking:['SALÃO DOS CAMPEÕES','Ranking de Aventureiros','A evolução de cada aventureiro registrada na Academia.'],
     bosses:['ARENA DE COMBATE','Arena dos Chefes','Responda aos enigmas, proteja sua energia e conquiste recompensas.'],
     guilds:['SALÃO DAS GUILDAS','Guildas','Reúna aliados, compartilhe um código e evoluam em equipe.'],
+    friends:['COMPANHEIROS DE JORNADA','Amigos','Encontre aventureiros e reúna seus aliados.'],
     teacher:['MESTRE DA ACADEMIA','Painel do Professor','Acompanhe a turma e administre a jornada de aprendizagem.']
   };
-  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',guildTab:'directory',guildQuery:'',studentQuery:'',missionDraft:null,bossDraft:null,battle:null,flagDraft:null,busy:false};
+  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',guildTab:'directory',guildQuery:'',friendQuery:'',friendResults:[],studentQuery:'',missionDraft:null,bossDraft:null,battle:null,flagDraft:null,busy:false};
   const toast=m=>C()?.toast?.(m);
   async function rpc(name,args={}){const c=C();if(!c?.supabase||!c.user||c.guest)throw Error('Entre com sua conta Google para usar este recurso.');const {data,error}=await c.supabase.rpc(name,args);if(error)throw error;return data;}
   const wait=m=>`<div class="adv-panel"><div class="adv-loading"><span class="adv-spinner"></span>${esc(m||'Consultando os registros da Academia...')}</div></div>`;
@@ -94,6 +95,7 @@
       <button type="button" data-adventure="ranking"><span class="ico">♛</span> Ranking</button>
       <button type="button" data-adventure="bosses"><span class="ico">🐉</span> Arena dos Chefes</button>
       <button type="button" data-adventure="guilds"><span class="ico">⚑</span> Guildas</button>
+      <button type="button" data-adventure="friends"><span class="ico">♟</span> Amigos</button>
       <button type="button" data-adventure="teacher" id="advTeacherNav" hidden><span class="ico">⚜</span> Painel do Professor</button>`);
   }
   async function sync(){
@@ -114,7 +116,7 @@
     $('pageKicker').textContent=HEAD[page][0];$('pageTitle').textContent=HEAD[page][1];$('pageSub').textContent=HEAD[page][2];
     $('rpgView').innerHTML=wait();load().catch(e=>{$('rpgView').innerHTML=fail(e.message||'Erro inesperado.');});
   }
-  async function load(){if(S.page==='missions')return missions();if(S.page==='ranking')return ranking();if(S.page==='bosses')return bosses();if(S.page==='guilds')return guilds();if(S.page==='teacher')return teacher();}
+  async function load(){if(S.page==='missions')return missions();if(S.page==='ranking')return ranking();if(S.page==='bosses')return bosses();if(S.page==='guilds')return guilds();if(S.page==='friends')return friends();if(S.page==='teacher')return teacher();}
 
   async function missions(){
     const items=await rpc('get_weekly_missions');
@@ -231,6 +233,13 @@
       <section class="adv-panel"><div class="adv-section-head"><div><h3>Guildas da Academia</h3><small>Conheça as companhias que estão recrutando.</small></div></div>${directory}</section>`;
   }
 
+  async function friends(){
+    const rows=await rpc('list_my_friends');
+    const groups={friend:rows.filter(x=>x.request_type==='friend'),received:rows.filter(x=>x.request_type==='received'),sent:rows.filter(x=>x.request_type==='sent')};
+    const result=(S.friendResults||[]).map(x=>'<div class="adv-member"><span class="adv-rank-avatar">'+esc(x.avatar||'🧙')+'</span><div><b>'+esc(x.player_name)+'</b><small>'+n(x.total_xp)+' XP</small></div>'+(x.is_friend?badge('Amigo','good'):x.request_status==='sent'?badge('Enviado','ready'):'<button class="adv-btn" data-adv="friend-add" data-id="'+x.user_id+'">Adicionar</button>')+'</div>').join('');
+    const cards=(arr,type)=>arr.map(x=>'<div class="adv-member"><span class="adv-rank-avatar">'+esc(x.avatar||'🧙')+'</span><div><b>'+esc(x.player_name)+'</b><small>'+n(x.total_xp)+' XP</small></div>'+(type==='received'?'<button class="adv-btn" data-adv="friend-accept" data-id="'+x.request_id+'">Aceitar</button><button class="adv-btn adv-btn-soft" data-adv="friend-reject" data-id="'+x.request_id+'">Recusar</button>':badge(type==='sent'?'Aguardando':'Amigo',type==='sent'?'ready':'good'))+'</div>').join('');
+    $('rpgView').innerHTML='<section class="adv-hero"><div><div class="adv-kicker">REDE DE AVENTUREIROS</div><h3>Adicione seus amigos.</h3><p>Procure pelo nome de aventureiro e envie solicitações de amizade.</p></div><div class="adv-hero-mark">♟</div></section><section class="adv-panel"><form id="advFriendSearchForm" class="adv-guild-directory-tools"><input class="adv-input" id="advFriendSearch" minlength="2" placeholder="Nome do aventureiro..." value="'+esc(S.friendQuery)+'"><button class="adv-btn" type="submit">Buscar</button></form><div class="adv-member-list">'+(result||'<p class="adv-muted">Pesquise para encontrar amigos.</p>')+'</div></section><section class="adv-panel"><h3>Solicitações recebidas</h3><div class="adv-member-list">'+(cards(groups.received,'received')||'<p class="adv-muted">Nenhuma solicitação recebida.</p>')+'</div></section><section class="adv-panel"><h3>Meus amigos</h3><div class="adv-member-list">'+(cards(groups.friend,'friend')||'<p class="adv-muted">Você ainda não adicionou amigos.</p>')+'</div></section><section class="adv-panel"><h3>Solicitações enviadas</h3><div class="adv-member-list">'+(cards(groups.sent,'sent')||'<p class="adv-muted">Nenhuma solicitação enviada.</p>')+'</div></section>';
+  }
   async function teacher(){
     if(!S.teacher)throw Error('Esta conta não possui permissão docente.');
     const d=await rpc('teacher_get_control_room');S.data=d;
@@ -289,6 +298,9 @@
     const a=b.dataset.adv;
     if(a==='retry')return load();
     if(a==='guild-tab'){S.guildTab=b.dataset.tab;return guilds();}
+    if(a==='friend-add'){await rpc('send_friend_request',{p_user_id:b.dataset.id});toast('Solicitação enviada.');return friends();}
+    if(a==='friend-accept'||a==='friend-reject'){await rpc('respond_friend_request',{p_request_id:b.dataset.id,p_accept:a==='friend-accept'});toast('Solicitação atualizada.');return friends();}
+    if(a==='invite-friend'){try{await navigator.clipboard.writeText(b.dataset.code);toast('Código da guilda copiado. Envie ao amigo!');}catch{toast('Código: '+b.dataset.code);}return;}
     if(a==='claim')return claim(b.dataset.id);
     if(a==='period'){S.period=b.dataset.period;return ranking();}
     if(a==='start-boss')return startBoss(b.dataset.id);
@@ -311,7 +323,7 @@
   const root=$('rpgView');
   if(root){
     root.addEventListener('click',e=>{const b=e.target.closest('[data-adv]');if(!b||b.disabled)return;action(b).catch(err=>{console.error('Ação da Aventura:',err);toast(err.message||'Não foi possível concluir esta ação.');});});
-    root.addEventListener('submit',e=>{const f=e.target.closest('[data-adv-form]');if(!f)return;const map={'create-guild':createGuild,'join-guild':joinGuild,'save-guild-flag':saveGuildFlag,'save-mission':saveMission,'save-boss':saveBoss};if(map[f.dataset.advForm])map[f.dataset.advForm](e).catch(err=>toast(err.message||'Não foi possível salvar.'));});
+    root.addEventListener('submit',e=>{if(e.target.id==='advFriendSearchForm'){e.preventDefault();S.friendQuery=$('advFriendSearch').value.trim();if(S.friendQuery.length<2){toast('Digite pelo menos 2 caracteres.');return;}rpc('search_academy_players',{p_query:S.friendQuery}).then(r=>{S.friendResults=r||[];friends();}).catch(err=>toast(err.message));return;}const f=e.target.closest('[data-adv-form]');if(!f)return;const map={'create-guild':createGuild,'join-guild':joinGuild,'save-guild-flag':saveGuildFlag,'save-mission':saveMission,'save-boss':saveBoss};if(map[f.dataset.advForm])map[f.dataset.advForm](e).catch(err=>toast(err.message||'Não foi possível salvar.'));});
     root.addEventListener('input',e=>{if(e.target.id==='advGuildSearch'){S.guildQuery=e.target.value.toLocaleLowerCase('pt-BR');root.querySelectorAll('[data-guild-search]').forEach(row=>row.hidden=!row.dataset.guildSearch.includes(S.guildQuery));return;}if(e.target.id==='advStudentSearch'){S.studentQuery=e.target.value;const q=S.studentQuery.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const rows=(S.data?.students||[]).filter(x=>`${x.name} ${x.guild_name||''} ${x.class||''}`.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));const body=root.querySelector('.adv-table tbody');if(body)body.innerHTML=rows.map(x=>`<tr><td><span class="adv-table-player">${esc(x.avatar||'🧙')} <b>${esc(x.name)}</b><small>${esc(x.class||'Sem classe')}</small></span></td><td>${n(x.total_xp)}</td><td>${n(x.quizzes)}</td><td>${n(x.correct)} / ${n(x.questions)}</td><td>${n(x.coins)}</td><td>${esc(x.guild_name||'—')}</td></tr>`).join('')||'<tr><td colspan="6" class="adv-empty">Nenhum aluno corresponde à busca.</td></tr>';return;}if(e.target.closest('#advGuildFlagForm'))updateFlagPreview();});
     root.addEventListener('change',e=>{if(e.target.closest('#advGuildFlagForm'))updateFlagPreview();});
   }
