@@ -281,3 +281,10 @@
   }
   .sidebar .xpmini,.sidebar .side-bottom{display:none}
 }
+
+
+/* Relíquias de guilda no Mercado Arcano */
+.mk-item-guild .mk-art{background:radial-gradient(circle at 50% 45%,#8e6ab955,transparent 58%),linear-gradient(145deg,#17263b,#241c36);border-color:#8065a5}
+.mk-item-guild .mk-icon{font-size:38px;filter:drop-shadow(0 0 10px #b995ff99)}
+.mk-item-guild .mk-rarity{color:#e1c7ff;border-color:#8568aa;background:#302342}
+.mk-item-guild{border-color:#6b568b;box-shadow:inset 0 0 18px #8d6acb12}
