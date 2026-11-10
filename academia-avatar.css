@@ -108,3 +108,72 @@
   .arc-item-visual{height:150px}
   .arc-item-visual .arc-avatar{height:143px;width:125px}
 }
+
+
+/* Revisão do Ateliê: personagens maiores e catálogo agrupado por equipamento */
+.arc-stage{
+  min-height:360px;
+  padding:15px 18px 17px;
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(153,124,193,.34),transparent 58%),
+    radial-gradient(ellipse at 50% 100%,rgba(194,151,83,.12),transparent 52%),
+    linear-gradient(180deg,#1b2940,#101a29 88%);
+}
+.arc-stage>.arc-avatar{
+  width:260px;
+  max-width:100%;
+  height:260px;
+  flex:0 0 auto;
+}
+.arc-stage-glow{
+  width:220px;
+  height:220px;
+  top:17px;
+  box-shadow:0 0 0 22px #d7bf8b0a,0 0 70px #8f7cbd4a;
+}
+.arc-item-visual{
+  height:220px;
+  background:
+    radial-gradient(ellipse at 50% 57%,rgba(194,151,83,.22),transparent 51%),
+    radial-gradient(ellipse at 50% 18%,rgba(123,92,166,.30),transparent 57%),
+    linear-gradient(145deg,#26334a,#111a2b 78%);
+}
+.arc-item-visual .arc-avatar{
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+  filter:drop-shadow(0 9px 11px rgba(0,0,0,.58));
+}
+.arc-group-heading{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:18px 0 1px;
+  padding:9px 12px;
+  border-left:3px solid #b3925b;
+  border-radius:0 7px 7px 0;
+  background:linear-gradient(90deg,#263448,#182435 70%,transparent);
+  color:#edd29a;
+  font:700 12px Georgia,serif;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+}
+.arc-group-heading:first-child{margin-top:0}
+.arc-group-heading:after{
+  content:"";
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg,#7f6847,transparent);
+}
+@media(max-width:760px){
+  .arc-stage{min-height:340px}
+  .arc-stage>.arc-avatar{height:250px;width:250px}
+  .arc-item-visual{height:180px}
+}
+@media(max-width:480px){
+  .arc-stage{min-height:335px;padding:12px}
+  .arc-stage>.arc-avatar{height:245px;width:245px}
+  .arc-item-visual{height:165px}
+}
