@@ -53,58 +53,67 @@
 .cls:hover{border-color:#947343}.cls.on{border-color:var(--gold);background:#1b2a3d}
 
 
-/* Floresta mágica: animações leves, sem repintar o fundo inteiro */
+/* Floresta mágica: camadas visíveis e movimento suave */
 .login{
   isolation:isolate;
   background-color:#081322;
   background-image:
-    linear-gradient(180deg,rgba(5,13,27,.18),rgba(7,15,31,.42)),
+    linear-gradient(180deg,rgba(5,13,27,.12),rgba(7,15,31,.30)),
     url('./login-rpg-dia.webp');
   background-size:cover;
   background-position:center;
-  animation:none;
 }
 .login:before{
+  content:"";
+  position:absolute;
+  inset:-5%;
+  z-index:0;
+  pointer-events:none;
   background:
-    radial-gradient(ellipse at 50% 55%,rgba(20,33,68,.12),rgba(3,9,22,.42) 78%),
-    linear-gradient(90deg,rgba(10,18,42,.42),rgba(27,30,73,.08) 48%,rgba(10,18,42,.40));
-  background-size:100% 100%;
+    radial-gradient(ellipse at 18% 78%,rgba(83,132,197,.34),transparent 43%),
+    radial-gradient(ellipse at 78% 66%,rgba(130,91,198,.30),transparent 45%),
+    radial-gradient(ellipse at 52% 34%,rgba(120,151,213,.16),transparent 52%),
+    linear-gradient(90deg,rgba(10,18,42,.22),rgba(27,30,73,.02) 48%,rgba(10,18,42,.20));
+  opacity:.88;
   transform:translate3d(0,0,0);
-  opacity:.9;
   will-change:transform,opacity;
-  animation:forestMistDrift 20s ease-in-out infinite alternate;
+  animation:forestMistDrift 18s ease-in-out infinite alternate;
 }
 .login:after{
   content:"";
   position:absolute;
-  inset:-8%;
-  z-index:0;
+  inset:-4%;
+  z-index:1;
   pointer-events:none;
-  opacity:.58;
+  opacity:.86;
   background-image:
-    radial-gradient(ellipse at 15% 78%,rgba(85,119,184,.18),transparent 36%),
-    radial-gradient(ellipse at 78% 66%,rgba(123,91,190,.16),transparent 38%),
-    radial-gradient(circle at 18% 25%,rgba(171,204,255,.72) 0 1px,transparent 2px),
-    radial-gradient(circle at 63% 18%,rgba(189,171,255,.68) 0 1px,transparent 2px),
-    radial-gradient(circle at 82% 42%,rgba(164,218,255,.66) 0 1px,transparent 2px),
-    radial-gradient(circle at 37% 68%,rgba(200,190,255,.58) 0 1px,transparent 2px),
-    radial-gradient(circle at 91% 82%,rgba(171,204,255,.60) 0 1px,transparent 2px);
-  background-size:100% 100%,100% 100%,310px 270px,370px 330px,290px 310px,410px 360px,330px 290px;
+    radial-gradient(circle at 12% 28%,rgba(195,222,255,.95) 0 1.5px,transparent 3px),
+    radial-gradient(circle at 27% 72%,rgba(180,190,255,.90) 0 1.4px,transparent 3px),
+    radial-gradient(circle at 48% 19%,rgba(218,211,255,.95) 0 1.6px,transparent 3px),
+    radial-gradient(circle at 68% 61%,rgba(176,218,255,.95) 0 1.5px,transparent 3px),
+    radial-gradient(circle at 84% 34%,rgba(211,196,255,.95) 0 1.5px,transparent 3px),
+    radial-gradient(circle at 91% 82%,rgba(175,207,255,.90) 0 1.4px,transparent 3px),
+    radial-gradient(ellipse at 20% 85%,rgba(112,148,209,.20),transparent 38%),
+    radial-gradient(ellipse at 78% 78%,rgba(145,112,204,.18),transparent 40%);
+  background-size:230px 240px,290px 270px,330px 290px,270px 300px,310px 260px,260px 310px,100% 100%,100% 100%;
   transform:translate3d(0,0,0);
   will-change:transform,opacity;
-  animation:forestParticlesDrift 32s ease-in-out infinite alternate;
+  animation:forestParticlesDrift 24s ease-in-out infinite alternate;
 }
+.login .login-layout{position:relative;z-index:2}
+.login .author-credit{z-index:3}
 @keyframes forestMistDrift{
-  from{transform:translate3d(-.35%,.25%,0) scale(1);opacity:.72}
-  to{transform:translate3d(.35%,-.25%,0) scale(1.015);opacity:.96}
+  from{transform:translate3d(-.55%,.3%,0) scale(1);opacity:.62}
+  to{transform:translate3d(.55%,-.3%,0) scale(1.025);opacity:.98}
 }
 @keyframes forestParticlesDrift{
-  from{transform:translate3d(-.45%,.35%,0);opacity:.42}
-  to{transform:translate3d(.45%,-.35%,0);opacity:.68}
+  from{transform:translate3d(-.65%,.45%,0);opacity:.55}
+  to{transform:translate3d(.65%,-.45%,0);opacity:.95}
 }
 @media(prefers-reduced-motion:reduce){
-  .login,.login:before,.login:after{animation:none!important;will-change:auto}
+  .login:before,.login:after{animation:none!important;will-change:auto}
 }
 @media(max-width:650px){
-  .login:before,.login:after{animation-duration:40s}
+  .login:before{animation-duration:26s}
+  .login:after{animation-duration:32s}
 }
