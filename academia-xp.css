@@ -98,7 +98,7 @@
   background-size:230px 240px,290px 270px,330px 290px,270px 300px,310px 260px,260px 310px,100% 100%,100% 100%;
   transform:translate3d(0,0,0);
   will-change:transform,opacity;
-  animation:forestParticlesDrift 24s ease-in-out infinite alternate;
+  animation:forestParticlesDrift 12s ease-in-out infinite alternate;
 }
 .login .login-layout{position:relative;z-index:2}
 .login .author-credit{z-index:3}
@@ -115,5 +115,5 @@
 }
 @media(max-width:650px){
   .login:before{animation-duration:26s}
-  .login:after{animation-duration:32s}
+  .login:after{animation-duration:16s}
 }
