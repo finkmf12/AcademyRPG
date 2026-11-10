@@ -233,3 +233,33 @@
 .rpgnav [data-adventure]{border-color:transparent;transition:background .18s,border-color .18s,color .18s}
 .rpgnav [data-adventure]:hover,.rpgnav [data-adventure].active{background:linear-gradient(90deg,#302448,#1b2436);border-color:#70599a;color:#d5c1ff}
 .rpgnav [data-adventure] .ico{color:#b9a0eb}
+
+
+/* Heráldica avançada: formatos de brasão, escudos e efeitos de relíquias */
+#rpgView .adv-flag-shape-heater{clip-path:polygon(5% 0,95% 0,92% 57%,82% 78%,50% 100%,18% 78%,8% 57%)}
+#rpgView .adv-flag-shape-kite{clip-path:polygon(50% 0,100% 17%,88% 72%,50% 100%,12% 72%,0 17%)}
+#rpgView .adv-flag-shape-round{border-radius:50%;aspect-ratio:1}
+#rpgView .adv-flag-shape-tower{clip-path:polygon(12% 0,88% 0,100% 18%,94% 78%,50% 100%,6% 78%,0 18%)}
+#rpgView .adv-flag-shape-pointed{clip-path:polygon(0 0,100% 0,94% 65%,50% 100%,6% 65%)}
+#rpgView .adv-flag--waves{background:repeating-radial-gradient(ellipse at 0 50%,var(--flag-secondary) 0 9px,var(--flag-primary) 10px 22px)}
+#rpgView .adv-flag--diamond{background:repeating-linear-gradient(45deg,var(--flag-primary) 0 18px,var(--flag-secondary) 18px 27px,var(--flag-primary) 27px 45px)}
+#rpgView .adv-flag--stripes{background:linear-gradient(to bottom,var(--flag-primary) 0 25%,var(--flag-secondary) 25% 38%,var(--flag-primary) 38% 62%,var(--flag-secondary) 62% 75%,var(--flag-primary) 75%)}
+#rpgView .adv-flag--sunburst{background:repeating-conic-gradient(from 0deg,var(--flag-primary) 0deg 18deg,var(--flag-secondary) 18deg 36deg)}
+#rpgView .adv-flag-shield-royal{border-color:#f1d18b;box-shadow:0 0 0 2px #805d2c,0 0 22px #d9ad5b88,inset 0 0 12px #ffe7a855}
+#rpgView .adv-flag-shield-obsidian{border-color:#9b91bd;box-shadow:0 0 0 2px #292238,0 0 18px #9b91bd77,inset 0 0 14px #090711}
+#rpgView .adv-flag-shield-winged:before,#rpgView .adv-flag-shield-winged:after{content:"";position:absolute;z-index:0;top:24%;width:28%;height:52%;border:2px solid #e9d5a3;background:linear-gradient(135deg,#f0d69a88,#795b3d55)}
+#rpgView .adv-flag-shield-winged:before{left:-8%;clip-path:polygon(0 0,100% 20%,75% 100%,0 65%)}
+#rpgView .adv-flag-shield-winged:after{right:-8%;clip-path:polygon(100% 0,0 20%,25% 100%,100% 65%)}
+#rpgView .adv-flag-guild-shield-royal{border:4px double #f5d78d;box-shadow:0 0 24px #f5d78d99,inset 0 0 18px #ffe8a866}
+#rpgView .adv-flag-guild-shield-obsidian{border:4px double #b8a9e6;box-shadow:0 0 26px #9a82e9aa,inset 0 0 22px #090817}
+#rpgView .adv-flag-guild-crest-dragon .adv-flag-symbol{filter:drop-shadow(0 0 8px #ff8b37);text-shadow:0 0 12px #ff7b2f,0 2px 4px #000}
+#rpgView .adv-flag-guild-crest-phoenix .adv-flag-symbol{filter:drop-shadow(0 0 10px #ffb04a);text-shadow:0 0 14px #ff7a32,0 2px 4px #000}
+#rpgView .adv-flag-guild-effect-aurora{animation:advAurora 4s ease-in-out infinite}
+#rpgView .adv-flag-guild-effect-flame{animation:advFlame 1.8s ease-in-out infinite}
+#rpgView .adv-flag-guild-effect-runes .adv-flag-symbol{text-shadow:0 0 5px #8eeaff,0 0 14px #75bfff,0 0 24px #b88cff}
+#rpgView .adv-flag-glint{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(115deg,transparent 35%,#ffffff28 48%,transparent 60%);mix-blend-mode:screen}
+#rpgView .adv-flag-preview{min-height:130px}
+#rpgView .adv-flag-controls label{min-width:0}
+@keyframes advAurora{0%,100%{box-shadow:0 0 12px #67d9ff66,inset 0 0 14px #7d8cff33}50%{box-shadow:0 0 28px #a78bfae0,inset 0 0 22px #67d9ff88}}
+@keyframes advFlame{0%,100%{filter:drop-shadow(0 0 3px #ff7136)}50%{filter:drop-shadow(0 0 12px #ffb347)}}
+@media(prefers-reduced-motion:reduce){#rpgView .adv-flag-guild-effect-aurora,#rpgView .adv-flag-guild-effect-flame{animation:none}}
