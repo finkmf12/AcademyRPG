@@ -14,7 +14,7 @@
     guilds:['SALÃO DAS GUILDAS','Guildas','Reúna aliados, compartilhe um código e evoluam em equipe.'],
     teacher:['MESTRE DA ACADEMIA','Painel do Professor','Acompanhe a turma e administre a jornada de aprendizagem.']
   };
-  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',studentQuery:'',missionDraft:null,bossDraft:null,battle:null,flagDraft:null,busy:false};
+  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',guildTab:'directory',guildQuery:'',studentQuery:'',missionDraft:null,bossDraft:null,battle:null,flagDraft:null,busy:false};
   const toast=m=>C()?.toast?.(m);
   async function rpc(name,args={}){const c=C();if(!c?.supabase||!c.user||c.guest)throw Error('Entre com sua conta Google para usar este recurso.');const {data,error}=await c.supabase.rpc(name,args);if(error)throw error;return data;}
   const wait=m=>`<div class="adv-panel"><div class="adv-loading"><span class="adv-spinner"></span>${esc(m||'Consultando os registros da Academia...')}</div></div>`;
@@ -196,7 +196,8 @@
     return `<div class="adv-battle-result defeat"><div class="adv-result-icon">🛡</div><div class="adv-kicker">FIM DA BATALHA</div><h3>O chefe ainda está de pé.</h3><p>Você acertou ${n(r.correct)} de ${n(r.total)} questões. São necessários ${n(r.required||S.battle?.boss?.min_correct||4)} acertos para vencer.</p><p class="adv-muted">Revise os conteúdos e volte mais forte. Nenhuma recompensa de chefe foi concedida nesta tentativa.</p><button class="adv-btn" data-adv="back-bosses">Voltar à arena</button></div>`;
   }
 
-  async function guilds(){
+  async function guilds(tab){
+    if(tab)S.guildTab=tab;
     const [mine,all]=await Promise.all([rpc('get_my_guild'),rpc('list_guilds')]);
     S.guildItems=[];
     if(mine?.guild?.owner){
@@ -205,17 +206,20 @@
       const ids=(owned.data||[]).map(x=>x.item_id).filter(id=>GUILD_SHOP_ITEMS.some(x=>x[0]===id));
       if(ids.length){const catalog=await C().supabase.from('market_items').select('id,name,icon').in('id',ids).eq('category','guild');if(catalog.error)throw catalog.error;S.guildItems=catalog.data||[];}
     }
-    const directory=(all||[]).map(g=>`<article class="adv-guild-row"><div class="adv-guild-crest">${flagMarkup(g.flag_config,'mini')}</div><div class="adv-guild-info"><b>${esc(g.name)}</b><small>${esc(g.description||'Uma guilda em busca de novos aventureiros.')}</small><span>${n(g.members)} / 6 membros · ${n(g.total_xp)} XP somados</span></div>${g.joined?badge('Sua guilda','good'):badge('Guilda aberta')}</article>`).join('');
-    if(mine?.guild){
+    const guildRows=(all||[]).map(g=>`<article class="adv-guild-row" data-guild-search="${esc((g.name+' '+g.tag+' '+(g.description||'')).toLocaleLowerCase('pt-BR'))}"><div class="adv-guild-crest">${flagMarkup(g.flag_config,'mini')}</div><div class="adv-guild-info"><b>${esc(g.name)}</b><small>${esc(g.description||'Uma guilda em busca de novos aventureiros.')}</small><span>${n(g.members)} / 6 membros · ${n(g.total_xp)} XP somados</span></div>${g.joined?badge('Sua guilda','good'):badge('Guilda aberta')}</article>`).join('');
+    const directory=`<div class="adv-guild-directory-tools"><input class="adv-input" id="advGuildSearch" type="search" placeholder="Buscar guilda por nome ou sigla..." value="${esc(S.guildQuery)}"><span>${n((all||[]).length)} guildas encontradas</span></div><div class="adv-guild-directory" id="advGuildDirectory">${guildRows||'<div class="adv-empty">Nenhuma guilda foi fundada ainda.</div>'}</div>`;
+    const tabs=`<div class="adv-tabs adv-guild-tabs">${mine?.guild?`<button class="${S.guildTab==='mine'?'active':''}" data-adv="guild-tab" data-tab="mine">Minha guilda</button>`:''}<button class="${S.guildTab==='directory'?'active':''}" data-adv="guild-tab" data-tab="directory">Explorar guildas <span>${n((all||[]).length)}</span></button><button class="${S.guildTab==='manage'?'active':''}" data-adv="guild-tab" data-tab="manage">${mine?.guild?'Convites':'Fundar / entrar'}</button></div>`;
+    if(mine?.guild && S.guildTab==='mine'){
       const g=mine.guild,ms=mine.members||[],f=flagConfig(g.flag_config);
-      $('rpgView').innerHTML=`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">SUA BANDEIRA</div><h3>${esc(g.name)} <small>[${esc(g.tag)}]</small></h3><p>${esc(g.description||'Uma irmandade de aventureiros.')}</p></div><div class="adv-guild-flag-side">${flagMarkup(f,'hero')}${f.motto?`<small>${esc(f.motto)}</small>`:''}</div></section>
+      $('rpgView').innerHTML= tabs+`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">SUA BANDEIRA</div><h3>${esc(g.name)} <small>[${esc(g.tag)}]</small></h3><p>${esc(g.description||'Uma irmandade de aventureiros.')}</p></div><div class="adv-guild-flag-side">${flagMarkup(f,'hero')}${f.motto?`<small>${esc(f.motto)}</small>`:''}</div></section>
         ${g.active?'':'<div class="adv-warning">Esta guilda foi temporariamente suspensa pelo professor. Seus membros podem consultar os dados e sair normalmente.</div>'}
         ${g.owner?flagEditor(g):''}
         <section class="adv-panel"><div class="adv-section-head"><div><h3>Companheiros de jornada</h3><small>${n(ms.length)} de 6 vagas ocupadas</small></div>${g.owner&&g.invite_code?`<button class="adv-btn adv-btn-soft" data-adv="copy-invite" data-code="${esc(g.invite_code)}">Copiar convite · ${esc(g.invite_code)}</button>`:''}</div>
         <div class="adv-member-list">${ms.map(m=>`<div class="adv-member"><span class="adv-rank-avatar">${esc(m.avatar||'🧙')}</span><div><b>${window.AcademiaAvatar?.nameMarkup(m.name,m.appearance||{})||esc(m.name)} ${m.is_me?'(você)':''}</b><small>${esc(m.role==='leader'?'Líder':m.role==='officer'?'Oficial':'Membro')} · ${esc(m.class||'Aventureiro')}</small></div><strong>${n(m.xp)} XP</strong></div>`).join('')}</div></section>
         <div class="adv-guild-actions"><p class="adv-footnote">O líder pode compartilhar o código de convite com até cinco companheiros.</p><button class="adv-btn adv-btn-danger" data-adv="leave-guild">Sair da guilda</button></div>`;return;
     }
-    $('rpgView').innerHTML=`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">AVENTUREIRO SOLITÁRIO?</div><h3>Encontre sua companhia.</h3><p>Crie uma guilda para liderar seus aliados ou entre em uma usando o código enviado pelo líder.</p></div><div class="adv-hero-mark">⚑</div></section>
+    if(S.guildTab==='directory'){$('rpgView').innerHTML=tabs+`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">DIRETÓRIO DA ACADEMIA</div><h3>Encontre sua próxima companhia.</h3><p>Explore as guildas, conheça seus brasões, veja a força de cada equipe e encontre um grupo para sua jornada.</p></div><div class="adv-hero-mark">⚑</div></section><section class="adv-panel"><div class="adv-section-head"><div><h3>Guildas da Academia</h3><small>Companhias ativas em ordem de atividade e força.</small></div></div>${directory}</section>`;return;}
+    $('rpgView').innerHTML=tabs+`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">AVENTUREIRO SOLITÁRIO?</div><h3>Encontre sua companhia.</h3><p>Crie uma guilda para liderar seus aliados ou entre em uma usando o código enviado pelo líder.</p></div><div class="adv-hero-mark">⚑</div></section>
       <div class="adv-guild-forms">
         <form class="adv-panel adv-form" data-adv-form="create-guild"><div class="adv-section-head"><div><h3>Fundar uma guilda</h3><small>Você será o líder inicial.</small></div></div>
           <label>Nome da guilda<input id="advGuildName" maxlength="24" minlength="3" required placeholder="Ex.: Ordem da Fênix"></label>
@@ -224,7 +228,7 @@
         <form class="adv-panel adv-form" data-adv-form="join-guild"><div class="adv-section-head"><div><h3>Entrar por convite</h3><small>Peça o código ao líder da guilda.</small></div></div>
           <label>Código de convite<input id="advGuildCode" maxlength="8" minlength="8" required placeholder="AB12CD34"></label><button class="adv-btn adv-btn-soft" type="submit">Entrar na guilda</button></form>
       </div>
-      <section class="adv-panel"><div class="adv-section-head"><div><h3>Guildas da Academia</h3><small>Conheça as companhias que estão recrutando.</small></div></div><div class="adv-guild-directory">${directory||'<div class="adv-empty">Nenhuma guilda foi fundada ainda.</div>'}</div></section>`;
+      <section class="adv-panel"><div class="adv-section-head"><div><h3>Guildas da Academia</h3><small>Conheça as companhias que estão recrutando.</small></div></div>${directory}</section>`;
   }
 
   async function teacher(){
@@ -284,6 +288,7 @@
   async function action(b){
     const a=b.dataset.adv;
     if(a==='retry')return load();
+    if(a==='guild-tab'){S.guildTab=b.dataset.tab;return guilds();}
     if(a==='claim')return claim(b.dataset.id);
     if(a==='period'){S.period=b.dataset.period;return ranking();}
     if(a==='start-boss')return startBoss(b.dataset.id);
@@ -307,7 +312,7 @@
   if(root){
     root.addEventListener('click',e=>{const b=e.target.closest('[data-adv]');if(!b||b.disabled)return;action(b).catch(err=>{console.error('Ação da Aventura:',err);toast(err.message||'Não foi possível concluir esta ação.');});});
     root.addEventListener('submit',e=>{const f=e.target.closest('[data-adv-form]');if(!f)return;const map={'create-guild':createGuild,'join-guild':joinGuild,'save-guild-flag':saveGuildFlag,'save-mission':saveMission,'save-boss':saveBoss};if(map[f.dataset.advForm])map[f.dataset.advForm](e).catch(err=>toast(err.message||'Não foi possível salvar.'));});
-    root.addEventListener('input',e=>{if(e.target.id==='advStudentSearch'){S.studentQuery=e.target.value;const q=S.studentQuery.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const rows=(S.data?.students||[]).filter(x=>`${x.name} ${x.guild_name||''} ${x.class||''}`.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));const body=root.querySelector('.adv-table tbody');if(body)body.innerHTML=rows.map(x=>`<tr><td><span class="adv-table-player">${esc(x.avatar||'🧙')} <b>${esc(x.name)}</b><small>${esc(x.class||'Sem classe')}</small></span></td><td>${n(x.total_xp)}</td><td>${n(x.quizzes)}</td><td>${n(x.correct)} / ${n(x.questions)}</td><td>${n(x.coins)}</td><td>${esc(x.guild_name||'—')}</td></tr>`).join('')||'<tr><td colspan="6" class="adv-empty">Nenhum aluno corresponde à busca.</td></tr>';return;}if(e.target.closest('#advGuildFlagForm'))updateFlagPreview();});
+    root.addEventListener('input',e=>{if(e.target.id==='advGuildSearch'){S.guildQuery=e.target.value.toLocaleLowerCase('pt-BR');root.querySelectorAll('[data-guild-search]').forEach(row=>row.hidden=!row.dataset.guildSearch.includes(S.guildQuery));return;}if(e.target.id==='advStudentSearch'){S.studentQuery=e.target.value;const q=S.studentQuery.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const rows=(S.data?.students||[]).filter(x=>`${x.name} ${x.guild_name||''} ${x.class||''}`.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));const body=root.querySelector('.adv-table tbody');if(body)body.innerHTML=rows.map(x=>`<tr><td><span class="adv-table-player">${esc(x.avatar||'🧙')} <b>${esc(x.name)}</b><small>${esc(x.class||'Sem classe')}</small></span></td><td>${n(x.total_xp)}</td><td>${n(x.quizzes)}</td><td>${n(x.correct)} / ${n(x.questions)}</td><td>${n(x.coins)}</td><td>${esc(x.guild_name||'—')}</td></tr>`).join('')||'<tr><td colspan="6" class="adv-empty">Nenhum aluno corresponde à busca.</td></tr>';return;}if(e.target.closest('#advGuildFlagForm'))updateFlagPreview();});
     root.addEventListener('change',e=>{if(e.target.closest('#advGuildFlagForm'))updateFlagPreview();});
   }
   document.addEventListener('click',e=>{const b=e.target.closest('[data-adventure]');if(b)open(b.dataset.adventure);});
