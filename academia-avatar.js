@@ -7,7 +7,7 @@
   const S={catalog:[],owned:[],appearance:{},balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
     ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
-    ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios'],
+    ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],
     ['aura','Auras'],['pet','Pets'],['title','Títulos']
   ];
   const SLOT_NAME={nameColor:'Cor do nome',hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura',pet:'Pet companheiro',title:'Título'};
@@ -57,6 +57,14 @@
     if(hat==='helm-eclipse-crown'||outfit==='armor-solar-sovereign'||shoulders==='shoulders-celestial-titan')gearGlowColor='#ffd36b';
     if(hat==='helm-astral-dragon'||accessory==='accessory-astral-core')gearGlowColor='#73e5ff';
     if(outfit==='armor-berserker')gearGlowColor='#ff3945';
+    if(outfit==='armor-crystal-knight')gearGlowColor='#83eaff';
+    if(outfit==='armor-storm-paladin')gearGlowColor='#a9d7ff';
+    if(outfit==='armor-emerald-warden')gearGlowColor='#60f0b4';
+    if(outfit==='armor-royal-gold')gearGlowColor='#ffd36b';
+    if(hat==='helm-celestial-guardian')gearGlowColor='#fff0b0';
+    if(hat==='helm-obsidian-crown')gearGlowColor='#c38aff';
+    if(hat==='helm-dragon-emperor')gearGlowColor='#ff8c58';
+    if(hat==='helm-rune-knight')gearGlowColor='#76eaff';
     if(cloak==='cloak-phoenix')gearGlowColor='#ff754b';
     const glowColor=auraColor||gearGlowColor;
     const auraFilterId='arcAuraGlow-'+(aura||hat||outfit||shoulders||cloak||accessory||'none');
@@ -132,8 +140,8 @@
     if(outfit==='armor-royal-gold')body+='<path d="M68 127 L53 141 L62 181 L100 205 L138 181 L147 141 L132 127 L115 137 L100 126 L85 137Z" fill="#8c642b" stroke="#f3d27c" stroke-width="6"/><path d="M80 139 L100 151 L120 139 L112 177 L100 191 L88 177Z" fill="#f4d77c" stroke="#fff1ba" stroke-width="4"/><path d="M100 133 L100 194 M66 174 L134 174" stroke="#fff0b1" stroke-width="4"/><circle cx="100" cy="157" r="10" fill="#fff6ca" stroke="#d59b36" stroke-width="4"/><path d="M73 191 L85 202 L100 213 L115 202 L127 191" fill="none" stroke="#f8e5a1" stroke-width="5"/>';
     // Ombreiras aparecem DEPOIS da armadura, encaixadas nos ombros.
     if(shoulders==='shoulders-titan'||shoulders==='shoulders-dragon'||shoulders==='shoulders-paladin'||shoulders==='shoulders-celestial-titan'||shoulders==='shoulders-crystal'||shoulders==='shoulders-infernal'){
-      const sc=shoulders==='shoulders-dragon'?'#a84d3e':shoulders==='shoulders-paladin'?'#d5bd7d':shoulders==='shoulders-celestial-titan'?'#526f9e':'#687b91';
-      const st=shoulders==='shoulders-dragon'?'#f1a16a':shoulders==='shoulders-celestial-titan'?'#a8edff':'#dce8ef';
+      const sc=shoulders==='shoulders-dragon'?'#a84d3e':shoulders==='shoulders-paladin'?'#d5bd7d':shoulders==='shoulders-celestial-titan'?'#526f9e':shoulders==='shoulders-crystal'?'#8bd9ed':shoulders==='shoulders-infernal'?'#803b45':'#687b91';
+      const st=shoulders==='shoulders-dragon'?'#f1a16a':shoulders==='shoulders-celestial-titan'?'#a8edff':shoulders==='shoulders-crystal'?'#e8fdff':shoulders==='shoulders-infernal'?'#ff6b59':'#dce8ef';
       body+='<path d="M69 130 L48 112 L25 126 L34 157 L69 151Z M131 130 L152 112 L175 126 L166 157 L131 151Z" fill="'+sc+'" stroke="#252d3b" stroke-width="5" stroke-linejoin="round"/><path d="M34 130 L54 119 L69 136 L56 150 L39 145Z M166 130 L146 119 L131 136 L144 150 L161 145Z" fill="'+st+'" stroke="#343b4c" stroke-width="3"/><path d="M31 126 L18 107 L46 115 M169 126 L182 107 L154 115" fill="none" stroke="'+st+'" stroke-width="5" stroke-linecap="round"/>';
     }
 
@@ -271,10 +279,10 @@
     const current=getPreviewAppearance(),selected=item(S.previewId);
     const previewName=selected?'Prévia: '+selected.name:'Seu visual atual';
     const previewButtons=selected?'<button class="arc-button arc-button-soft" data-avatar-action="cancel-preview">Voltar ao visual equipado</button>':'<span class="arc-preview-hint">Experimente qualquer peça antes de comprar.</span>';
-    const list=S.catalog.filter(x=>(S.filter==='all'||x.slot===S.filter)&&(S.tab==='shop'||owns(x.id)));
+    const list=S.catalog.filter(x=>(S.filter==='all'||(S.filter==='wings'?x.id.startsWith('wings-'):x.slot===S.filter))&&(S.tab==='shop'||owns(x.id)));
     const categorySource=S.catalog.filter(x=>S.tab==='shop'||owns(x.id));
     const categoryButton=([key,label])=>{
-      const count=key==='all'?categorySource.length:categorySource.filter(v=>v.slot===key).length;
+      const count=key==='all'?categorySource.length:key==='wings'?categorySource.filter(v=>v.id.startsWith('wings-')).length:categorySource.filter(v=>v.slot===key).length;
       return '<button type="button" class="arc-filter '+(S.filter===key?'active':'')+'" data-avatar-filter="'+key+'" aria-pressed="'+(S.filter===key?'true':'false')+'"><span class="arc-filter-icon">'+SLOT_ICON[key]+'</span><span class="arc-filter-label">'+label+'</span><small>'+count+'</small></button>';
     };
     const sideGroups=[
@@ -286,15 +294,15 @@
       '<div class="arc-nav-groups">'+sideGroups.map(group=>
         '<section class="arc-nav-group"><h4 class="arc-nav-heading">'+group.title+'</h4><div class="arc-nav-options">'+group.items.map(categoryButton).join('')+'</div></section>'
       ).join('')+'</div>';
-    const activeCategory=SLOTS.find(x=>x[0]===S.filter);
+    const activeCategory=S.filter==='wings'?['wings','Asas']:SLOTS.find(x=>x[0]===S.filter);
     const categoryHeading=S.filter==='all'?'Todos os visuais':(activeCategory?.[1]||'Visuais');
     const categoryMeta=list.length+' '+(list.length===1?'item':'itens');
     const tabs='<button class="arc-tab '+(S.tab==='shop'?'active':'')+'" data-avatar-tab="shop">Loja de visuais</button><button class="arc-tab '+(S.tab==='inventory'?'active':'')+'" data-avatar-tab="inventory">Meu inventário ('+S.owned.length+')</button>';
-    const items=S.filter==='all'
+    const items=S.filter==='wings'?list.map(card).join(''):S.filter==='all'
       ? SLOTS.slice(1).map(([slot,label])=>{
-          const group=list.filter(x=>x.slot===slot);
+          const group=list.filter(x=>x.slot===slot&&!(slot==='accessory'&&x.id.startsWith('wings-')));
           return group.length?'<div class="arc-group-heading">'+label+'</div>'+group.map(card).join(''):'';
-        }).join('')
+        }).join('')+(list.some(x=>x.id.startsWith('wings-'))?'<div class="arc-group-heading">Asas</div>'+list.filter(x=>x.id.startsWith('wings-')).map(card).join(''):'')
       : list.map(card).join('');
     root.innerHTML=
       '<section class="arc-hero"><div><div class="arc-eyebrow">✦ ATELIÊ ARCANO ✦</div><h3>Seu personagem, sua lenda.</h3><p>Combine cabelos, chapéus, roupas, capas, máscaras e itens mágicos. Os visuais conquistados por mérito ficam guardados para sempre.</p><div class="arc-wallet"><span>🪙</span><div><small>SALDO DISPONÍVEL</small><b>'+S.balance.toLocaleString('pt-BR')+' Coins</b></div></div></div><div class="arc-stage arc-stage-aura-'+(current.aura||'none')+'"><div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'<div class="arc-stage-caption"><b>'+esc(previewName)+'</b><small>'+esc(SLOT_NAME[selected?.slot]||'Aventureiro')+'</small>'+previewButtons+'</div></div></section>'+
