@@ -6,10 +6,10 @@
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const S={catalog:[],owned:[],appearance:{},balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
-    ['all','Todos'],['hair','Cabelos'],['hat','Chapéus'],['outfit','Roupas e armaduras'],
-    ['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios'],['aura','Auras']
+    ['all','Todos'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
+    ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios'],['aura','Auras']
   ];
-  const SLOT_NAME={hair:'Cabelo',hat:'Chapéu',outfit:'Roupa / armadura',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura'};
+  const SLOT_NAME={hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura'};
   const ACH_NAME={
     primeiro:'Primeiro passo',sequencia:'Sequência de fogo',gabarito:'Gabarito',
     explorador:'Explorador',simulado:'Veterano',nivel5:'Nível 5',
@@ -43,7 +43,7 @@
       :variant==='profile'?'width:100%;height:100%;'
       :'width:218px;max-width:100%;height:215px;';
     const id=(slot)=>a[slot]||'';
-    const hair=id('hair'),hat=id('hat'),outfit=id('outfit'),cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),aura=id('aura');
+    const hair=id('hair'),hat=id('hat'),outfit=id('outfit'),shoulders=id('shoulders'),cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),aura=id('aura');
     let out='';
     if(aura==='aura-ember')out+='<circle cx="100" cy="112" r="82" fill="none" stroke="#e58b55" stroke-width="5" opacity=".34" stroke-dasharray="7 7"><animate attributeName="opacity" values=".2;.5;.2" dur="4s" repeatCount="indefinite"/></circle>';
     if(aura==='aura-celestial'||aura==='aura-dedication')out+='<circle cx="100" cy="106" r="84" fill="none" stroke="'+(aura==='aura-dedication'?'#f1d58e':'#8dc7f1')+'" stroke-width="3" opacity=".55" stroke-dasharray="2 8"/><path d="M32 72 Q100 5 168 72" fill="none" stroke="#f4dfa8" stroke-width="2" opacity=".75"/>';
@@ -54,6 +54,11 @@
       if(cloak==='cloak-stars')out+='<g fill="#f4e1a5"><path d="M71 156 l3 6 6 1-6 3-3 6-2-6-6-3 6-1z"/><path d="M130 171 l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>';
     }
     // Corpo, braços e botas: base comum a todas as combinações.
+    if(shoulders==='shoulders-titan'||shoulders==='shoulders-dragon'||shoulders==='shoulders-paladin'){
+      const sc=shoulders==='shoulders-dragon'?'#a84d3e':shoulders==='shoulders-paladin'?'#d5bd7d':'#687b91';
+      const st=shoulders==='shoulders-dragon'?'#f1a16a':'#dce8ef';
+      out+='<path d="M70 124 L48 112 L29 125 L39 151 L69 150Z M130 124 L152 112 L171 125 L161 151 L131 150Z" fill="'+sc+'" stroke="#252d3b" stroke-width="5" stroke-linejoin="round"/><path d="M38 128 L55 119 L68 132 L59 145 L43 143Z M162 128 L145 119 L132 132 L141 145 L157 143Z" fill="'+st+'" stroke="#343b4c" stroke-width="3"/><path d="M34 124 L23 110 L45 115 M166 124 L177 110 L155 115" fill="none" stroke="'+st+'" stroke-width="5" stroke-linecap="round"/>';
+    }
     out+='<path d="M68 126 Q47 135 43 163 L54 169 L73 146 M132 126 Q153 135 157 163 L146 169 L127 146" fill="'+p.coat+'" stroke="#30283a" stroke-width="4" stroke-linejoin="round"/><path d="M55 164 Q61 156 69 160 L65 176 Q55 180 49 172Z M145 164 Q139 156 131 160 L135 176 Q145 180 151 172Z" fill="#efc69d" stroke="#30283a" stroke-width="3"/>';
     out+='<path d="M78 181 L76 205 Q87 214 98 207 L100 184 M122 181 L124 205 Q113 214 102 207 L100 184" fill="#34415a" stroke="#252c3c" stroke-width="3"/><path d="M72 202 Q85 199 98 206 L98 216 Q82 221 67 214Z M102 206 Q115 199 128 202 L133 214 Q118 221 102 216Z" fill="#493a35" stroke="#242332" stroke-width="3"/>';
     let coat=p.coat, trim=p.trim, dark=p.dark;
@@ -63,8 +68,16 @@
     if(outfit==='outfit-arcane'){coat='#634b8d';trim='#d9b8f0';dark='#342650';}
     if(outfit==='outfit-perfect'){coat='#76559b';trim='#f2d991';dark='#382952';}
     if(outfit==='armor-logic'){coat='#60717b';trim='#a9d6df';dark='#2d3d4a';}
+    if(outfit==='armor-colossus'){coat='#566b80';trim='#e2c47f';dark='#26394e';}
+    if(outfit==='armor-dragon'){coat='#873f3c';trim='#f0ad70';dark='#452735';}
+    if(outfit==='armor-paladin'){coat='#d0c7ae';trim='#e5bd62';dark='#55576a';}
+    if(outfit==='armor-shadow'){coat='#303c55';trim='#b1a1d4';dark='#171f31';}
     out+='<path d="M69 126 Q100 108 131 126 L146 194 Q100 210 54 194Z" fill="'+coat+'" stroke="'+dark+'" stroke-width="4" stroke-linejoin="round"/><path d="M77 126 Q100 139 123 126 L112 163 L100 176 L88 163Z" fill="'+trim+'" opacity=".94"/><path d="M100 143 L100 190" stroke="'+dark+'" stroke-width="3"/><path d="M62 177 Q100 186 138 177 L141 188 Q100 199 59 188Z" fill="'+dark+'" stroke="'+trim+'" stroke-width="2"/><circle cx="100" cy="183" r="5" fill="'+trim+'"/>';
     if(outfit==='outfit-royal'||outfit==='outfit-perfect'||outfit==='outfit_logic')out+='<path d="M78 147 L88 157 L100 147 L112 157 L122 147" fill="none" stroke="'+trim+'" stroke-width="3"/>';
+    if(outfit==='armor-colossus')out+='<path d="M70 124 L55 136 L60 174 L76 181 L88 160 L100 169 L112 160 L124 181 L140 174 L145 136 L130 124 L116 133 L100 125 L84 133Z" fill="#687e94" stroke="#202e43" stroke-width="5" stroke-linejoin="round"/><path d="M83 137 L100 146 L117 137 L111 163 L100 173 L89 163Z" fill="#d7bc77" stroke="#34445a" stroke-width="3"/><path d="M76 176 L124 176 M82 187 L118 187" stroke="#e1c78a" stroke-width="4"/><circle cx="100" cy="151" r="6" fill="#8de0ed" stroke="#24364c" stroke-width="3"/>';
+    if(outfit==='armor-dragon')out+='<path d="M69 126 L57 139 L65 180 L100 199 L135 180 L143 139 L131 126 L116 136 L100 127 L84 136Z" fill="#a94c3f" stroke="#48283a" stroke-width="5"/><path d="M80 135 L100 148 L120 135 L112 174 L100 187 L88 174Z" fill="#e4a05f" stroke="#63313a" stroke-width="3"/><path d="M65 151 L49 165 L66 173 M135 151 L151 165 L134 173" fill="none" stroke="#f2bd79" stroke-width="5"/><path d="M75 184 L85 198 L100 207 L115 198 L125 184" fill="none" stroke="#f0bd76" stroke-width="4"/>';
+    if(outfit==='armor-paladin')out+='<path d="M69 125 L54 139 L62 179 L100 201 L138 179 L146 139 L131 125 L115 135 L100 126 L85 135Z" fill="#d8d4c4" stroke="#68677a" stroke-width="5"/><path d="M81 137 L100 149 L119 137 L111 174 L100 187 L89 174Z" fill="#e8c66e" stroke="#777080" stroke-width="3"/><path d="M100 143 L100 191 M68 174 L132 174" stroke="#fff0bb" stroke-width="4"/><path d="M85 195 L100 211 L115 195" fill="#b69a62" stroke="#5a5260" stroke-width="3"/>';
+    if(outfit==='armor-shadow')out+='<path d="M68 125 L53 139 L61 181 L100 202 L139 181 L147 139 L132 125 L115 137 L100 127 L85 137Z" fill="#303d5b" stroke="#151c30" stroke-width="5"/><path d="M82 139 L100 150 L118 139 L111 177 L100 189 L89 177Z" fill="#71628d" stroke="#c2a7df" stroke-width="3"/><path d="M70 163 L130 163 M75 181 L125 181" stroke="#bba3d8" stroke-width="3"/>';
     // Pescoço, orelhas e rosto.
     out+='<path d="M88 111 L88 130 Q100 140 112 130 L112 111" fill="#e7b58d" stroke="#493b3a" stroke-width="2"/><ellipse cx="58" cy="78" rx="8" ry="12" fill="#efc59f" stroke="#473843" stroke-width="3"/><ellipse cx="142" cy="78" rx="8" ry="12" fill="#efc59f" stroke="#473843" stroke-width="3"/><ellipse cx="100" cy="78" rx="43" ry="48" fill="#f0c69f" stroke="#473843" stroke-width="4"/>';
     out+='<ellipse cx="84" cy="82" rx="5.2" ry="7" fill="#2a3044"/><ellipse cx="116" cy="82" rx="5.2" ry="7" fill="#2a3044"/><circle cx="86" cy="79" r="1.8" fill="#fff"/><circle cx="118" cy="79" r="1.8" fill="#fff"/><path d="M94 98 Q100 103 106 98" fill="none" stroke="#a75f5a" stroke-width="2.8" stroke-linecap="round"/><ellipse cx="75" cy="96" rx="7" ry="3.5" fill="#e9928b" opacity=".45"/><ellipse cx="125" cy="96" rx="7" ry="3.5" fill="#e9928b" opacity=".45"/>';
@@ -82,6 +95,12 @@
     if(hat==='hat-ranger')out+='<path d="M54 64 Q100 39 146 64 L139 75 Q100 84 61 75Z" fill="#557456" stroke="#334b3b" stroke-width="3"/><path d="M59 66 Q100 53 141 66" fill="none" stroke="#d6c38b" stroke-width="4"/>';
     if(hat==='hat-royal')out+='<path d="M66 64 L72 35 L91 51 L101 26 L112 51 L130 35 L136 66Z" fill="#d7b45f" stroke="#74552e" stroke-width="3"/><path d="M68 65 L134 65" stroke="#f5e2a6" stroke-width="5"/><circle cx="101" cy="42" r="5" fill="#8d5c9f"/>';
     if(hat==='hat-firstspark')out+='<path d="M65 64 Q100 34 135 64 L132 74 Q100 84 68 74Z" fill="#4f8064" stroke="#2e5443" stroke-width="3"/><path d="M98 47 l5 9 10 2-10 4-5 9-4-9-10-4 10-2Z" fill="#e9d58e"/>';
+    if(hat==='horns-infernal')out+='<path d="M72 61 Q47 46 43 9 Q70 22 82 48 M128 61 Q153 46 157 9 Q130 22 118 48" fill="#9f3f43" stroke="#3e2635" stroke-width="6" stroke-linecap="round"/><path d="M50 17 Q61 27 67 43 M150 17 Q139 27 133 43" fill="none" stroke="#efaa86" stroke-width="3"/>';
+    if(hat==='horns-ancient')out+='<path d="M74 61 Q31 59 20 22 Q54 25 82 48 M126 61 Q169 59 180 22 Q146 25 118 48" fill="#d7bc83" stroke="#514335" stroke-width="6" stroke-linejoin="round"/><path d="M31 29 L51 39 M169 29 L149 39" stroke="#fff0c9" stroke-width="3"/>';
+    if(hat==='helm-berserker')out+='<path d="M54 79 Q45 21 100 18 Q155 21 146 79 L134 89 L66 89Z" fill="#687889" stroke="#202b3c" stroke-width="6"/><path d="M62 55 L42 24 L78 40 M138 55 L158 24 L122 40" fill="#9d4e42" stroke="#432d3b" stroke-width="5" stroke-linejoin="round"/><path d="M61 66 Q100 78 139 66 L134 91 L66 91Z" fill="#42536a" stroke="#202b3c" stroke-width="4"/><path d="M82 79 L118 79" stroke="#e5c77e" stroke-width="5"/>';
+    if(hat==='helm-dragon')out+='<path d="M53 80 Q43 19 100 12 Q157 19 147 80 L134 92 L66 92Z" fill="#a34a3e" stroke="#492536" stroke-width="6"/><path d="M70 44 L54 7 L91 29 L100 1 L109 29 L146 7 L130 44" fill="#d7a05c" stroke="#572d37" stroke-width="5" stroke-linejoin="round"/><path d="M59 65 L100 80 L141 65 L133 93 L67 93Z" fill="#753846" stroke="#402437" stroke-width="4"/><path d="M100 26 L100 86" stroke="#f2c47b" stroke-width="4"/>';
+    if(hat==='helm-paladin')out+='<path d="M55 81 Q47 21 100 17 Q153 21 145 81 L132 92 L68 92Z" fill="#c7cbd0" stroke="#596273" stroke-width="6"/><path d="M100 18 L100 89 M63 57 L137 57" stroke="#f3d17c" stroke-width="5"/><path d="M65 66 L82 74 L100 68 L118 74 L135 66 L130 94 L70 94Z" fill="#aeb7c5" stroke="#596273" stroke-width="4"/><path d="M91 81 L109 81" stroke="#39485d" stroke-width="5"/>';
+    if(hat==='helm-shadow')out+='<path d="M53 81 Q43 20 100 15 Q157 20 147 81 L133 94 L67 94Z" fill="#343b56" stroke="#171e32" stroke-width="6"/><path d="M63 57 L100 71 L137 57 L130 96 L70 96Z" fill="#252e47" stroke="#9381b5" stroke-width="4"/><path d="M75 77 L92 81 L100 92 L108 81 L125 77" fill="none" stroke="#d0a8e7" stroke-width="4"/><path d="M100 18 L100 63" stroke="#b9a0d6" stroke-width="4"/>';
     if(accessory==='accessory-staff')out+='<path d="M45 121 L34 197" stroke="#8b6845" stroke-width="7" stroke-linecap="round"/><path d="M34 112 Q34 101 45 98 Q56 101 56 112 Q56 123 45 125 Q34 123 34 112Z" fill="#8dd0ef" stroke="#e4d18b" stroke-width="3"/>';
     if(accessory==='accessory-orb')out+='<circle cx="156" cy="139" r="14" fill="#7fc9ee" fill-opacity=".72" stroke="#d9e8ff" stroke-width="3"/><circle cx="151" cy="134" r="4" fill="#fff"/><path d="M142 156 Q156 164 169 154" fill="none" stroke="#d6b46b" stroke-width="2"/>';
     if(accessory==='accessory-scholar')out+='<circle cx="100" cy="166" r="12" fill="#d9b96d" stroke="#fff0b5" stroke-width="3"/><path d="M94 166 L99 171 L108 160" fill="none" stroke="#5b472b" stroke-width="3"/>';
