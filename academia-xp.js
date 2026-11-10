@@ -192,9 +192,9 @@ function renderMarket() {
   if(!M){el.innerHTML='<div class="panel"><div class="empty">Carregando sua carteira e seus tesouros...</div></div>';return;}
   if(M.error){el.innerHTML=box('<b>Não foi possível carregar o Mercado Arcano.</b><br>'+esc(M.error));return;}
   const g=M.guest;
-  const query=marketQuery.normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR');
+  const query=marketQuery.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
   const filtered=M.items.filter(x=>(marketCategory==='Todos'||x.category===marketCategory)&&
-    (x.name+' '+x.description).normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR').includes(query));
+    (x.name+' '+x.description).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').includes(query));
   const inv=M.inventory.map(c=>({...c,item:M.items.find(x=>x.id===c.item_id)})).filter(x=>x.item);
   const equipped=inv.filter(x=>x.equipped).length;
   const title=inv.find(x=>x.equipped&&x.item.category==='titles')?.item;
@@ -410,9 +410,9 @@ $('rpgView').addEventListener('click', e => {
 $('rpgView').addEventListener('input',e=>{
   if(e.target.id==='marketSearch'){
     marketQuery=e.target.value;
-    const q=marketQuery.normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR');
+    const q=marketQuery.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
     const list=(M?.items||[]).filter(x=>(marketCategory==='Todos'||x.category===marketCategory)&&
-      (x.name+' '+x.description).normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR').includes(q));
+      (x.name+' '+x.description).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').includes(q));
     const target=$('marketCatalog'); if(target) target.innerHTML=list.map(marketItemCard).join('')||'<div class="mk-empty">Nenhum tesouro encontrado.</div>';
   }
 });
