@@ -493,16 +493,27 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
   <aside class="sidebar">
     <div class="brand"><div class="brand-mark"><span>⚔</span></div><div><strong>Academia RPG</strong><small>ÁREA DE ESTUDOS</small></div></div>
     <div class="nav-label nav-label-player">JOGADOR</div>
-    <nav class="rpgnav rpgnav-profile"><button data-rpg="perfil"><span class="ico">★</span> Perfil do Jogador</button><button data-rpg="atelier"><span class="ico">✦</span> Ateliê Arcano</button></nav>
-    <div class="nav-label nav-label-library">BIBLIOTECA</div>
-    <nav class="nav">
-      <button class="active" data-page="inicio"><span class="ico">⌂</span> Visão geral</button>
-      <button data-page="programacao"><span class="ico">⌘</span> Programação de Aplicativos</button>
-      <button data-page="banco"><span class="ico">▤</span> Banco de Dados</button>
-      <button data-page="modelagem"><span class="ico">◇</span> Modelagem de Sistemas</button>
+    <nav class="rpgnav rpgnav-profile" aria-label="Área do jogador">
+      <button type="button" data-rpg="perfil"><span class="ico">★</span> Perfil do Jogador</button>
+      <button type="button" data-rpg="atelier"><span class="ico">✦</span> Ateliê Arcano</button>
     </nav>
+
+    <div class="nav-label nav-label-library">BIBLIOTECA</div>
+    <nav class="nav" aria-label="Biblioteca de estudos">
+      <button class="active" type="button" data-page="inicio"><span class="ico">⌂</span> Visão geral</button>
+      <button type="button" data-page="programacao"><span class="ico">⌘</span> Programação de Aplicativos</button>
+      <button type="button" data-page="banco"><span class="ico">▤</span> Banco de Dados</button>
+      <button type="button" data-page="modelagem"><span class="ico">◇</span> Modelagem de Sistemas</button>
+    </nav>
+
     <div class="nav-label nav-label-training">TREINAMENTO</div>
-    <nav class="rpgnav rpgnav-training"><button data-rpg="sala"><span class="ico">⚔</span> Sala de Treinamento</button><button data-rpg="market"><span class="ico">🪙</span> Mercado Arcano</button></nav>
+    <nav class="rpgnav rpgnav-training" aria-label="Treinamento e mercado">
+      <button type="button" data-rpg="sala"><span class="ico">⚔</span> Sala de Treinamento</button>
+      <button type="button" data-rpg="market"><span class="ico">🪙</span> Mercado Arcano</button>
+    </nav>
+
+    <div class="nav-label nav-label-adventure">AVENTURA</div>
+    <nav class="rpgnav rpgnav-adventure" aria-label="Aventura e comunidade"></nav>
     <div class="xpmini" id="xpMini" data-rpg="perfil"></div>
     <div class="side-bottom">Biblioteca pessoal de estudos<br><span id="sideStorageNote" style="color:#71839a">Seus arquivos ficam protegidos na nuvem.</span></div>
   </aside>
