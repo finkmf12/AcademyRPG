@@ -530,3 +530,28 @@
   .arc-title-stage{min-width:155px;padding:7px 9px}
   .arc-title-plate b{font-size:9px}
 }
+
+
+/* Títulos compactos no perfil e no ranking */
+.arc-title-profile{
+  width:max-content;
+  max-width:100%;
+  margin:5px 0 7px;
+  padding:6px 11px;
+}
+.arc-title-rank{
+  align-self:flex-start;
+  width:max-content;
+  min-width:0;
+  max-width:100%;
+  gap:5px;
+  padding:3px 7px;
+  border-radius:5px;
+  letter-spacing:.7px;
+}
+.arc-title-rank b{font-size:8px}
+.arc-title-rank .arc-title-sigil{font-size:8px}
+@media(max-width:650px){
+  .arc-title-profile{max-width:100%;white-space:normal}
+  .arc-title-rank{max-width:100%}
+}
