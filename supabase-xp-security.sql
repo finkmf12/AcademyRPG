@@ -141,8 +141,8 @@ begin
   if v_s.question_ids[v_s.current_index]<>p_question_id then raise exception 'Ordem de questão inválida'; end if;
   select * into v_q from public.quiz_question_bank where id=p_question_id and active;
   if not found then raise exception 'Questão indisponível'; end if;
-  if not exists(select 1 from jsonb_array_elements_text(v_q.options) x(value) where value=p_answer)
-     and p_answer<>v_q.correct_answer then raise exception 'Alternativa inválida'; end if;
+  if p_answer is null or (not exists(select 1 from jsonb_array_elements_text(v_q.options) x(value) where value=p_answer)
+     and p_answer<>v_q.correct_answer) then raise exception 'Alternativa inválida'; end if;
   v_ok:=p_answer=v_q.correct_answer;
   v_correct:=v_s.correct+case when v_ok then 1 else 0 end;
   v_streak:=case when v_ok then v_s.current_streak+1 else 0 end;
