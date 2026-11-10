@@ -68,8 +68,24 @@ const ACH = {
 };
 const HEAD = {
   sala: ['TREINAMENTO', 'Sala de Treinamento', 'Teste seus conhecimentos, ganhe XP e evolua de nível.'],
-  perfil: ['JOGADOR', 'Perfil do Jogador', 'Acompanhe seu nível, suas conquistas e o histórico de XP.']
+  perfil: ['JOGADOR', 'Perfil do Jogador', 'Acompanhe seu nível, suas conquistas e o histórico de XP.'],
+  market: ['TESOUROS', 'Mercado Arcano', 'Conquiste Coins, personalize seu personagem e equipe suas relíquias.']
 };
+const MARKET_DEMO_ITEMS = [
+  {id:'title-apprentice',name:'Aprendiz Arcano',category:'titles',price:50,rarity:'Comum',icon:'📜',description:'O primeiro passo de uma grande jornada.'},
+  {id:'title-coder',name:'Mestre do Código',category:'titles',price:200,rarity:'Raro',icon:'⌘',description:'Para quem domina os enigmas da lógica.'},
+  {id:'title-dragon',name:'Caçador de Dragões',category:'titles',price:400,rarity:'Épico',icon:'🐉',description:'Uma honra conquistada em grandes batalhas.'},
+  {id:'nick-arcane',name:'Aura Arcana',category:'nick',price:100,rarity:'Incomum',icon:'✨',description:'Um brilho sutil envolve seu nome.'},
+  {id:'nick-flame',name:'Chama Dourada',category:'nick',price:400,rarity:'Épico',icon:'🔥',description:'Seu nome arde com energia lendária.'},
+  {id:'frame-silver',name:'Moldura Prateada',category:'frames',price:100,rarity:'Incomum',icon:'🛡️',description:'Um acabamento elegante para seu avatar.'},
+  {id:'frame-royal',name:'Brasão Real',category:'frames',price:800,rarity:'Lendário',icon:'👑',description:'Uma moldura digna de uma lenda.'},
+  {id:'bg-forest',name:'Floresta Encantada',category:'backgrounds',price:200,rarity:'Raro',icon:'🌲',description:'Uma paisagem envolta em mistério.'},
+  {id:'badge-scholar',name:'Selo do Conhecimento',category:'badges',price:50,rarity:'Comum',icon:'🏅',description:'Celebre sua dedicação aos estudos.'}
+];
+const MARKET_CATEGORIES = [
+  ['Todos','Todos'],['titles','Títulos'],['nick','Efeitos de Nick'],['frames','Molduras'],['backgrounds','Fundos'],['badges','Insígnias']
+];
+let M = null, marketCategory = 'Todos', marketQuery = '';
 let S = null, quiz = null, resultHtml = null, view = 'sala', tab = 'conquistas', err = null, lastKey = null, isOpen = false, editing = false, pickClass = null;
 
 const info = () => { const xp = S.p.total_xp, L = levelOf(xp), a = need(L), b = need(L + 1); return { xp, L, a, b, pct: Math.round((xp - a) / (b - a) * 100) }; };
@@ -119,6 +135,12 @@ function openRpg(v) {
   document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.rpgnav button').forEach(b => b.classList.toggle('active', b.dataset.rpg === v));
   $('pageKicker').textContent = HEAD[v][0]; $('pageTitle').textContent = HEAD[v][1]; $('pageSub').textContent = HEAD[v][2];
+  if (v === 'market') {
+    M = null; $('rpgView').innerHTML = '<div class="panel"><div class="empty">Abrindo o Mercado Arcano...</div></div>';
+    loadMarket().then(() => { if (isOpen && view === 'market') render(); })
+      .catch(e => { M = { error: e.message || String(e) }; if (isOpen && view === 'market') render(); });
+    return;
+  }
   render();
 }
 function closeRpg() {
@@ -127,10 +149,96 @@ function closeRpg() {
 }
 
 function render() {
-  if (view === 'perfil') renderPerfil();
+  if (view === 'market') renderMarket();
+  else if (view === 'perfil') renderPerfil();
   else if (quiz) renderQuiz();
   else if (resultHtml) $('rpgView').innerHTML = resultHtml;
   else renderSala();
+}
+
+
+async function loadMarket() {
+  if (C().guest) {
+    M = { guest:true, balance:0, items:MARKET_DEMO_ITEMS, inventory:[], transactions:[], dailyAvailable:false };
+    return;
+  }
+  const sb = C().supabase;
+  const [daily,wallet,items,inventory,transactions] = await Promise.all([
+    sb.rpc('market_daily_status'),
+    sb.from('coin_wallets').select('balance').maybeSingle(),
+    sb.from('market_items').select('*').eq('active',true).order('price'),
+    sb.from('user_cosmetics').select('item_id,equipped,purchased_at').order('purchased_at',{ascending:false}),
+    sb.from('coin_transactions').select('id,amount,event_key,description,created_at').order('created_at',{ascending:false}).limit(30)
+  ]);
+  const bad=[daily,wallet,items,inventory,transactions].find(r=>r.error);
+  if(bad) throw bad.error;
+  M={guest:false,balance:wallet.data?.balance||0,items:items.data||[],inventory:inventory.data||[],
+    transactions:transactions.data||[],dailyAvailable:daily.data===true};
+}
+
+function marketItemCard(item) {
+  const owned=(M.inventory||[]).some(x=>x.item_id===item.id);
+  const cat=MARKET_CATEGORIES.find(x=>x[0]===item.category)?.[1]||'Relíquia';
+  return `<article class="mk-item">
+    <div class="mk-art"><span class="mk-rarity">${esc(item.rarity)}</span><span class="mk-icon">${esc(item.icon)}</span></div>
+    <div class="mk-itembody"><div class="mk-itemtitle"><div><h4>${esc(item.name)}</h4><small>${esc(cat)}</small></div><strong>${item.price} C</strong></div>
+    <p>${esc(item.description)}</p>
+    <button class="mk-buy ${owned?'owned':''}" data-market-act="buy" data-id="${esc(item.id)}" ${owned||M.guest?'disabled':''}>${owned?'✓ No inventário':M.guest?'Entre para adquirir':'Adquirir item'}</button></div>
+  </article>`;
+}
+
+function renderMarket() {
+  const el=$('rpgView');
+  if(!M){el.innerHTML='<div class="panel"><div class="empty">Carregando sua carteira e seus tesouros...</div></div>';return;}
+  if(M.error){el.innerHTML=box('<b>Não foi possível carregar o Mercado Arcano.</b><br>'+esc(M.error));return;}
+  const g=M.guest;
+  const query=marketQuery.normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR');
+  const filtered=M.items.filter(x=>(marketCategory==='Todos'||x.category===marketCategory)&&
+    (x.name+' '+x.description).normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR').includes(query));
+  const inv=M.inventory.map(c=>({...c,item:M.items.find(x=>x.id===c.item_id)})).filter(x=>x.item);
+  const equipped=inv.filter(x=>x.equipped).length;
+  const title=inv.find(x=>x.equipped&&x.item.category==='titles')?.item;
+  const nick=inv.find(x=>x.equipped&&x.item.category==='nick')?.item;
+  const frame=inv.find(x=>x.equipped&&x.item.category==='frames')?.item;
+  const avatar=S?.p?.avatar||'🧙', name=S?.p?.adventurer_name||'Aventureiro';
+  const catButtons=MARKET_CATEGORIES.map(([key,label])=>`<button class="mk-filter ${marketCategory===key?'active':''}" data-market-cat="${key}">${label}</button>`).join('');
+  const inventoryHtml=inv.length?inv.map(x=>`<div class="mk-inv"><span>${esc(x.item.icon)}</span><div class="mk-inv-info"><b>${esc(x.item.name)}</b><small>${x.equipped?'Equipado':'Disponível'}</small></div><button data-market-act="equip" data-id="${esc(x.item.id)}" data-equipped="${x.equipped}">${x.equipped?'Desequipar':'Equipar'}</button></div>`).join(''):'<div class="mk-empty">Seu inventário ainda está vazio. Escolha um tesouro no catálogo.</div>';
+  const history=M.transactions.length?M.transactions.slice(0,12).map(t=>`<div class="mk-history-row"><span>${esc(t.description)}</span><b class="${t.amount>0?'plus':'minus'}">${t.amount>0?'+':''}${t.amount} Coins</b></div>`).join(''):'<div class="mk-empty">Suas movimentações aparecerão aqui.</div>';
+  el.innerHTML=`
+    ${g?'<div class="rpg-note">Modo convidado: você pode conhecer os tesouros, mas precisa entrar com Google para ganhar, comprar e salvar Coins no seu perfil.</div>':''}
+    <section class="mk-hero"><div><span class="mk-eyebrow">✦ A feira dos aventureiros ✦</span><h3>Seu personagem. Suas escolhas.</h3><p>Conquiste moedas estudando e personalize sua identidade nos reinos da Academia.</p><div class="mk-rewards"><span>Quiz <b>+10</b></span><span>Sequência de 5 <b>+20</b></span><span>Conquista <b>+40</b></span><span>Missão diária <b>+30</b></span></div></div><div class="mk-wallet"><span>🪙</span><small>SUA CARTEIRA</small><strong>${g?'—':M.balance.toLocaleString('pt-BR')+' Coins'}</strong></div></section>
+    <div class="mk-metrics"><div><small>Itens no inventário</small><b>${g?'—':inv.length}</b></div><div><small>Itens equipados</small><b>${g?'—':equipped}</b></div><div><small>Próxima raridade</small><b>Épica</b></div></div>
+    <section class="mk-daily"><div><b>📜 Missão diária</b><small>Resgate sua recompensa uma vez por dia.</small></div><button data-market-act="daily" ${g||!M.dailyAvailable?'disabled':''}>${g?'Entre para resgatar':M.dailyAvailable?'Resgatar +30 Coins':'Concluída hoje'}</button></section>
+    <div class="mk-toolbar"><h3>Catálogo de tesouros</h3><input class="search" id="marketSearch" value="${esc(marketQuery)}" placeholder="Buscar item..." aria-label="Buscar item"></div>
+    <div class="mk-filters">${catButtons}</div><div class="mk-grid" id="marketCatalog">${filtered.map(marketItemCard).join('')||'<div class="mk-empty">Nenhum tesouro encontrado.</div>'}</div>
+    <section class="panel mk-panel" id="marketInventory"><h3>Seu inventário</h3><div class="mk-inventory">${g?'<div class="mk-empty">Entre com Google para visualizar seu inventário pessoal.</div>':inventoryHtml}</div><small class="mk-note">Itens comprados ficam disponíveis para equipar e desequipar sem custo adicional.</small></section>
+    <section class="panel mk-panel"><h3>Prévia do perfil</h3><div class="mk-profile"><div class="mk-avatar ${frame?'has-frame':''}">${esc(avatar)}</div><div><h4>${esc(name)} ${nick?'<span class="mk-nick">✦ '+esc(nick.name)+'</span>':''}</h4><p>${esc(title?.name||'Aventureiro')} · Nível ${S?levelOf(S.p.total_xp):'—'}</p><small>Os cosméticos equipados serão exibidos no perfil do jogador.</small></div></div></section>
+    <section class="panel mk-panel"><h3>Histórico de Coins</h3><div class="mk-history">${g?'<div class="mk-empty">O histórico fica salvo na conta Google.</div>':history}</div></section>
+    <p class="mk-note">Coins são pontos virtuais do jogo. Não podem ser transferidas entre contas e não envolvem compras com dinheiro real. Recompensas de chefes (+50) e eventos especiais serão conectadas quando esses modos forem implementados.</p>`;
+}
+
+async function marketAction(button) {
+  if(!button||M?.guest){C().toast('Entre com Google para usar sua carteira e seu inventário.');return;}
+  const action=button.dataset.marketAct, id=button.dataset.id;
+  button.disabled=true;
+  try{
+    if(action==='daily'){
+      const {data,error}=await C().supabase.rpc('market_claim_daily');
+      if(error)throw error;
+      C().toast(data>0?'Missão diária concluída: +30 Coins!':'Você já resgatou a missão diária de hoje.');
+    }else if(action==='buy'){
+      const {data,error}=await C().supabase.rpc('market_buy_item',{p_item_id:id});
+      if(error)throw error;
+      if(!data.ok) C().toast(data.reason==='owned'?'Você já possui este item.':'Coins insuficientes para adquirir este tesouro.');
+      else C().toast('Tesouro adquirido e adicionado ao inventário!');
+    }else if(action==='equip'){
+      const equipped=button.dataset.equipped==='true';
+      const {error}=await C().supabase.rpc('market_equip_item',{p_item_id:id,p_equipped:!equipped});
+      if(error)throw error;
+      C().toast(equipped?'Item desequipado.':'Item equipado no seu perfil!');
+    }
+    await loadMarket();renderMarket();
+  }catch(e){C().toast('Não foi possível concluir a ação: '+(e.message||e));button.disabled=false;}
 }
 
 function renderSala() {
@@ -211,14 +319,19 @@ async function finish() {
     if (error) throw error;
     if (!C().guest) {
       await fetchAll();
+      await loadMarket();
       const after = levelOf(S.p.total_xp);
       mini();
       const total = (data.xp || 0) + (data.streak_xp || 0);
+      const coinTotal = data.duplicate ? 0 : (M?.transactions || [])
+        .filter(t => t.event_key === 'quiz:' + z.id || t.event_key === 'quiz-streak:' + z.id)
+        .reduce((sum, t) => sum + Math.max(0, t.amount), 0);
       xpHtml = total > 0
         ? `<div class="res-xp">+${total} XP</div><p class="sub">${z.cat === 'simulado' ? 'Simulado' : 'Quiz'} +${data.xp || 0}${data.streak_xp ? ` · Sequência de 5 acertos +${data.streak_xp}` : ''}</p>`
         : '<div class="rpg-note">Resultado validado. Nenhum XP novo desta vez: você já recebeu a recompensa desta categoria hoje ou atingiu o limite diário.</div>';
+      if (coinTotal > 0) xpHtml += `<p class="mk-earned">🪙 +${coinTotal} Coins adicionadas à sua carteira.</p>`;
       if (after > before) xpHtml += `<p><b>Você subiu para o nível ${after}!</b></p>`;
-      (data.achievements || []).forEach(id => { if (ACH[id]) xpHtml += `<p>🏅 Nova conquista: <b>${ACH[id][1]}</b></p>`; });
+      (data.achievements || []).forEach(id => { if (ACH[id]) xpHtml += `<p>🏅 Nova conquista: <b>${ACH[id][1]}</b> · +40 Coins</p>`; });
     } else {
       xpHtml = '<div class="rpg-note">Resultado validado. Entre com Google para salvar XP e conquistas no seu perfil.</div>';
     }
@@ -277,6 +390,10 @@ async function setAvatar(v) {
 }
 
 $('rpgView').addEventListener('click', e => {
+  const marketButton=e.target.closest('[data-market-act]');
+  if(marketButton){marketAction(marketButton);return;}
+  const categoryButton=e.target.closest('[data-market-cat]');
+  if(categoryButton){marketCategory=categoryButton.dataset.marketCat;renderMarket();return;}
   const b = e.target.closest('[data-act],[data-tab]'); if (!b) return;
   if (b.dataset.tab) { tab = b.dataset.tab; render(); return; }
   const a = b.dataset.act;
@@ -289,6 +406,15 @@ $('rpgView').addEventListener('click', e => {
   else if (a === 'editchar') { editing = true; pickClass = S.p.class; render(); }
   else if (a === 'cancelchar') { editing = false; render(); }
   else if (a === 'savechar') saveChar();
+});
+$('rpgView').addEventListener('input',e=>{
+  if(e.target.id==='marketSearch'){
+    marketQuery=e.target.value;
+    const q=marketQuery.normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR');
+    const list=(M?.items||[]).filter(x=>(marketCategory==='Todos'||x.category===marketCategory)&&
+      (x.name+' '+x.description).normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR').includes(q));
+    const target=$('marketCatalog'); if(target) target.innerHTML=list.map(marketItemCard).join('')||'<div class="mk-empty">Nenhum tesouro encontrado.</div>';
+  }
 });
 document.addEventListener('click', e => { const b = e.target.closest('[data-rpg]'); if (b) openRpg(b.dataset.rpg); });
 // Ao clicar em qualquer item do menu/cards antigos, esta área é escondida e o site funciona como antes.
