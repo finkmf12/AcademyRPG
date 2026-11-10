@@ -36,8 +36,12 @@
   function render(appearance,variant,playerClass){
     const a=appearance||{}, p=PALETTE[playerClass]||PALETTE.mago;
     const small=variant==='rank'||variant==='mini';
-    const scale='100%';
     const viewBox=small?'0 0 200 170':'0 0 200 225';
+    const svgStyle=variant==='mini'?'width:36px;height:40px;'
+      :variant==='rank'?'width:43px;height:47px;'
+      :variant==='item'?'width:143px;max-width:100%;height:164px;'
+      :variant==='profile'?'width:100%;height:100%;'
+      :'width:218px;max-width:100%;height:215px;';
     const id=(slot)=>a[slot]||'';
     const hair=id('hair'),hat=id('hat'),outfit=id('outfit'),cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),aura=id('aura');
     let out='';
@@ -81,7 +85,7 @@
     if(accessory==='accessory-staff')out+='<path d="M45 121 L34 197" stroke="#8b6845" stroke-width="7" stroke-linecap="round"/><path d="M34 112 Q34 101 45 98 Q56 101 56 112 Q56 123 45 125 Q34 123 34 112Z" fill="#8dd0ef" stroke="#e4d18b" stroke-width="3"/>';
     if(accessory==='accessory-orb')out+='<circle cx="156" cy="139" r="14" fill="#7fc9ee" fill-opacity=".72" stroke="#d9e8ff" stroke-width="3"/><circle cx="151" cy="134" r="4" fill="#fff"/><path d="M142 156 Q156 164 169 154" fill="none" stroke="#d6b46b" stroke-width="2"/>';
     if(accessory==='accessory-scholar')out+='<circle cx="100" cy="166" r="12" fill="#d9b96d" stroke="#fff0b5" stroke-width="3"/><path d="M94 166 L99 171 L108 160" fill="none" stroke="#5b472b" stroke-width="3"/>';
-    return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+'" xmlns="http://www.w3.org/2000/svg" viewBox="'+viewBox+'" role="img" aria-label="Personagem medieval personalizado" style="width:'+scale+';height:100%;display:block;overflow:visible" focusable="false">'+out+'</svg>';
+    return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+'" xmlns="http://www.w3.org/2000/svg" viewBox="'+viewBox+'" role="img" aria-label="Personagem medieval personalizado" style="'+svgStyle+'display:block;overflow:visible" focusable="false">'+out+'</svg>';
   }
   function toast(message){const c=C();if(c?.toast)c.toast(message);}
   function notifyAppearance(){
