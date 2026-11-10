@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mercado Arcano — Academia RPG</title>
+<style>
+:root{--bg:#090e18;--panel:#111a29;--panel2:#172438;--line:#2a3b53;--gold:#d9b36b;--gold2:#f3dca8;--muted:#9aa9bc;--text:#edf2fa;--violet:#9b83d8;--blue:#78a8d8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% -10%,#29304b 0,transparent 42%),var(--bg);color:var(--text);font:15px Inter,Segoe UI,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}
+.shell{max-width:1440px;margin:auto;min-height:100vh;display:grid;grid-template-columns:238px 1fr}.side{background:#0b1320;border-right:1px solid var(--line);padding:26px 17px;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:11px;padding:0 7px 24px;border-bottom:1px solid var(--line)}.sigil{width:38px;height:38px;border:1px solid var(--gold);color:var(--gold);display:grid;place-items:center;transform:rotate(45deg);font-size:20px}.sigil span{transform:rotate(-45deg)}.brand b{font:18px Georgia,serif}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:4px}.navlabel{font-size:10px;letter-spacing:2px;color:#71839b;margin:27px 10px 11px}.nav a{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid transparent;border-radius:9px;color:#b9c6d7;text-decoration:none;margin:3px 0}.nav a.active{background:#1b2940;border-color:#3d4d66;color:var(--gold2)}.nav a span{width:22px;text-align:center}.sidefoot{margin-top:auto;border-top:1px solid var(--line);padding:17px 8px 0;color:#8191a7;font-size:11px;line-height:1.6}
+main{padding:30px clamp(18px,4vw,54px) 60px;min-width:0}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px}.crumb{color:var(--gold);font-size:10px;letter-spacing:2.5px;text-transform:uppercase}.top h1{font:clamp(27px,4vw,36px) Georgia,serif;margin:6px 0}.subtitle{color:var(--muted);font-size:13px}.wallet{display:flex;align-items:center;gap:11px;border:1px solid #6c5738;background:linear-gradient(135deg,#28251f,#171e2b);border-radius:12px;padding:11px 16px;white-space:nowrap}.coin{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ffe4a1,#b77d35);color:#4b3210;font-weight:900;box-shadow:0 0 18px #d9b36b44}.wallet small{display:block;color:var(--muted);font-size:10px}.wallet strong{color:var(--gold2);font-size:17px}
+.hero{position:relative;overflow:hidden;border:1px solid #62513b;border-radius:17px;padding:27px 30px;background:linear-gradient(105deg,#1c2a40 0%,#1b2135 57%,#342a31 100%);margin-bottom:23px}.hero:after{content:"✧";position:absolute;right:5%;top:-55px;font-size:210px;color:#e1c17c17}.hero .tag{color:var(--gold2);font-size:10px;letter-spacing:2px;text-transform:uppercase}.hero h2{font:27px Georgia,serif;margin:9px 0}.hero p{color:#c1ccda;line-height:1.55;font-size:13px;max-width:620px;margin:0}.hero .hero-foot{margin-top:17px;color:#e7c987;font-size:11px}.hero .spark{position:absolute;right:12%;bottom:16px;font-size:45px;color:#e7c98788;text-shadow:0 0 24px #e7c987}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 27px}.metric{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px 16px}.metric small{color:var(--muted);font-size:11px}.metric strong{display:block;margin-top:5px;font:22px Georgia,serif;color:var(--gold2)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:20px 0 14px}.toolbar h3{font:21px Georgia,serif;margin:0}.tools{display:flex;gap:8px;flex-wrap:wrap}.search{width:min(250px,55vw);background:#0d1624;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:10px 12px;outline:none}.search:focus{border-color:var(--gold)}.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:17px}.filter{border:1px solid var(--line);border-radius:30px;padding:7px 12px;background:#111b2a;color:#aebbd0;font-size:11px}.filter.active{background:#382f25;border-color:#987847;color:var(--gold2)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.item{background:linear-gradient(180deg,#172338,#111a29);border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:.18s}.item:hover{transform:translateY(-3px);border-color:#806b4c}.art{height:124px;display:grid;place-items:center;position:relative;background:radial-gradient(circle at 50% 45%,#5a477b66,transparent 58%),linear-gradient(135deg,#202d43,#151c2c);font-size:53px}.art:after{content:"";position:absolute;inset:9px;border:1px solid #d6b46b22;border-radius:8px}.rarity{position:absolute;top:10px;left:11px;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:5px 8px;border-radius:20px;background:#0b1220cc;border:1px solid #ffffff20;color:#d4ddeb}.itembody{padding:13px}.itemtitle{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.item h4{margin:0;font-size:14px}.item p{margin:7px 0 13px;color:var(--muted);font-size:11px;line-height:1.45;min-height:32px}.price{color:var(--gold2);font-size:12px;font-weight:800;white-space:nowrap}.buy{width:100%;border:1px solid #8c7045;background:linear-gradient(135deg,#d9b36b,#a7793d);color:#20190f;border-radius:7px;padding:9px;font-weight:800;font-size:11px}.buy.owned{background:#1a2b32;border-color:#45685d;color:#9fd0b5}.buy:disabled{opacity:.8;cursor:default}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px;margin-top:22px}.panel h3{font:20px Georgia,serif;margin:0 0 13px}.inventory{display:flex;gap:9px;flex-wrap:wrap}.inv{border:1px solid var(--line);background:#0e1725;border-radius:9px;padding:10px 12px;display:flex;align-items:center;gap:9px;font-size:12px}.inv span{font-size:21px}.inv button{border:1px solid #596a80;background:#1c2b40;color:#d8e2ef;border-radius:6px;padding:6px 8px;font-size:10px}.profile{display:grid;grid-template-columns:84px 1fr auto;align-items:center;gap:14px;background:linear-gradient(110deg,#1d2a40,#28263b);border:1px solid #66563d;border-radius:12px;padding:16px}.avatar{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-size:36px;background:radial-gradient(circle,#66518d,#182338 70%);border:2px solid var(--gold);box-shadow:0 0 20px #b99a5a33}.profile h4{margin:0 0 5px;font:19px Georgia,serif}.profile p{margin:0;color:#aebbd0;font-size:11px}.profile .title{color:var(--gold2);font-size:11px;margin-top:5px}.profile .level{color:#9dbfe7;font-size:11px;text-align:right}.toast{position:fixed;right:20px;bottom:20px;background:#1e3442;border:1px solid #5d8a78;color:#d6f1e1;padding:12px 16px;border-radius:9px;display:none;box-shadow:0 8px 30px #0008;z-index:5}.note{color:#73849a;font-size:10px;margin-top:17px;line-height:1.5}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shell{grid-template-columns:210px 1fr}.side{padding:22px 13px}}
+@media(max-width:700px){.shell{display:block}.side{padding:13px 15px;border-right:0;border-bottom:1px solid var(--line)}.brand{padding-bottom:12px}.navlabel,.sidefoot{display:none}.nav{display:flex;overflow:auto;gap:5px;padding-top:9px}.nav a{white-space:nowrap;padding:9px 11px}.nav a span{width:auto}main{padding:21px 15px 45px}.top{align-items:flex-start}.wallet{padding:8px 10px}.wallet strong{font-size:14px}.wallet small{font-size:9px}.metrics{grid-template-columns:repeat(3,1fr);gap:7px}.metric{padding:11px}.metric strong{font-size:17px}.grid{gap:9px}.art{height:105px}.itembody{padding:10px}.profile{grid-template-columns:60px 1fr}.avatar{width:56px;height:56px;font-size:27px}.profile .level{grid-column:2;text-align:left}}
+@media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.item h4{font-size:12px}.item p{font-size:10px;min-height:43px}.price{font-size:10px}.art{height:92px;font-size:42px}.hero{padding:21px}.hero h2{font-size:23px}.subtitle{max-width:190px;line-height:1.4}.tools{width:100%}.search{width:100%}.metrics{grid-template-columns:1fr 1fr}.metrics .metric:last-child{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="side">
+ <div class="brand"><div class="sigil"><span>✦</span></div><div><b>Academia RPG</b><small>MERCADO ARCANO</small></div></div>
+ <div class="navlabel">SUA JORNADA</div>
+ <nav class="nav"><a href="#loja" class="active"><span>⚒</span> Mercado</a><a href="#inventario"><span>▣</span> Inventário</a><a href="#perfil"><span>♙</span> Meu perfil</a></nav>
+ <div class="sidefoot">PROTÓTIPO DE DEMONSTRAÇÃO<br>Moedas fictícias · sem compras reais</div>
+</aside>
+<main>
+ <header class="top"><div><div class="crumb">Academia RPG / Tesouros</div><h1>Mercado Arcano</h1><div class="subtitle">Personalize sua identidade. Mostre suas conquistas. Escreva sua lenda.</div></div><div class="wallet"><div class="coin">C</div><div><small>SUA CARTEIRA</small><strong id="balance">1.250 Coins</strong></div></div></header>
+ <section class="hero"><div class="tag">✦ A feira dos aventureiros ✦</div><h2>Seu personagem. Suas escolhas.</h2><p>Encontre títulos, efeitos mágicos e relíquias visuais para deixar sua marca nos reinos da Academia. Cada conquista conta uma história.</p><div class="hero-foot">NOVOS TESOUROS AGUARDAM POR VOCÊ</div><div class="spark">✧</div></section>
+ <section class="metrics"><div class="metric"><small>Itens no inventário</small><strong id="ownedCount">2</strong></div><div class="metric"><small>Itens equipados</small><strong id="equippedCount">1</strong></div><div class="metric"><small>Próxima raridade</small><strong>Épica</strong></div></section>
+ <section id="loja">
+  <div class="toolbar"><h3>Catálogo de tesouros</h3><div class="tools"><input class="search" id="search" placeholder="Buscar item..." aria-label="Buscar item"></div></div>
+  <div class="filters" id="filters"><button class="filter active" data-cat="Todos">Todos</button><button class="filter" data-cat="Títulos">Títulos</button><button class="filter" data-cat="Nick">Efeitos de Nick</button><button class="filter" data-cat="Molduras">Molduras</button><button class="filter" data-cat="Fundos">Fundos</button><button class="filter" data-cat="Insígnias">Insígnias</button></div>
+  <div class="grid" id="catalog"></div>
+ </section>
+ <section class="panel" id="inventario"><h3>Seu inventário</h3><div class="inventory" id="inventory"></div><div class="note">Itens comprados ficam disponíveis para equipar e desequipar sem custo adicional.</div></section>
+ <section class="panel" id="perfil"><h3>Prévia do perfil público</h3><div class="profile"><div class="avatar">🧙</div><div><h4>Viajante Arcano <span id="previewNick">✦</span></h4><p>Explorador · Nível 12 · 840 XP</p><div class="title" id="previewTitle">Aprendiz Arcano</div></div><div class="level">✧ Perfil<br>em destaque</div></div><div class="note">Esta prévia usa um personagem fictício. No produto final, o perfil exibirá os dados e cosméticos do aluno autenticado.</div></section>
+ <p class="note">DEMONSTRAÇÃO VISUAL — saldo, compras e equipamentos são temporários nesta página. Nenhuma conta, moeda ou dado real é alterado.</p>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const items=[
+{id:'title-apprentice',name:'Aprendiz Arcano',cat:'Títulos',price:50,rarity:'Comum',icon:'📜',desc:'O primeiro passo de uma grande jornada.',kind:'title'},
+{id:'title-coder',name:'Mestre do Código',cat:'Títulos',price:200,rarity:'Raro',icon:'⌘',desc:'Para quem domina os enigmas da lógica.',kind:'title'},
+{id:'title-dragon',name:'Caçador de Dragões',cat:'Títulos',price:400,rarity:'Épico',icon:'🐉',desc:'Uma honra conquistada em grandes batalhas.',kind:'title'},
+{id:'nick-arcane',name:'Aura Arcana',cat:'Nick',price:100,rarity:'Incomum',icon:'✨',desc:'Um brilho sutil envolve seu nome.',kind:'nick'},
+{id:'nick-flame',name:'Chama Dourada',cat:'Nick',price:400,rarity:'Épico',icon:'🔥',desc:'Seu nome arde com energia lendária.',kind:'nick'},
+{id:'frame-silver',name:'Moldura Prateada',cat:'Molduras',price:100,rarity:'Incomum',icon:'🛡️',desc:'Um acabamento elegante para seu avatar.',kind:'frame'},
+{id:'frame-royal',name:'Brasão Real',cat:'Molduras',price:800,rarity:'Lendário',icon:'👑',desc:'Uma moldura digna de uma lenda.',kind:'frame'},
+{id:'bg-forest',name:'Floresta Encantada',cat:'Fundos',price:200,rarity:'Raro',icon:'🌲',desc:'Uma paisagem envolta em mistério.',kind:'background'},
+{id:'badge-scholar',name:'Selo do Conhecimento',cat:'Insígnias',price:50,rarity:'Comum',icon:'🏅',desc:'Celebre sua dedicação aos estudos.',kind:'badge'}
+];
+let balance=1250,owned=new Set(['title-apprentice','nick-arcane']),equipped={title:'title-apprentice',nick:'nick-arcane'};
+let category='Todos';
+const $=s=>document.querySelector(s);
+function toast(msg){const el=$('#toast');el.textContent=msg;el.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.style.display='none',2400)}
+function render(){
+ $('#balance').textContent=balance.toLocaleString('pt-BR')+' Coins';
+ $('#ownedCount').textContent=owned.size;
+ $('#equippedCount').textContent=Object.keys(equipped).length;
+ const q=$('#search').value.toLocaleLowerCase('pt-BR');
+ const filtered=items.filter(x=>(category==='Todos'||x.cat===category)&&(x.name+' '+x.desc).toLocaleLowerCase('pt-BR').includes(q));
+ $('#catalog').innerHTML=filtered.map(x=>{const has=owned.has(x.id);return '<article class="item"><div class="art"><span class="rarity">'+x.rarity+'</span>'+x.icon+'</div><div class="itembody"><div class="itemtitle"><h4>'+x.name+'</h4><span class="price">'+x.price+' C</span></div><p>'+x.desc+'</p><button class="buy '+(has?'owned':'')+'" data-buy="'+x.id+'" '+(has?'disabled':'')+'>'+(has?'✓ No inventário':'Adquirir item')+'</button></div></article>'}).join('')||'<div class="panel">Nenhum tesouro encontrado.</div>';
+ $('#inventory').innerHTML=[...owned].map(id=>{const x=items.find(i=>i.id===id);const active=equipped[x.kind]===id;return '<div class="inv"><span>'+x.icon+'</span><div><b>'+x.name+'</b><br><small style="color:#8fa0b5">'+(active?'Equipado':'Disponível')+'</small></div><button data-equip="'+id+'">'+(active?'Desequipar':'Equipar')+'</button></div>'}).join('');
+ const title=items.find(x=>x.id===equipped.title);$('#previewTitle').textContent=title?title.name:'Sem título equipado';
+ const nick=items.find(x=>x.id===equipped.nick);$('#previewNick').textContent=nick?'✦':'';
+}
+$('#filters').addEventListener('click',e=>{const b=e.target.closest('button[data-cat]');if(!b)return;category=b.dataset.cat;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===b));render()});
+$('#search').addEventListener('input',render);
+$('#catalog').addEventListener('click',e=>{const b=e.target.closest('[data-buy]');if(!b)return;const x=items.find(i=>i.id===b.dataset.buy);if(balance<x.price){toast('Você não tem Coins suficientes.');return}balance-=x.price;owned.add(x.id);render();toast(x.name+' foi adicionado ao inventário!')});
+$('#inventory').addEventListener('click',e=>{const b=e.target.closest('[data-equip]');if(!b)return;const x=items.find(i=>i.id===b.dataset.equip);if(equipped[x.kind]===x.id){delete equipped[x.kind];toast(x.name+' foi desequipado.')}else{equipped[x.kind]=x.id;toast(x.name+' equipado!')}render()});
+render();
+</script>
+</body></html>
