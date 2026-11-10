@@ -8,10 +8,10 @@
   const SLOTS=[
     ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
     ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios'],
-    ['aura','Auras'],['title','Títulos']
+    ['aura','Auras'],['pet','Pets'],['title','Títulos']
   ];
-  const SLOT_NAME={nameColor:'Cor do nome',hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura',title:'Título'};
-  const SLOT_ICON={all:'✦',nameColor:'✧',hair:'✂',hat:'♛',outfit:'⚔',shoulders:'🛡',cloak:'◈',mask:'◉',accessory:'✧',aura:'☼',title:'♕'};
+  const SLOT_NAME={nameColor:'Cor do nome',hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura',pet:'Pet companheiro',title:'Título'};
+  const SLOT_ICON={all:'✦',nameColor:'✧',hair:'✂',hat:'♛',outfit:'⚔',shoulders:'🛡',cloak:'◈',mask:'◉',accessory:'✧',aura:'☼',pet:'🐉',title:'♕'};
   const ACH_NAME={
     primeiro:'Primeiro passo',sequencia:'Sequência de fogo',gabarito:'Gabarito',
     explorador:'Explorador',simulado:'Veterano',nivel5:'Nível 5',
@@ -46,7 +46,7 @@
       :'width:100%;max-width:260px;height:260px;';
     const id=slot=>a[slot]||'';
     const hair=id('hair'),hat=id('hat'),outfit=id('outfit'),shoulders=id('shoulders'),
-      cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),aura=id('aura');
+      cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),aura=id('aura'),pet=id('pet');
     const auraColors={
       'aura-ember':'#ff873d','aura-celestial':'#8bdcff','aura-dedication':'#f5d98b',
       'aura-solar-ascendant':'#ffd04b','aura-void-emperor':'#bd78ff',
@@ -191,10 +191,11 @@
     if(accessory==='accessory-astral-core')
       front+='<circle cx="168" cy="152" r="22" fill="#55dfff" opacity=".26"/><path d="M168 129 L184 151 L168 175 L152 151Z" fill="#70eaff" stroke="#e1fdff" stroke-width="4"/><path d="M168 135 L168 169 M157 151 L179 151" stroke="#ffffff" stroke-width="2.5" opacity=".9"/><circle cx="168" cy="151" r="5" fill="#fff"/>';
 
+    const petArt=pet?(()=>{const wrap='<g class="arc-pet-companion"><ellipse cx="165" cy="205" rx="18" ry="4" fill="#000" opacity=".25"/><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.4s" repeatCount="indefinite"/>';const end='</g>';if(pet==='pet-dragonling')return wrap+'<path d="M150 180 Q135 164 143 148 Q154 153 159 166 M177 178 Q195 161 190 145 Q176 151 170 166" fill="#5cb7d7" stroke="#244c68" stroke-width="3"/><ellipse cx="164" cy="188" rx="17" ry="15" fill="#3f91b7" stroke="#244c68" stroke-width="3"/><path d="M151 185 Q138 189 140 201 Q151 198 157 194" fill="#3f91b7" stroke="#244c68" stroke-width="3"/><circle cx="175" cy="171" r="13" fill="#65c3df" stroke="#244c68" stroke-width="3"/><path d="M166 161 L163 150 L174 158 M179 160 L188 151 L187 165" fill="#79d3e8" stroke="#244c68" stroke-width="3"/><circle cx="179" cy="169" r="2" fill="#142b42"/><circle cx="170" cy="169" r="2" fill="#142b42"/><path d="M171 177 Q176 181 181 176" fill="none" stroke="#17374a" stroke-width="2"/><path d="M157 199 L155 205 M170 200 L171 205" stroke="#244c68" stroke-width="3" stroke-linecap="round"/>'+end;if(pet==='pet-goblin')return wrap+'<path d="M151 177 L137 168 L153 164 M179 174 L195 163 L185 182" fill="#75a94d" stroke="#354b32" stroke-width="3"/><ellipse cx="166" cy="190" rx="15" ry="18" fill="#6f9e49" stroke="#354b32" stroke-width="3"/><circle cx="166" cy="169" r="15" fill="#83b85b" stroke="#354b32" stroke-width="3"/><path d="M155 158 L150 146 L163 155 M174 156 L184 145 L180 162" fill="#a5ce6c" stroke="#354b32" stroke-width="3"/><circle cx="160" cy="169" r="2.5" fill="#202b20"/><circle cx="172" cy="169" r="2.5" fill="#202b20"/><path d="M160 179 Q166 184 173 178" fill="none" stroke="#354b32" stroke-width="2.5"/><path d="M158 204 L155 210 M174 204 L177 210" stroke="#354b32" stroke-width="4" stroke-linecap="round"/>'+end;if(pet==='pet-slime')return wrap+'<path d="M145 201 Q143 176 160 171 Q180 166 187 188 Q190 203 178 207 L151 207Z" fill="#7edb9c" stroke="#2f785c" stroke-width="3"/><ellipse cx="160" cy="188" rx="3" ry="5" fill="#164c43"/><ellipse cx="175" cy="188" rx="3" ry="5" fill="#164c43"/><path d="M162 197 Q168 202 174 197" fill="none" stroke="#2f785c" stroke-width="2.5"/><circle cx="153" cy="178" r="4" fill="#d5ffe4" opacity=".9"/><path d="M166 171 Q158 160 168 155 Q179 163 175 172" fill="#a5f5c4" stroke="#2f785c" stroke-width="2"/>'+end;if(pet==='pet-wolfcub')return wrap+'<ellipse cx="164" cy="191" rx="18" ry="14" fill="#8b9bb4" stroke="#3d4b64" stroke-width="3"/><circle cx="170" cy="173" r="14" fill="#aab8cc" stroke="#3d4b64" stroke-width="3"/><path d="M159 163 L157 148 L169 159 M176 160 L187 151 L183 168" fill="#8295b1" stroke="#3d4b64" stroke-width="3"/><path d="M164 178 Q170 184 177 178" fill="none" stroke="#3d4b64" stroke-width="2.5"/><circle cx="166" cy="171" r="2" fill="#18243a"/><circle cx="176" cy="171" r="2" fill="#18243a"/><ellipse cx="172" cy="180" rx="6" ry="4" fill="#e6eaf0"/><circle cx="173" cy="178" r="2" fill="#263448"/><path d="M150 191 Q138 183 143 174 Q153 177 156 186" fill="#aab8cc" stroke="#3d4b64" stroke-width="3"/><path d="M155 201 L154 207 M172 202 L174 208" stroke="#3d4b64" stroke-width="3" stroke-linecap="round"/>'+end;return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 160 Q184 177 177 184" fill="#f39a4e" stroke="#82472f" stroke-width="3"/><ellipse cx="166" cy="190" rx="15" ry="14" fill="#f2c36c" stroke="#82472f" stroke-width="3"/><circle cx="166" cy="173" r="13" fill="#ffd37b" stroke="#82472f" stroke-width="3"/><path d="M157 164 Q153 151 164 145 Q167 158 172 162" fill="#ff8a4c"/><circle cx="161" cy="174" r="2" fill="#633b2c"/><circle cx="171" cy="174" r="2" fill="#633b2c"/><path d="M162 181 Q166 185 171 181" fill="none" stroke="#82472f" stroke-width="2"/>'+end;})():'';
     const filterDefs=glowColor
       ? '<filter id="'+auraFilterId+'" x="-55%" y="-45%" width="210%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="8" result="softAlpha"/><feFlood flood-color="'+glowColor+'" flood-opacity=".96" result="auraTint"/><feComposite in="auraTint" in2="softAlpha" operator="in" result="coloredGlow"/><feGaussianBlur in="coloredGlow" stdDeviation="4" result="wideGlow"/><feMerge><feMergeNode in="wideGlow"/><feMergeNode in="coloredGlow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
       : '';
-    return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+(auraColor?' has-luminous-aura':gearGlowColor?' has-premium-glow':'')+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 225" role="img" aria-label="Personagem medieval personalizado" style="'+svgStyle+'display:block;overflow:visible" focusable="false"><defs>'+filterDefs+'</defs><g class="arc-layer-back">'+back+'</g><g class="arc-character-glow"'+glowFilter+'><g class="arc-layer-body">'+body+'</g><g class="arc-layer-head">'+head+'</g><g class="arc-layer-front">'+front+'</g></g></svg>';
+    return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+(auraColor?' has-luminous-aura':gearGlowColor?' has-premium-glow':'')+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 225" role="img" aria-label="Personagem medieval personalizado" style="'+svgStyle+'display:block;overflow:visible" focusable="false"><defs>'+filterDefs+'</defs><g class="arc-layer-back">'+back+'</g><g class="arc-character-glow"'+glowFilter+'><g class="arc-layer-body">'+body+'</g><g class="arc-layer-head">'+head+'</g><g class="arc-layer-front">'+front+'</g></g>'+petArt+'</svg>';
   }
   function titleMarkup(appearance,variant='stage'){
     const selected=item(appearance?.title);
@@ -246,7 +247,7 @@
       : x.slot==='nameColor'
         ? '<div class="arc-name-color-preview"><b class="'+nameColorClass(x.id)+'">Aventureiro</b><small>PRÉVIA DA COR DO NOME</small></div>'
         : render(preview,'item',S.playerClass);
-    return '<article class="arc-item-card arc-rarity-'+(RARITY[x.rarity]||'common')+(premium?' arc-premium-card':'')+(x.slot==='title'?' arc-title-item-card':'')+(x.slot==='aura'?' arc-aura-item-card':'')+'"><div class="arc-item-visual">'+visual+'</div><div class="arc-item-copy"><div class="arc-item-top"><span>'+esc(SLOT_NAME[x.slot]||x.slot)+'</span><b>'+esc(x.rarity)+'</b></div><h4>'+esc(x.name)+'</h4><p>'+esc(x.description)+'</p><div class="arc-item-bottom">'+action+'</div><div class="arc-item-actions"><button class="arc-preview-btn '+(S.previewId===x.id?'active':'')+'" data-avatar-action="preview" data-id="'+esc(x.id)+'">'+(S.previewId===x.id?'Em prévia':'Experimentar')+'</button>'+main+'</div></div></article>';
+    return '<article class="arc-item-card arc-rarity-'+(RARITY[x.rarity]||'common')+(premium?' arc-premium-card':'')+(x.slot==='title'?' arc-title-item-card':'')+(x.slot==='aura'?' arc-aura-item-card':'')+(x.slot==='pet'?' arc-pet-item-card':'')+'"><div class="arc-item-visual">'+visual+'</div><div class="arc-item-copy"><div class="arc-item-top"><span>'+esc(SLOT_NAME[x.slot]||x.slot)+'</span><b>'+esc(x.rarity)+'</b></div><h4>'+esc(x.name)+'</h4><p>'+esc(x.description)+'</p><div class="arc-item-bottom">'+action+'</div><div class="arc-item-actions"><button class="arc-preview-btn '+(S.previewId===x.id?'active':'')+'" data-avatar-action="preview" data-id="'+esc(x.id)+'">'+(S.previewId===x.id?'Em prévia':'Experimentar')+'</button>'+main+'</div></div></article>';
   }
   function renderAtelier(){
     const root=$('rpgView');if(!root)return;
@@ -265,7 +266,7 @@
     const sideGroups=[
       {title:'Aparência',items:[['hair','Cabelos'],['hat','Chapéus e elmos']]},
       {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios']]},
-      {title:'Identidade',items:[['nameColor','Cores neon']]},{title:'Poderes e títulos',items:[['aura','Auras'],['title','Títulos']]}
+      {title:'Identidade',items:[['nameColor','Cores neon']]},{title:'Poderes e títulos',items:[['aura','Auras'],['pet','Pets'],['title','Títulos']]}
     ];
     const cats='<div class="arc-side-all">'+categoryButton(['all','Todos os itens'])+'</div>'+
       '<div class="arc-nav-groups">'+sideGroups.map(group=>
