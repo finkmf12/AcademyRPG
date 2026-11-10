@@ -119,3 +119,60 @@
   .login:before{animation-duration:7s}
   .login:after{animation-duration:4s}
 }
+
+
+/* Mercado Arcano — loja integrada à conta e ao inventário */
+.mk-hero{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:25px 28px;margin-bottom:18px;border:1px solid #66543a;border-radius:15px;background:linear-gradient(110deg,#1b2a40,#1c2235 60%,#332a31)}
+.mk-eyebrow{color:var(--gold2);font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.mk-hero h3{font:26px Georgia,serif;margin:9px 0}
+.mk-hero p{color:#c1ccda;font-size:13px;line-height:1.5;max-width:590px;margin:0}
+.mk-rewards{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+.mk-rewards span{border:1px solid #ffffff20;border-radius:30px;background:#0b1422a8;padding:6px 9px;color:#c6d0df;font-size:10px}
+.mk-rewards b{color:var(--gold2);margin-left:3px}
+.mk-wallet{min-width:150px;text-align:center;padding:14px;border:1px solid #8b7146;border-radius:12px;background:#171d29}
+.mk-wallet>span{display:block;font-size:24px}
+.mk-wallet small,.mk-metrics small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px}
+.mk-wallet strong{display:block;color:var(--gold2);font-size:18px;margin-top:4px}
+.mk-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 22px}
+.mk-metrics>div{padding:13px 15px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.mk-metrics b{display:block;color:var(--gold2);font:21px Georgia,serif;margin-top:5px}
+.mk-daily{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 17px;margin:16px 0 24px;border:1px solid #66543a;border-radius:11px;background:linear-gradient(110deg,#1d2a3c,#1a2230)}
+.mk-daily b,.mk-daily small{display:block}.mk-daily small{color:var(--muted);font-size:11px;margin-top:4px}
+.mk-daily button,.mk-buy{border:1px solid #8c7045;background:linear-gradient(135deg,#d9b36b,#a7793d);color:#20190f;border-radius:7px;padding:10px 13px;font-weight:800;font-size:11px;white-space:nowrap}
+.mk-daily button:disabled,.mk-buy:disabled{opacity:.68;cursor:not-allowed}
+.mk-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:20px 0 13px}
+.mk-toolbar h3,.mk-panel h3{font:21px Georgia,serif;margin:0}
+.mk-toolbar .search{min-width:180px}
+.mk-filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
+.mk-filter{border:1px solid var(--line);border-radius:30px;padding:7px 12px;background:#111b2a;color:#aebbd0;font-size:11px}
+.mk-filter.active{background:#382f25;border-color:#987847;color:var(--gold2)}
+.mk-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.mk-item{background:linear-gradient(180deg,#172338,#111a29);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:transform .18s,border-color .18s}
+.mk-item:hover{transform:translateY(-2px);border-color:#806b4c}
+.mk-art{height:112px;display:grid;place-items:center;position:relative;background:radial-gradient(circle at 50% 45%,#5a477b66,transparent 58%),linear-gradient(135deg,#202d43,#151c2c)}
+.mk-art:after{content:"";position:absolute;inset:8px;border:1px solid #d6b46b22;border-radius:8px;pointer-events:none}
+.mk-icon{font-size:48px}.mk-rarity{position:absolute;top:9px;left:10px;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:5px 8px;border-radius:20px;background:#0b1220cc;border:1px solid #ffffff20;color:#d4ddeb}
+.mk-itembody{padding:12px}
+.mk-itemtitle{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.mk-itemtitle h4{margin:0;font-size:13px}.mk-itemtitle small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.mk-itemtitle strong{color:var(--gold2);font-size:11px;white-space:nowrap}
+.mk-item p{margin:8px 0 12px;color:var(--muted);font-size:11px;line-height:1.45;min-height:32px}
+.mk-buy{width:100%}.mk-buy.owned{background:#1a2b32;border-color:#45685d;color:#9fd0b5}
+.mk-panel{margin-top:21px}.mk-panel h3{margin-bottom:13px}
+.mk-inventory{display:flex;gap:9px;flex-wrap:wrap}
+.mk-inv{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:#0e1725;border-radius:9px;padding:9px 11px;min-width:210px}
+.mk-inv>span{font-size:23px}.mk-inv-info{flex:1;min-width:0}.mk-inv-info b,.mk-inv-info small{display:block}.mk-inv-info b{font-size:11px}.mk-inv-info small{color:var(--muted);font-size:10px;margin-top:3px}
+.mk-inv button{border:1px solid #596a80;background:#1c2b40;color:#d8e2ef;border-radius:6px;padding:6px 8px;font-size:10px}
+.mk-empty{color:var(--muted);font-size:12px;padding:12px}
+.mk-note{display:block;color:#7f91a8;font-size:10px;line-height:1.5;margin-top:12px}
+.mk-profile{display:flex;align-items:center;gap:14px;padding:15px;border:1px solid #66563d;border-radius:11px;background:linear-gradient(110deg,#1d2a40,#28263b)}
+.mk-avatar{width:65px;height:65px;border-radius:50%;display:grid;place-items:center;font-size:32px;background:radial-gradient(circle,#66518d,#182338 70%);border:2px solid var(--gold)}
+.mk-avatar.has-frame{box-shadow:0 0 0 4px #9db9d5,0 0 0 7px #34485f,0 0 18px #b99a5a55}
+.mk-profile h4{margin:0 0 5px;font:18px Georgia,serif}.mk-profile p{margin:0;color:#b7c4d6;font-size:11px}.mk-profile small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.mk-nick{color:#f2d18a;font:11px Inter,Arial,sans-serif}
+.mk-history{display:grid;gap:7px}
+.mk-history-row{display:flex;justify-content:space-between;gap:10px;padding:9px 11px;border-radius:8px;background:#0e1725;border:1px solid #26364a;font-size:11px}
+.mk-history-row b{white-space:nowrap}.mk-history-row .plus{color:#9fd0b5}.mk-history-row .minus{color:#e5a2a2}
+.mk-earned{color:#f2d18a;font-weight:700}
+@media(max-width:950px){.mk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.mk-hero{align-items:stretch;flex-direction:column;padding:20px}.mk-wallet{align-self:flex-start;min-width:140px}.mk-metrics{gap:7px}.mk-metrics>div{padding:10px}.mk-metrics b{font-size:17px}.mk-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mk-itembody{padding:9px}.mk-art{height:94px}.mk-icon{font-size:40px}.mk-itemtitle h4{font-size:11px}.mk-item p{font-size:10px;min-height:42px}.mk-buy{font-size:10px;padding:8px 5px}.mk-daily{align-items:flex-start;flex-direction:column}.mk-daily button{width:100%}.mk-toolbar .search{width:100%}.mk-inv{min-width:100%}}
