@@ -17,12 +17,12 @@ declare
   v_motto text:=btrim(coalesce(p_motto,''));
 begin
   if v_uid is null then raise exception 'Não autenticado'; end if;
-  if p_primary not in ('#9f3e40','#3b638a','#426c56','#936533','#71538c','#d0b36b','#303b4d','#d9d6cd')
-    or p_secondary not in ('#9f3e40','#3b638a','#426c56','#936533','#71538c','#d0b36b','#303b4d','#d9d6cd') then
+  if p_primary is null or p_primary not in ('#9f3e40','#3b638a','#34465d','#426c56','#936533','#71538c','#d0b36b','#303b4d','#d9d6cd')
+    or p_secondary not in ('#9f3e40','#3b638a','#34465d','#426c56','#936533','#71538c','#d0b36b','#303b4d','#d9d6cd') then
     raise exception 'Cor de bandeira inválida.';
   end if;
-  if p_pattern not in ('solid','horizontal','vertical','diagonal','cross','chevron','quartered') then raise exception 'Padrão inválido.'; end if;
-  if p_symbol not in ('⚔️','🐉','🦉','🦅','🐺','🛡️','✦','♛','🌙','🔥') then raise exception 'Símbolo inválido.'; end if;
+  if p_pattern is null or p_pattern not in ('solid','horizontal','vertical','diagonal','cross','chevron','quartered') then raise exception 'Padrão inválido.'; end if;
+  if p_symbol is null or p_symbol not in ('⚔️','🐉','🦉','🦅','🐺','🛡️','✦','♛','🌙','🔥') then raise exception 'Símbolo inválido.'; end if;
   if char_length(v_motto)>48 then raise exception 'O lema deve ter no máximo 48 caracteres.'; end if;
   select id into v_guild_id from public.guilds where owner_id=v_uid for update;
   if not found then raise exception 'Somente o líder atual da guilda pode editar a bandeira.'; end if;
