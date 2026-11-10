@@ -183,3 +183,45 @@
   #rpgView .adv-spinner{animation:none}
   #rpgView .adv-progress i,#rpgView .adv-btn{transition:none}
 }
+
+/* Estúdio de bandeiras das guildas */
+#rpgView .adv-guild-flag-side{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:7px;flex:none;min-width:125px}
+#rpgView .adv-guild-flag-side>small{max-width:180px;color:#e2c78f;font:italic 11px Georgia,serif;text-align:center;line-height:1.4}
+#rpgView .adv-flag{position:relative;display:grid;place-items:center;overflow:hidden;isolation:isolate;aspect-ratio:3/2;border:2px solid #b3925d;border-radius:7px;background:var(--flag-primary);box-shadow:0 6px 20px #0007,inset 0 0 0 2px #0b1425aa}
+#rpgView .adv-flag-mini{width:55px;flex:none;border-width:1px;border-radius:5px;box-shadow:0 3px 10px #0007}
+#rpgView .adv-flag-hero{width:126px;border-radius:8px}
+#rpgView .adv-flag-preview{width:min(100%,310px);border-radius:10px}
+#rpgView .adv-flag--solid{background:var(--flag-primary)}
+#rpgView .adv-flag--horizontal{background:linear-gradient(to bottom,var(--flag-primary) 0 33.33%,var(--flag-secondary) 33.33% 66.66%,var(--flag-primary) 66.66% 100%)}
+#rpgView .adv-flag--vertical{background:linear-gradient(to right,var(--flag-primary) 0 33.33%,var(--flag-secondary) 33.33% 66.66%,var(--flag-primary) 66.66% 100%)}
+#rpgView .adv-flag--diagonal{background:repeating-linear-gradient(135deg,var(--flag-primary) 0 22px,var(--flag-secondary) 22px 44px)}
+#rpgView .adv-flag--cross{background:linear-gradient(to bottom,transparent 39%,var(--flag-secondary) 39% 61%,transparent 61%),linear-gradient(to right,transparent 39%,var(--flag-secondary) 39% 61%,transparent 61%),var(--flag-primary)}
+#rpgView .adv-flag--quartered{background:linear-gradient(135deg,var(--flag-primary) 0 49.5%,var(--flag-secondary) 50% 100%)}
+#rpgView .adv-flag--chevron{background:var(--flag-primary)}
+#rpgView .adv-flag--chevron:before{content:"";position:absolute;inset:0 35% 0 0;background:var(--flag-secondary);clip-path:polygon(0 0,55% 0,100% 50%,55% 100%,0 100%,45% 50%)}
+#rpgView .adv-flag-symbol{position:relative;z-index:1;display:grid;place-items:center;width:42px;height:42px;border:1px solid #fff6;border-radius:50%;background:#0b1425a8;color:#fff;font-size:25px;line-height:1;text-shadow:0 2px 5px #000}
+#rpgView .adv-flag-mini .adv-flag-symbol{width:23px;height:23px;font-size:14px;border-width:1px}
+#rpgView .adv-flag-hero .adv-flag-symbol{width:46px;height:46px;font-size:29px}
+#rpgView .adv-flag-preview .adv-flag-symbol{width:57px;height:57px;font-size:35px}
+#rpgView .adv-flag-panel{margin-bottom:15px}
+#rpgView .adv-flag-editor-mark{display:grid;place-items:center;width:35px;height:35px;border:1px solid #886d47;border-radius:9px;color:#d8bb80;background:#1d2938;font-size:20px}
+#rpgView .adv-flag-editor{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(0,1.2fr);gap:22px;align-items:center}
+#rpgView .adv-flag-preview-wrap{display:flex;flex-direction:column;align-items:center;gap:9px;padding:16px;border:1px solid #2b3c50;border-radius:11px;background:#0b1725;text-align:center}
+#rpgView .adv-flag-preview-wrap>small{color:#91a0b4;font-size:9px;text-transform:uppercase;letter-spacing:1px}
+#rpgView .adv-flag-motto-preview{min-height:15px;margin:0;color:#e3cc9e;font:italic 12px Georgia,serif;overflow-wrap:anywhere}
+#rpgView .adv-flag-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+#rpgView .adv-flag-controls label{display:flex;flex-direction:column;gap:6px;color:#c8d3e0;font-size:10px;font-weight:750}
+#rpgView .adv-flag-controls select,#rpgView .adv-flag-controls input{width:100%;min-width:0;padding:10px 11px;border:1px solid #384b62;border-radius:8px;background:#0c1725;color:#e1e8f0;font:inherit;font-size:12px}
+#rpgView .adv-flag-motto-field{grid-column:1/-1}
+#rpgView .adv-flag-controls>.adv-btn{grid-column:1/-1;justify-self:start}
+#rpgView .adv-flag-permission{grid-column:1/-1;color:#8495a9;font-size:9px;line-height:1.55}
+@media(max-width:650px){
+  #rpgView .adv-guild-flag-side{min-width:88px}
+  #rpgView .adv-flag-hero{width:86px}
+  #rpgView .adv-flag-editor{grid-template-columns:1fr}
+  #rpgView .adv-flag-controls{grid-template-columns:1fr 1fr}
+}
+@media(max-width:420px){
+  #rpgView .adv-flag-controls{grid-template-columns:1fr}
+  #rpgView .adv-flag-motto-field,#rpgView .adv-flag-controls>.adv-btn,#rpgView .adv-flag-permission{grid-column:auto}
+}
