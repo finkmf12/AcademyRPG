@@ -798,3 +798,18 @@
   .arc-nav-options{gap:3px}
   .arc-side-nav .arc-filter{padding:4px 6px}
 }
+
+/* Prévia responsiva: personagem inteiro, sem ampliação/corte em monitores largos */
+.arc-item-visual{height:clamp(155px,19vw,205px);min-height:155px;display:flex;align-items:center;justify-content:center;padding:8px 12px}
+.arc-item-visual .arc-avatar{display:block;width:auto!important;height:100%!important;max-width:min(100%,190px)!important;max-height:100%!important;object-fit:contain;object-position:center center;flex:0 1 auto}
+.arc-item-visual svg.arc-avatar{width:auto!important;height:100%!important;max-width:min(100%,190px)!important;overflow:visible}
+@media(min-width:1200px){.arc-catalog-main .arc-item-visual{height:190px}.arc-catalog-main .arc-item-visual .arc-avatar{max-width:170px!important}}
+@media(max-width:760px){.arc-item-visual{height:165px;min-height:145px}.arc-item-visual .arc-avatar{max-width:145px!important}}
+@media(max-width:480px){.arc-item-visual{height:150px;min-height:135px}.arc-item-visual .arc-avatar{max-width:125px!important}}
+/* Cores de nome compradas: visíveis em todas as superfícies públicas */
+.arc-name-neon-cyan{color:#67f5ff!important;text-shadow:0 0 4px #67f5ff,0 0 10px #00d9ff,0 0 20px #00aaff}
+.arc-name-neon-pink{color:#ff82d5!important;text-shadow:0 0 4px #ff82d5,0 0 10px #ff35b7,0 0 20px #e000a5}
+.arc-name-neon-purple{color:#c49aff!important;text-shadow:0 0 4px #c49aff,0 0 10px #965bff,0 0 20px #743bff}
+.arc-name-neon-green{color:#8dff9e!important;text-shadow:0 0 4px #8dff9e,0 0 10px #28ef62,0 0 20px #00c853}
+.arc-name-neon-gold{color:#ffe18a!important;text-shadow:0 0 4px #ffe18a,0 0 10px #ffb300,0 0 20px #ff8f00}
+.arc-name-neon-red{color:#ff8989!important;text-shadow:0 0 4px #ff8989,0 0 10px #ff3d3d,0 0 20px #d50000}
