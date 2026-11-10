@@ -853,3 +853,26 @@
   0%,100%{filter:brightness(.96);box-shadow:inset 0 0 14px rgba(220,158,255,.25),0 0 8px rgba(190,90,255,.65),0 0 20px rgba(153,65,255,.48)}
   50%{filter:brightness(1.18);box-shadow:inset 0 0 21px rgba(220,158,255,.42),0 0 14px rgba(190,90,255,.98),0 0 31px rgba(153,65,255,.76),0 0 43px rgba(255,195,90,.4)}
 }
+
+
+/* Título exclusivo BUG HUNTER — neon vermelho pulsante */
+.arc-title-title-bug-hunter{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #ff7777;
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.11) 0 1px,transparent 1px 5px),
+    linear-gradient(115deg,#3b080d 0%,#a71928 48%,#4a1018 100%);
+  color:#fff0f0;
+  box-shadow:inset 0 0 17px rgba(255,70,70,.32),0 0 10px rgba(255,35,55,.82),0 0 25px rgba(230,0,30,.65),0 0 40px rgba(255,90,65,.28);
+  text-shadow:0 0 5px #fff,0 0 12px #ff7777,0 0 23px #ff1744;
+  animation:arc-bug-hunter-pulse 2s ease-in-out infinite;
+}
+.arc-title-title-bug-hunter .arc-title-sigil{
+  color:#ffd0d0;
+  text-shadow:0 0 8px #ff5252,0 0 17px #ff1744;
+}
+@keyframes arc-bug-hunter-pulse{
+  0%,100%{filter:brightness(.94);box-shadow:inset 0 0 14px rgba(255,70,70,.25),0 0 8px rgba(255,35,55,.62),0 0 20px rgba(230,0,30,.46)}
+  50%{filter:brightness(1.2);box-shadow:inset 0 0 22px rgba(255,70,70,.43),0 0 15px rgba(255,35,55,.98),0 0 32px rgba(230,0,30,.78),0 0 44px rgba(255,90,65,.42)}
+}
