@@ -84,7 +84,7 @@ const MARKET_DEMO_ITEMS = [
   {id:'badge-scholar',name:'Selo do Conhecimento',category:'badges',price:50,rarity:'Comum',icon:'🏅',description:'Celebre sua dedicação aos estudos.'}
 ];
 const MARKET_CATEGORIES = [
-  ['Todos','Todos'],['titles','Títulos'],['nick','Efeitos de Nick'],['frames','Molduras'],['backgrounds','Fundos'],['badges','Insígnias']
+  ['Todos','Todos'],['titles','Títulos'],['nick','Efeitos de Nick'],['frames','Molduras'],['backgrounds','Fundos'],['badges','Insígnias'],['guild','Guildas']
 ];
 let M = null, marketCategory = 'Todos', marketQuery = '';
 let S = null, quiz = null, resultHtml = null, view = 'sala', tab = 'conquistas', err = null, lastKey = null, isOpen = false, editing = false, pickClass = null;
@@ -188,7 +188,7 @@ function marketItemCard(item) {
   const owned=(M.inventory||[]).some(x=>x.item_id===item.id);
   const cat=MARKET_CATEGORIES.find(x=>x[0]===item.category)?.[1]||'Relíquia';
   const notice=M.notice?.id===item.id?'<div class="mk-buy-alert" role="alert"><b>Coins insuficientes</b><span>Este item custa '+item.price+' Coins. Você tem '+M.balance+' Coins e precisa de mais '+Math.max(0,item.price-M.balance)+'.</span></div>':'';
-  return `<article class="mk-item">
+  return `<article class="mk-item ${item.category==='guild'?'mk-item-guild':''}">
     <div class="mk-art"><span class="mk-rarity">${esc(item.rarity)}</span><span class="mk-icon">${esc(item.icon)}</span></div>
     <div class="mk-itembody"><div class="mk-itemtitle"><div><h4>${esc(item.name)}</h4><small>${esc(cat)}</small></div><strong>${item.price} C</strong></div>
     <p>${esc(item.description)}</p>
