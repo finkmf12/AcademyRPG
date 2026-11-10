@@ -8,7 +8,7 @@ Esta entrega adiciona quatro sistemas de jogo e um painel de gestão docente ao 
 - **Ranking:** classificação geral, semanal e mensal. Exibe apenas nome de aventureiro, avatar, classe, nível e XP; não expõe e-mails.
 - **Arena dos Chefes:** três chefes iniciais para Programação, Banco de Dados e Modelagem. Cada batalha utiliza seis perguntas do banco já existente. Respostas, resultado e recompensas são confirmados pelo Supabase; a recompensa de cada chefe é limitada a uma vitória por semana.
 - **Guildas:** criação, diretório, entrada por código e saída. Cada aventureiro só pode estar em uma guilda por vez; cada guilda comporta até seis membros. Se o líder sair, a liderança passa para o membro mais antigo; uma guilda sem membros é encerrada.
-- **Bandeiras de guilda:** estúdio com oito cores, sete padrões, dez símbolos e lema de até 48 caracteres. A bandeira fica salva no banco e aparece no diretório e para todos os membros; apenas o líder atual pode alterá-la.
+- **Bandeiras de guilda:** estúdio com nove cores, sete padrões, dez símbolos e lema de até 48 caracteres. A bandeira fica salva no banco e aparece no diretório e para todos os membros; apenas o líder atual pode alterá-la.
 
 ## Painel do Professor
 
