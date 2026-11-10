@@ -174,16 +174,15 @@ begin
   if not exists(select 1 from public.user_avatar_items where user_id=v_uid and item_id=p_item_id) then
     raise exception 'Este visual ainda não está no seu inventário.';
   end if;
-  insert into public.player_profiles(user_id) values(v_uid) on conflict(user_id) do nothing;
-  if p_equipped then
-    update public.player_profiles
-      set appearance=jsonb_set(coalesce(appearance,'{}'::jsonb),array[v_item.slot],to_jsonb(v_item.id),true)
-      where user_id=v_uid returning appearance into v_appearance;
-  else
-    update public.player_profiles
-      set appearance=case when appearance->>v_item.slot=v_item.id then appearance-v_item.slot else appearance end
-      where user_id=v_uid returning appearance into v_appearance;
-  end if;
+  update public.player_profiles
+    set appearance=case
+      when p_equipped then jsonb_set(coalesce(appearance,'{}'::jsonb),array[v_item.slot],to_jsonb(v_item.id),true)
+      when appearance->>v_item.slot=v_item.id then appearance-v_item.slot
+      else appearance
+    end
+    where user_id=v_uid
+    returning appearance into v_appearance;
+  if not found then raise exception 'Perfil do aventureiro não encontrado.'; end if;
   return jsonb_build_object('ok',true,'appearance',coalesce(v_appearance,'{}'::jsonb));
 end $$;
 
