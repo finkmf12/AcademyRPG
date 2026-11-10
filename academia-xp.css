@@ -77,7 +77,7 @@
   opacity:.88;
   transform:translate3d(0,0,0);
   will-change:transform,opacity;
-  animation:forestMistDrift 18s ease-in-out infinite alternate;
+  animation:forestMistDrift 6s ease-in-out infinite alternate;
 }
 .login:after{
   content:"";
@@ -98,22 +98,24 @@
   background-size:230px 240px,290px 270px,330px 290px,270px 300px,310px 260px,260px 310px,100% 100%,100% 100%;
   transform:translate3d(0,0,0);
   will-change:transform,opacity;
-  animation:forestParticlesDrift 12s ease-in-out infinite alternate;
+  animation:forestParticlesDrift 3.5s ease-in-out infinite alternate;
 }
 .login .login-layout{position:relative;z-index:2}
 .login .author-credit{z-index:3}
 @keyframes forestMistDrift{
-  from{transform:translate3d(-.55%,.3%,0) scale(1);opacity:.62}
-  to{transform:translate3d(.55%,-.3%,0) scale(1.025);opacity:.98}
+  0%{transform:translate3d(-1.8%,.9%,0) scale(1);opacity:.58}
+  50%{transform:translate3d(.9%,-.7%,0) scale(1.035);opacity:.98}
+  100%{transform:translate3d(1.8%,-.9%,0) scale(1.015);opacity:.68}
 }
 @keyframes forestParticlesDrift{
-  from{transform:translate3d(-.65%,.45%,0);opacity:.55}
-  to{transform:translate3d(.65%,-.45%,0);opacity:.95}
+  0%{transform:translate3d(-2.2%,1.4%,0);opacity:.48}
+  50%{transform:translate3d(1.1%,-1%,0);opacity:1}
+  100%{transform:translate3d(2.2%,-1.4%,0);opacity:.62}
 }
 @media(prefers-reduced-motion:reduce){
   .login:before,.login:after{animation:none!important;will-change:auto}
 }
 @media(max-width:650px){
-  .login:before{animation-duration:26s}
-  .login:after{animation-duration:16s}
+  .login:before{animation-duration:7s}
+  .login:after{animation-duration:4s}
 }
