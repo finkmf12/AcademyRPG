@@ -108,7 +108,7 @@
   async function ranking(){
     const r=await rpc('get_leaderboard',{p_period:S.period}),rows=r.entries||[];
     const list=rows.map(e=>`<div class="adv-rank-row ${e.rank<=3?'top-'+e.rank:''} ${e.is_me?'is-me':''}">
-      <span class="adv-rank-number">${e.rank<=3?['♛','Ⅱ','Ⅲ'][e.rank-1]:n(e.rank)}</span><span class="adv-rank-avatar">${esc(e.avatar||'🧙')}</span>
+      <span class="adv-rank-number">${e.rank<=3?['♛','Ⅱ','Ⅲ'][e.rank-1]:n(e.rank)}</span><span class="adv-rank-avatar">${window.AcademiaAvatar ? window.AcademiaAvatar.render(e.appearance||{},'rank',e.class) : esc(e.avatar||'🧙')}</span>
       <span class="adv-rank-name"><b>${esc(e.name)}</b><small>${esc(e.class||'Aventureiro')} · Nível ${n(e.level)}</small></span>
       <strong>${n(e.xp)} <small>XP</small></strong>${e.is_me?badge('Você','ready'):''}</div>`).join('');
     const me=r.my_rank?`Sua posição: #${n(r.my_rank)}`:'Seu personagem ainda não aparece nesta classificação.';
