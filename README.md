@@ -14,7 +14,7 @@ Neste mundo, os jogadores assumem o papel de estudantes/heróis em uma academia 
 
 ## ✨ Funcionalidades Principais
 
-- ⚔️ **Criação e Personalização de Personagens:** Escolha classes, distribua atributos (Força, Agilidade, Inteligência, etc.) e vista equipamentos.
+- ⚔️ **Criação e Personalização de Personagens:** Escolha classes, vista equipamentos e aproveite sua jornada.
 - 🏫 **Sistema de Academia:** Aulas, treinamentos diários e progressão de nível baseados em desempenho e tempo.
 - 🗺️ **Missões e Batalhas (Quests):** Explore calabouços, enfrente monstros e complete missões para ganhar ouro, EXP e itens raros.
 - 🛒 **Loja e Inventário:** Compre poções, armas e armaduras para melhorar o seu poder de combate.
@@ -26,10 +26,10 @@ Neste mundo, os jogadores assumem o papel de estudantes/heróis em uma academia 
 
 Este projeto foi desenvolvido utilizando as seguintes tecnologias:
 
-* **Front-end:** [Insira aqui, ex: HTML5, CSS3, JavaScript / React / TailwindCSS]
-* **Back-end:** [Insira aqui, ex: Node.js, Express / Python, Django / PHP]
-* **Banco de Dados:** [Insira aqui, ex: MongoDB / PostgreSQL / MySQL]
-* **Hospedagem/Deploy:** [Insira aqui, ex: Vercel / Heroku / Netlify]
+* **Front-end:** HTML, JavaScript
+* **Back-end:** Node.JS
+* **Banco de Dados:** SupaBase
+* **Hospedagem/Deploy:** Vercel.app
 
 ---
 
@@ -47,3 +47,7 @@ Certifique-se de ter instalado em sua máquina:
 1. **Clone o repositório:**
    ```bash
    git clone [https://github.com/SEU-USUARIO/AcademyRPG.git](https://github.com/SEU-USUARIO/AcademyRPG.git)
+
+
+
+Eu, Yuri, fico grato por quem está ajudando!! Estarei a disposição.
