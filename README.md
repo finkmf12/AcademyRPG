@@ -2,7 +2,7 @@
 
 > Um RPG online baseado em navegador/plataforma onde você cria seu personagem, gerencia sua evolução em uma "Academia", treina habilidades e embarca em aventuras épicas.
 
----
+---   https://academyrpg.vercel.app  ---
 
 ## 🚀 Sobre o Projeto
 
