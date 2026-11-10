@@ -39,6 +39,11 @@ create table if not exists public.avatar_items (
   )
 );
 
+-- Atualiza a restrição também em instalações que já tinham o Ateliê Arcano.
+alter table public.avatar_items drop constraint if exists avatar_items_slot_check;
+alter table public.avatar_items add constraint avatar_items_slot_check
+  check (slot in ('hair','hat','outfit','shoulders','cloak','mask','accessory','aura'));
+
 create index if not exists avatar_items_active_slot_idx
   on public.avatar_items(active,slot,price);
 create index if not exists avatar_items_achievement_idx
