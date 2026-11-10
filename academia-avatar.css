@@ -813,3 +813,22 @@
 .arc-name-neon-green{color:#8dff9e!important;text-shadow:0 0 4px #8dff9e,0 0 10px #28ef62,0 0 20px #00c853}
 .arc-name-neon-gold{color:#ffe18a!important;text-shadow:0 0 4px #ffe18a,0 0 10px #ffb300,0 0 20px #ff8f00}
 .arc-name-neon-red{color:#ff8989!important;text-shadow:0 0 4px #ff8989,0 0 10px #ff3d3d,0 0 20px #d50000}
+
+/* Título exclusivo BETA-TESTER — neon ciano/verde */
+.arc-title-title-beta-tester{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #7efff4;
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.10) 0 1px,transparent 1px 5px),
+    linear-gradient(115deg,#092f3b 0%,#087c83 48%,#123d38 100%);
+  color:#e7fffd;
+  box-shadow:inset 0 0 16px rgba(75,255,238,.28),0 0 9px rgba(0,255,238,.75),0 0 23px rgba(0,255,200,.55),0 0 38px rgba(0,210,255,.28);
+  text-shadow:0 0 5px #baffff,0 0 11px #00fff0,0 0 22px #00d9ff;
+  animation:arc-beta-neon-pulse 2.4s ease-in-out infinite;
+}
+.arc-title-title-beta-tester .arc-title-sigil{color:#aafff6;text-shadow:0 0 8px #00fff0,0 0 16px #00d9ff}
+@keyframes arc-beta-neon-pulse{
+  0%,100%{filter:brightness(.96);box-shadow:inset 0 0 14px rgba(75,255,238,.24),0 0 8px rgba(0,255,238,.62),0 0 20px rgba(0,255,200,.42)}
+  50%{filter:brightness(1.16);box-shadow:inset 0 0 20px rgba(75,255,238,.38),0 0 13px rgba(0,255,238,.92),0 0 30px rgba(0,255,200,.68),0 0 42px rgba(0,210,255,.36)}
+}
