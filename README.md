@@ -50,4 +50,4 @@ Certifique-se de ter instalado em sua máquina:
 
 
 
-Eu, Yuri, fico grato por quem está ajudando!! Estarei a disposição.
+* **✨Eu, Yuri, fico grato por quem está ajudando!! Estarei a disposição.✨**
