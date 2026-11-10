@@ -53,7 +53,7 @@
 .cls:hover{border-color:#947343}.cls.on{border-color:var(--gold);background:#1b2a3d}
 
 
-/* Floresta mágica animada da tela inicial */
+/* Floresta mágica: animações leves, sem repintar o fundo inteiro */
 .login{
   isolation:isolate;
   background-color:#081322;
@@ -62,49 +62,49 @@
     url('./login-rpg-dia.webp');
   background-size:cover;
   background-position:center;
-  animation:forestBackdrop 34s ease-in-out infinite alternate;
+  animation:none;
 }
 .login:before{
   background:
     radial-gradient(ellipse at 50% 55%,rgba(20,33,68,.12),rgba(3,9,22,.42) 78%),
     linear-gradient(90deg,rgba(10,18,42,.42),rgba(27,30,73,.08) 48%,rgba(10,18,42,.40));
-  background-size:150% 150%;
-  animation:forestGlow 18s ease-in-out infinite alternate;
+  background-size:100% 100%;
+  transform:translate3d(0,0,0);
+  opacity:.9;
+  will-change:transform,opacity;
+  animation:forestMistDrift 20s ease-in-out infinite alternate;
 }
 .login:after{
   content:"";
   position:absolute;
-  inset:-12%;
+  inset:-8%;
   z-index:0;
   pointer-events:none;
-  opacity:.72;
+  opacity:.58;
   background-image:
-    radial-gradient(ellipse at 15% 78%,rgba(85,119,184,.22),transparent 36%),
-    radial-gradient(ellipse at 78% 66%,rgba(123,91,190,.20),transparent 38%),
+    radial-gradient(ellipse at 15% 78%,rgba(85,119,184,.18),transparent 36%),
+    radial-gradient(ellipse at 78% 66%,rgba(123,91,190,.16),transparent 38%),
     radial-gradient(circle at 18% 25%,rgba(171,204,255,.72) 0 1px,transparent 2px),
-    radial-gradient(circle at 63% 18%,rgba(189,171,255,.70) 0 1.5px,transparent 2.5px),
-    radial-gradient(circle at 82% 42%,rgba(164,218,255,.70) 0 1px,transparent 2px),
-    radial-gradient(circle at 37% 68%,rgba(200,190,255,.60) 0 1px,transparent 2px),
-    radial-gradient(circle at 91% 82%,rgba(171,204,255,.62) 0 1.5px,transparent 2.5px);
+    radial-gradient(circle at 63% 18%,rgba(189,171,255,.68) 0 1px,transparent 2px),
+    radial-gradient(circle at 82% 42%,rgba(164,218,255,.66) 0 1px,transparent 2px),
+    radial-gradient(circle at 37% 68%,rgba(200,190,255,.58) 0 1px,transparent 2px),
+    radial-gradient(circle at 91% 82%,rgba(171,204,255,.60) 0 1px,transparent 2px);
   background-size:100% 100%,100% 100%,310px 270px,370px 330px,290px 310px,410px 360px,330px 290px;
-  animation:forestParticles 22s linear infinite,forestMist 12s ease-in-out infinite alternate;
+  transform:translate3d(0,0,0);
+  will-change:transform,opacity;
+  animation:forestParticlesDrift 32s ease-in-out infinite alternate;
 }
-@keyframes forestBackdrop{
-  from{background-position:48% 50%}
-  to{background-position:54% 46%}
+@keyframes forestMistDrift{
+  from{transform:translate3d(-.35%,.25%,0) scale(1);opacity:.72}
+  to{transform:translate3d(.35%,-.25%,0) scale(1.015);opacity:.96}
 }
-@keyframes forestGlow{
-  from{background-position:0% 45%;filter:hue-rotate(-8deg)}
-  to{background-position:100% 55%;filter:hue-rotate(12deg)}
-}
-@keyframes forestParticles{
-  from{background-position:0 0,0 0,0 0,120px 90px,60px 180px,220px 70px,90px 220px}
-  to{background-position:0 0,0 0,310px -270px,-250px -240px,350px -130px,-190px -290px,-240px -70px}
-}
-@keyframes forestMist{
-  from{opacity:.42;transform:translate3d(-1%,1%,0) scale(1)}
-  to{opacity:.82;transform:translate3d(1%,-1%,0) scale(1.04)}
+@keyframes forestParticlesDrift{
+  from{transform:translate3d(-.45%,.35%,0);opacity:.42}
+  to{transform:translate3d(.45%,-.35%,0);opacity:.68}
 }
 @media(prefers-reduced-motion:reduce){
-  .login,.login:before,.login:after{animation:none!important}
+  .login,.login:before,.login:after{animation:none!important;will-change:auto}
+}
+@media(max-width:650px){
+  .login:before,.login:after{animation-duration:40s}
 }
