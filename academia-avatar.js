@@ -254,10 +254,22 @@
     const previewButtons=selected?'<button class="arc-button arc-button-soft" data-avatar-action="cancel-preview">Voltar ao visual equipado</button>':'<span class="arc-preview-hint">Experimente qualquer peça antes de comprar.</span>';
     const list=S.catalog.filter(x=>(S.filter==='all'||x.slot===S.filter)&&(S.tab==='shop'||owns(x.id)));
     const categorySource=S.catalog.filter(x=>S.tab==='shop'||owns(x.id));
-    const cats=SLOTS.map(x=>{
-      const count=x[0]==='all'?categorySource.length:categorySource.filter(v=>v.slot===x[0]).length;
-      return '<button class="arc-filter '+(S.filter===x[0]?'active':'')+'" data-avatar-filter="'+x[0]+'"><span class="arc-filter-icon">'+SLOT_ICON[x[0]]+'</span><span class="arc-filter-label">'+x[1]+'</span><small>'+count+'</small></button>';
-    }).join('');
+    const categoryButton=([key,label])=>{
+      const count=key==='all'?categorySource.length:categorySource.filter(v=>v.slot===key).length;
+      return '<button type="button" class="arc-filter '+(S.filter===key?'active':'')+'" data-avatar-filter="'+key+'" aria-pressed="'+(S.filter===key?'true':'false')+'"><span class="arc-filter-icon">'+SLOT_ICON[key]+'</span><span class="arc-filter-label">'+label+'</span><small>'+count+'</small></button>';
+    };
+    const sideGroups=[
+      {title:'Aparência',items:[['hair','Cabelos'],['hat','Chapéus e elmos']]},
+      {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios']]},
+      {title:'Poderes e títulos',items:[['aura','Auras'],['title','Títulos']]}
+    ];
+    const cats='<div class="arc-side-all">'+categoryButton(['all','Todos os itens'])+'</div>'+
+      '<div class="arc-nav-groups">'+sideGroups.map(group=>
+        '<section class="arc-nav-group"><h4 class="arc-nav-heading">'+group.title+'</h4><div class="arc-nav-options">'+group.items.map(categoryButton).join('')+'</div></section>'
+      ).join('')+'</div>';
+    const activeCategory=SLOTS.find(x=>x[0]===S.filter);
+    const categoryHeading=S.filter==='all'?'Todos os visuais':(activeCategory?.[1]||'Visuais');
+    const categoryMeta=list.length+' '+(list.length===1?'item':'itens');
     const tabs='<button class="arc-tab '+(S.tab==='shop'?'active':'')+'" data-avatar-tab="shop">Loja de visuais</button><button class="arc-tab '+(S.tab==='inventory'?'active':'')+'" data-avatar-tab="inventory">Meu inventário ('+S.owned.length+')</button>';
     const items=S.filter==='all'
       ? SLOTS.slice(1).map(([slot,label])=>{
@@ -269,7 +281,7 @@
       '<section class="arc-hero"><div><div class="arc-eyebrow">✦ ATELIÊ ARCANO ✦</div><h3>Seu personagem, sua lenda.</h3><p>Combine cabelos, chapéus, roupas, capas, máscaras e itens mágicos. Os visuais conquistados por mérito ficam guardados para sempre.</p><div class="arc-wallet"><span>🪙</span><div><small>SALDO DISPONÍVEL</small><b>'+S.balance.toLocaleString('pt-BR')+' Coins</b></div></div></div><div class="arc-stage arc-stage-aura-'+(current.aura||'none')+'"><div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'<div class="arc-stage-caption"><b>'+esc(previewName)+'</b><small>'+esc(SLOT_NAME[selected?.slot]||'Aventureiro')+'</small>'+previewButtons+'</div></div></section>'+
       '<div class="arc-toolbar"><div><h3>Guarda-roupa</h3><p>Os itens comprados usam as Coins que você já acumula na Academia.</p></div><div class="arc-tabs">'+tabs+'</div></div>'+
       (S.tab==='inventory'?'<div class="arc-inventory-note">Itens no inventário: '+S.owned.length+' · Recompensas de conquistas não custam Coins.</div>':'')+
-      '<div class="arc-catalog-layout"><aside class="arc-side-nav"><div class="arc-side-title">CATEGORIAS</div>'+cats+'</aside><div class="arc-catalog-main"><div class="arc-item-grid">'+(items||'<div class="arc-empty">'+(S.tab==='inventory'?'Você ainda não possui itens nesta categoria. Visite a loja ou complete conquistas para receber novos visuais.':'Nenhum item encontrado nesta categoria.')+'</div>')+'</div></div></div>'+
+      '<div class="arc-catalog-layout"><aside class="arc-side-nav" aria-label="Categorias do Ateliê"><div class="arc-side-title">FILTRAR VISUAIS</div>'+cats+'</aside><div class="arc-catalog-main"><div class="arc-catalog-heading"><div><span>CATÁLOGO ARCANO</span><h4>'+categoryHeading+'</h4></div><small>'+categoryMeta+'</small></div><div class="arc-item-grid">'+(items||'<div class="arc-empty">'+(S.tab==='inventory'?'Você ainda não possui itens nesta categoria. Visite a loja ou complete conquistas para receber novos visuais.':'Nenhum item encontrado nesta categoria.')+'</div>')+'</div></div></div>'+
       '<p class="arc-footnote">As prévias não alteram seu personagem. A aparência só muda quando você equipa um item, e fica sincronizada na sua conta.</p>';
   }
   async function open(){
