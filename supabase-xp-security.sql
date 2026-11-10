@@ -107,7 +107,7 @@ end $$;
 create or replace function public.start_quiz(p_category text)
 returns jsonb language plpgsql security definer set search_path=public as $$
 declare v_uid uuid:=auth.uid(); v_n integer; v_ids bigint[]; v_session uuid; v_questions jsonb:='[]'::jsonb;
-  v_q record; v_options jsonb;
+  v_q record; v_options jsonb; v_id bigint;
 begin
   if p_category not in ('programacao','banco','modelagem','geral','simulado') then raise exception 'Categoria inválida'; end if;
   if v_uid is not null and (
@@ -121,8 +121,8 @@ begin
   end if;
   if coalesce(cardinality(v_ids),0)<>v_n then raise exception 'Banco de questões incompleto para esta categoria.'; end if;
   insert into public.quiz_sessions(user_id,category,question_ids) values(v_uid,p_category,v_ids) returning id into v_session;
-  foreach v_q.id in array v_ids loop
-    select * into v_q from public.quiz_question_bank where id=v_q.id;
+  foreach v_id in array v_ids loop
+    select * into v_q from public.quiz_question_bank where id=v_id;
     select jsonb_agg(value order by random()) into v_options
     from jsonb_array_elements_text(v_q.options||jsonb_build_array(v_q.correct_answer)) as e(value);
     v_questions:=v_questions||jsonb_build_array(jsonb_build_object('id',v_q.id,'prompt',v_q.prompt,'options',v_options));
@@ -140,12 +140,9 @@ begin
   if v_s.status<>'active' or v_s.current_index>cardinality(v_s.question_ids) then raise exception 'Questão já respondida ou sessão encerrada'; end if;
   if v_s.question_ids[v_s.current_index]<>p_question_id then raise exception 'Ordem de questão inválida'; end if;
   select * into v_q from public.quiz_question_bank where id=p_question_id and active;
-  if not found or not (p_answer=any(v_q.options::text[])) then
-    if not found then raise exception 'Questão indisponível'; end if;
-  end if;
-  if p_answer<>v_q.correct_answer and not exists(select 1 from jsonb_array_elements_text(v_q.options) x(value) where value=p_answer) then
-    raise exception 'Alternativa inválida';
-  end if;
+  if not found then raise exception 'Questão indisponível'; end if;
+  if not exists(select 1 from jsonb_array_elements_text(v_q.options) x(value) where value=p_answer)
+     and p_answer<>v_q.correct_answer then raise exception 'Alternativa inválida'; end if;
   v_ok:=p_answer=v_q.correct_answer;
   v_correct:=v_s.correct+case when v_ok then 1 else 0 end;
   v_streak:=case when v_ok then v_s.current_streak+1 else 0 end;
