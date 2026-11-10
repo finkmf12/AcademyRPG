@@ -164,6 +164,7 @@
   #rpgView .adv-rank-row{gap:8px;padding:10px}
   #rpgView .adv-rank-avatar{width:33px;height:33px;font-size:18px}
 }
+@media(max-width:650px){.adv-nav-divider{display:none}}
 @media(max-width:560px){
   #rpgView{padding:0 0 30px}
   #rpgView .adv-hero{padding:18px;margin-bottom:17px}
