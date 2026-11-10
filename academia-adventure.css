@@ -225,3 +225,7 @@
   #rpgView .adv-flag-controls{grid-template-columns:1fr}
   #rpgView .adv-flag-motto-field,#rpgView .adv-flag-controls>.adv-btn,#rpgView .adv-flag-permission{grid-column:auto}
 }
+
+/* Ajuste do brasão no diretório: a bandeira horizontal substitui o antigo selo quadrado. */
+#rpgView .adv-guild-crest{width:58px;height:40px;min-height:40px;border:0;border-radius:0;background:transparent;box-shadow:none}
+#rpgView .adv-guild-crest .adv-flag-mini{width:55px}
