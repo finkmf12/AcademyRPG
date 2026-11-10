@@ -53,7 +53,7 @@
 .cls:hover{border-color:#947343}.cls.on{border-color:var(--gold);background:#1b2a3d}
 
 
-/* Floresta mágica: camadas visíveis e movimento suave */
+/* Fundo do login: somente o papel de parede, sem partículas ou camadas animadas. */
 .login{
   isolation:isolate;
   background-color:#081322;
@@ -61,42 +61,14 @@
   background-size:cover;
   background-position:center;
 }
-.login:before{content:none!important;display:none!important}
+.login:before,
 .login:after{
-  content:"";
-  position:absolute;
-  inset:-4%;
-  z-index:1;
-  pointer-events:none;
-  opacity:.86;
-  background-image:
-    radial-gradient(circle at 12% 28%,rgba(195,222,255,.95) 0 1.5px,transparent 3px),
-    radial-gradient(circle at 27% 72%,rgba(180,190,255,.90) 0 1.4px,transparent 3px),
-    radial-gradient(circle at 48% 19%,rgba(218,211,255,.95) 0 1.6px,transparent 3px),
-    radial-gradient(circle at 68% 61%,rgba(176,218,255,.95) 0 1.5px,transparent 3px),
-    radial-gradient(circle at 84% 34%,rgba(211,196,255,.95) 0 1.5px,transparent 3px),
-    radial-gradient(circle at 91% 82%,rgba(175,207,255,.90) 0 1.4px,transparent 3px),
-    radial-gradient(ellipse at 20% 85%,rgba(112,148,209,.20),transparent 38%),
-    radial-gradient(ellipse at 78% 78%,rgba(145,112,204,.18),transparent 40%);
-  background-size:230px 240px,290px 270px,330px 290px,270px 300px,310px 260px,260px 310px,100% 100%,100% 100%;
-  transform:translate3d(0,0,0);
-  will-change:transform,opacity;
-  animation:forestParticlesDrift 3.5s ease-in-out infinite alternate;
+  content:none!important;
+  display:none!important;
+  animation:none!important;
 }
 .login .login-layout{position:relative;z-index:2}
 .login .author-credit{z-index:3}
-@keyframes forestParticlesDrift{
-  0%{transform:translate3d(-2.2%,1.4%,0);opacity:.48}
-  50%{transform:translate3d(1.1%,-1%,0);opacity:1}
-  100%{transform:translate3d(2.2%,-1.4%,0);opacity:.62}
-}
-@media(prefers-reduced-motion:reduce){
-  .login:before,.login:after{animation:none!important;will-change:auto}
-}
-@media(max-width:650px){
-  .login:before{animation-duration:7s}
-  .login:after{animation-duration:4s}
-}
 
 
 /* Mercado Arcano — loja integrada à conta e ao inventário */
