@@ -341,40 +341,46 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 
 
 <style id="dark-fantasy-atmosphere">
-/* Camadas atmosféricas da floresta: mantêm a arte de fundo original intacta. */
+/* Chuva arcana discreta: filetes frios descem lentamente sobre a biblioteca. */
 .login { isolation:isolate; }
 .login-atmosphere {
   position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
 }
 .login-atmosphere::before,
 .login-atmosphere::after {
-  content:""; position:absolute; inset:-18%;
+  content:""; position:absolute; inset:-180px -35px;
   pointer-events:none;
+  background-repeat:repeat;
+  will-change:background-position;
 }
-
+.login-atmosphere::before {
+  opacity:.16;
+  background-image:repeating-linear-gradient(
+    172deg,
+    transparent 0 17px,
+    rgba(190,215,255,.48) 18px,
+    transparent 19px 47px
+  );
+  background-size:100% 150px;
+  animation:arcane-rain-fall 2.8s linear infinite;
+}
 .login-atmosphere::after {
-  opacity:.52;
-  background:
-    radial-gradient(2px 2px at 8% 24%,rgba(204,224,255,.85) 45%,transparent 70%),
-    radial-gradient(1.5px 1.5px at 18% 66%,rgba(179,203,255,.8) 45%,transparent 70%),
-    radial-gradient(2px 2px at 31% 42%,rgba(221,205,255,.8) 45%,transparent 70%),
-    radial-gradient(1.5px 1.5px at 48% 18%,rgba(190,221,255,.8) 45%,transparent 70%),
-    radial-gradient(2px 2px at 63% 72%,rgba(205,193,255,.8) 45%,transparent 70%),
-    radial-gradient(1.5px 1.5px at 78% 34%,rgba(195,220,255,.8) 45%,transparent 70%),
-    radial-gradient(2px 2px at 91% 58%,rgba(218,207,255,.8) 45%,transparent 70%);
-  background-size:100% 100%;
-  animation:forest-particles-drift 19s linear infinite alternate;
+  opacity:.10;
+  background-image:repeating-linear-gradient(
+    168deg,
+    transparent 0 31px,
+    rgba(160,194,255,.42) 32px,
+    transparent 33px 86px
+  );
+  background-size:100% 230px;
+  animation:arcane-rain-fall 4.2s linear infinite;
 }
-
-
-
-@keyframes forest-shadow-drift { from{transform:translate3d(-1%,0,0) scale(1)} to{transform:translate3d(1.5%,-1%,0) scale(1.04)} }
-@keyframes forest-particles-drift { from{transform:translate3d(-.5%,0,0)} to{transform:translate3d(1%, -2%,0)} }
-@media(max-width:760px) {
- .wizard-staff { height:72%; }
- .forest-mist { height:38%;opacity:.27; }
+@keyframes arcane-rain-fall {
+  from { background-position:0 0; }
+  to { background-position:0 230px; }
 }
 @media(prefers-reduced-motion:reduce) {
+  .login-atmosphere::before,
   .login-atmosphere::after { animation:none!important; }
 }
 </style>
