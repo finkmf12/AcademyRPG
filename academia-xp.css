@@ -143,3 +143,21 @@
 .rpgnav-profile button{background:#24251f;border-color:#665638;color:#e8d19d}
 .rpgnav-profile button:hover,.rpgnav-profile button.active{background:linear-gradient(90deg,#3a3020,#24283a);border-color:#c19a56;color:#ffe0a0}
 .rpgnav-profile .ico{color:#e6c477}
+
+
+/* Barra de rolagem discreta para combinar com a sidebar dark fantasy */
+.sidebar{
+  scrollbar-width:thin;
+  scrollbar-color:#53627a #0d1521;
+  scrollbar-gutter:stable;
+}
+.sidebar::-webkit-scrollbar{width:8px}
+.sidebar::-webkit-scrollbar-track{background:#0d1521}
+.sidebar::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#64748b,#39465b);
+  border:2px solid #0d1521;
+  border-radius:20px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,#b99a62,#786044);
+}
