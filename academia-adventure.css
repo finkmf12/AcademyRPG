@@ -275,3 +275,21 @@
 #rpgView .adv-fight-portrait .adv-boss-portrait{object-fit:cover;object-position:center 38%;height:100%;min-height:220px}
 @media(max-width:640px){#rpgView .adv-boss-art{height:175px;min-height:175px}#rpgView .adv-fight-banner{display:flex;flex-direction:column-reverse;gap:0}#rpgView .adv-fight-portrait{flex:0 0 auto;width:100%;height:190px;min-height:190px;mask-image:linear-gradient(180deg,#000 75%,transparent)}#rpgView .adv-fight-portrait .adv-boss-portrait{min-height:190px}#rpgView .adv-fight-title{padding:12px 18px 20px}}
 @media(prefers-reduced-motion:reduce){#rpgView .adv-boss-portrait{transition:none}}
+
+/* Diretório de guildas: navegação, pesquisa e cartões responsivos */
+#rpgView .adv-guild-tabs{margin:0 0 18px;display:flex;gap:8px;flex-wrap:wrap}
+#rpgView .adv-guild-tabs button span{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;margin-left:5px;padding:0 6px;border-radius:20px;background:#d7b87522;color:#e7c98d;font-size:11px}
+#rpgView .adv-guild-directory-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 18px}
+#rpgView .adv-guild-directory-tools input{flex:1;max-width:440px;min-width:180px}
+#rpgView .adv-guild-directory-tools span{color:var(--muted,#9ba9bb);font-size:12px;white-space:nowrap}
+#rpgView .adv-guild-directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#rpgView .adv-guild-directory .adv-guild-row{min-width:0;min-height:104px;padding:13px;display:flex;align-items:center;gap:13px;border:1px solid #34445a;border-radius:13px;background:linear-gradient(145deg,#172438,#101a29);transition:border-color .2s,transform .2s}
+#rpgView .adv-guild-directory .adv-guild-row:hover{border-color:#c5a56c;transform:translateY(-2px)}
+#rpgView .adv-guild-directory .adv-guild-crest{flex:0 0 58px;width:58px;height:68px;display:grid;place-items:center}
+#rpgView .adv-guild-directory .adv-guild-info{flex:1;min-width:0}
+#rpgView .adv-guild-directory .adv-guild-info b{display:block;overflow-wrap:anywhere}
+#rpgView .adv-guild-directory .adv-guild-info small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#rpgView .adv-guild-directory .adv-guild-info span{font-size:11px}
+#rpgView .adv-guild-directory .adv-badge{flex:0 0 auto}
+#rpgView .adv-guild-directory [hidden]{display:none!important}
+@media(max-width:760px){#rpgView .adv-guild-directory{grid-template-columns:1fr}#rpgView .adv-guild-directory-tools{align-items:stretch;flex-direction:column}#rpgView .adv-guild-directory-tools input{max-width:none;width:100%}}
