@@ -7,11 +7,11 @@
   const S={catalog:[],owned:[],appearance:{},balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
     ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
-    ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],
+    ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],['weapon','Armas'],
     ['aura','Auras'],['pet','Pets'],['title','Títulos']
   ];
-  const SLOT_NAME={nameColor:'Cor do nome',hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura',pet:'Pet companheiro',title:'Título'};
-  const SLOT_ICON={all:'✦',nameColor:'✧',hair:'✂',hat:'♛',outfit:'⚔',shoulders:'🛡',cloak:'◈',mask:'◉',accessory:'✧',aura:'☼',pet:'🐉',title:'♕'};
+  const SLOT_NAME={nameColor:'Cor do nome',hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',weapon:'Arma',aura:'Aura',pet:'Pet companheiro',title:'Título'};
+  const SLOT_ICON={all:'✦',nameColor:'✧',hair:'✂',hat:'♛',outfit:'⚔',shoulders:'🛡',cloak:'◈',mask:'◉',accessory:'✧',weapon:'⚔',aura:'☼',pet:'🐉',title:'♕'};
   const ACH_NAME={
     primeiro:'Primeiro passo',sequencia:'Sequência de fogo',gabarito:'Gabarito',
     explorador:'Explorador',simulado:'Veterano',nivel5:'Nível 5',
@@ -46,7 +46,7 @@
       :'width:100%;max-width:260px;height:260px;';
     const id=slot=>a[slot]||'';
     const hair=id('hair'),hat=id('hat'),outfit=id('outfit'),shoulders=id('shoulders'),
-      cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),aura=id('aura'),pet=id('pet');
+      cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),weapon=id('weapon'),aura=id('aura'),pet=id('pet');
     const auraColors={
       'aura-ember':'#ff873d','aura-celestial':'#8bdcff','aura-dedication':'#f5d98b',
       'aura-solar-ascendant':'#ffd04b','aura-void-emperor':'#bd78ff',
@@ -56,7 +56,8 @@
     let gearGlowColor='';
     if(hat==='helm-eclipse-crown'||outfit==='armor-solar-sovereign'||shoulders==='shoulders-celestial-titan')gearGlowColor='#ffd36b';
     if(hat==='helm-astral-dragon'||accessory==='accessory-astral-core')gearGlowColor='#73e5ff';
-    if(outfit==='armor-berserker')gearGlowColor='#ff3945';
+    if(outfit==='armor-vader'||weapon==='weapon-red-plasma-saber')gearGlowColor='#ff293d';
+    if(shoulders.startsWith('shoulders-')&&['shoulders-celestial-regent','shoulders-void-colossus','shoulders-sunforge'].includes(shoulders))gearGlowColor='#ffd45c';
     if(outfit==='armor-crystal-knight')gearGlowColor='#83eaff';
     if(outfit==='armor-storm-paladin')gearGlowColor='#a9d7ff';
     if(outfit==='armor-emerald-warden')gearGlowColor='#60f0b4';
@@ -66,6 +67,7 @@
     if(hat==='helm-dragon-emperor')gearGlowColor='#ff8c58';
     if(hat==='helm-rune-knight')gearGlowColor='#76eaff';
     if(cloak==='cloak-phoenix')gearGlowColor='#ff754b';
+    if(accessory.startsWith('wings-')&&['wings-ember-titan','wings-crystal-seraph','wings-nebula-emperor','wings-abyssal-flame'].includes(accessory))gearGlowColor=accessory==='wings-nebula-emperor'?'#b88cff':accessory==='wings-abyssal-flame'?'#ff5865':accessory==='wings-ember-titan'?'#ff9a44':'#9deaff';
     const glowColor=auraColor||gearGlowColor;
     const auraFilterId='arcAuraGlow-'+(aura||hat||outfit||shoulders||cloak||accessory||'none');
     const glowFilter=glowColor?' filter="url(#'+auraFilterId+')"':'';
@@ -96,6 +98,20 @@
     if(accessory==='wings-thunder-emperor')back+='<g class="arc-legendary-wings"><path d="M94 150 Q48 161 5 109 L22 91 L8 69 L40 74 L37 37 L72 64 L91 105Z M106 150 Q152 161 195 109 L178 91 L192 69 L160 74 L163 37 L128 64 L109 105Z" fill="#527da9" stroke="#d9f4ff" stroke-width="4"/><path d="M87 136 L24 78 L57 93 L77 113 M113 136 L176 78 L143 93 L123 113" stroke="#e9fbff" stroke-width="4" fill="none"/><path d="M58 82 L75 92 L64 109 L87 118 M142 82 L125 92 L136 109 L113 118" stroke="#8deaff" stroke-width="5" fill="none"><animate attributeName="opacity" values=".35;1;.35" dur=".9s" repeatCount="indefinite"/></path><animateTransform attributeName="transform" type="scale" values="1 1;1.09 1.04;1 1" dur="2.5s" repeatCount="indefinite" additive="sum"/></g>';
     if(accessory==='wings-blood-moon')back+='<g class="arc-legendary-wings"><path d="M94 151 Q48 163 4 108 Q22 99 8 73 Q37 79 34 43 Q67 60 83 103 Q76 56 94 12 Q111 58 105 117Z M106 151 Q152 163 196 108 Q178 99 192 73 Q163 79 166 43 Q133 60 117 103 Q124 56 106 12Z" fill="#762f4a" stroke="#ff9eae" stroke-width="4"/><path d="M91 137 Q52 97 23 68 M109 137 Q148 97 177 68" stroke="#ffd1d8" stroke-width="3" fill="none"/><animateTransform attributeName="transform" type="scale" values="1 1;1.1 1.04;1 1" dur="2.3s" repeatCount="indefinite" additive="sum"/><animate attributeName="opacity" values=".8;1;.8" dur="1.5s" repeatCount="indefinite"/></g>';
     if(accessory==='wings-starlight')back+='<g class="arc-legendary-wings"><path d="M94 150 Q48 164 5 108 Q19 95 5 70 Q39 76 37 39 Q67 57 84 101 Q72 50 94 7 Q111 52 105 116Z M106 150 Q152 164 195 108 Q181 95 195 70 Q161 76 163 39 Q133 57 116 101 Q128 50 106 7Z" fill="#b9b9f0" stroke="#fff" stroke-width="4"/><path d="M91 137 Q52 95 23 65 M109 137 Q148 95 177 65" stroke="#fff" stroke-width="4" fill="none"/><g fill="#fff"><circle cx="40" cy="91" r="3"><animate attributeName="opacity" values=".2;1;.2" dur="1.7s" repeatCount="indefinite"/></circle><circle cx="160" cy="91" r="3"><animate attributeName="opacity" values="1;.2;1" dur="1.7s" repeatCount="indefinite"/></circle></g><animateTransform attributeName="transform" type="scale" values="1 1;1.08 1.05;1 1" dur="3s" repeatCount="indefinite" additive="sum"/></g>';
+
+    const newWingFinishes={
+      'wings-ember-titan':['#d9572f','#ffd77e'],'wings-crystal-seraph':['#91d5ee','#f2ffff'],
+      'wings-nebula-emperor':['#604a9c','#dfbaff'],'wings-abyssal-flame':['#612b49','#ff8795']
+    };
+    const wingFinish=newWingFinishes[accessory];
+    if(wingFinish){
+      back+='<g class="arc-legendary-wings"><path d="M94 151 Q51 155 5 109 Q22 99 7 72 Q40 79 35 39 Q70 58 84 101 Q72 49 94 5 Q112 52 105 116Z M106 151 Q149 155 195 109 Q178 99 193 72 Q160 79 165 39 Q130 58 116 101 Q128 49 106 5Z" fill="'+wingFinish[0]+'" stroke="'+wingFinish[1]+'" stroke-width="5" stroke-linejoin="round"/>'+
+       '<path d="M90 139 Q48 99 22 65 M110 139 Q152 99 178 65" stroke="'+wingFinish[1]+'" stroke-width="4" fill="none"/>'+
+       '<path d="M91 145 L60 110 L78 118 L95 137 M109 145 L140 110 L122 118 L105 137" fill="none" stroke="#fff" stroke-width="3" opacity=".72"/>'+
+       '<animateTransform attributeName="transform" type="scale" values="1 1;1.1 1.05;1 1" dur="2.7s" repeatCount="indefinite" additive="sum"/>'+
+       '<animate attributeName="opacity" values=".78;1;.78" dur="1.8s" repeatCount="indefinite"/></g>';
+    }
+
     if(cloak){
       const cloakColor=cloak==='cloak-forest'?'#456c59':cloak==='cloak-night'?'#51416f':cloak==='cloak-veteran'?'#783b48':cloak==='cloak-phoenix'?'#8f302f':cloak==='cloak-obsidian'?'#252b42':'#334c72';
       back+='<path d="M74 116 Q100 103 126 116 L158 205 Q100 230 42 205Z" fill="'+cloakColor+'" stroke="'+(cloak==='cloak-phoenix'?'#ffbd62':cloak==='cloak-obsidian'?'#9d8ad0':'#d6bd85')+'" stroke-width="4" stroke-linejoin="round"/><path d="M85 122 L100 212 L115 122" fill="none" stroke="#ffffff" stroke-opacity=".25" stroke-width="4"/>';
@@ -156,6 +172,24 @@
       body+='<path d="M69 130 L48 112 L25 126 L34 157 L69 151Z M131 130 L152 112 L175 126 L166 157 L131 151Z" fill="'+sc+'" stroke="#252d3b" stroke-width="5" stroke-linejoin="round"/><path d="M34 130 L54 119 L69 136 L56 150 L39 145Z M166 130 L146 119 L131 136 L144 150 L161 145Z" fill="'+st+'" stroke="#343b4c" stroke-width="3"/><path d="M31 126 L18 107 L46 115 M169 126 L182 107 L154 115" fill="none" stroke="'+st+'" stroke-width="5" stroke-linecap="round"/>';
     }
 
+
+    const shoulderFinishes={
+      'shoulders-bronze-guard':['#9a6545','#f3c58a'],'shoulders-forest-ram':['#39754f','#a6e6a7'],
+      'shoulders-steel-vanguard':['#52667d','#dce8f2'],'shoulders-ruby-sentinel':['#9b3344','#ffb1a7'],
+      'shoulders-moon-silver':['#617d9c','#d8efff'],'shoulders-jade-temple':['#278c70','#c7ffd9'],
+      'shoulders-stormbreaker':['#3c6c9b','#8cecff'],'shoulders-obsidian-spikes':['#292b42','#c7a2ff'],
+      'shoulders-sunforge':['#a66b21','#fff0a0'],'shoulders-arcane-prism':['#674b9c','#e4d1ff'],
+      'shoulders-frost-titan':['#6aabc3','#d9fbff'],'shoulders-dragon-emperor':['#973a3d','#ffd18a'],
+      'shoulders-celestial-regent':['#b88a37','#fff3ac'],'shoulders-void-colossus':['#352b59','#c5a0ff']
+    };
+    const shoulderFinish=shoulderFinishes[shoulders];
+    if(shoulderFinish){
+      body+='<path d="M69 130 L46 111 L19 126 L31 159 L68 151Z M131 130 L154 111 L181 126 L169 159 L132 151Z" fill="'+shoulderFinish[0]+'" stroke="'+shoulderFinish[1]+'" stroke-width="5" stroke-linejoin="round"/>'+
+        '<path d="M30 132 L50 119 L68 136 L55 151 L39 146Z M170 132 L150 119 L132 136 L145 151 L161 146Z" fill="'+shoulderFinish[1]+'" stroke="'+shoulderFinish[0]+'" stroke-width="3"/>'+
+        '<path d="M27 126 L13 103 L49 115 M173 126 L187 103 L151 115" fill="none" stroke="'+shoulderFinish[1]+'" stroke-width="6" stroke-linecap="round"/>'+
+        '<path d="M37 139 L52 135 L60 144 M163 139 L148 135 L140 144" fill="none" stroke="#fff" stroke-width="2.5" opacity=".8"/>';
+    }
+
     // Cajado fica junto à mão; medalha e orbe são detalhes frontais.
     if(accessory==='accessory-staff')
       back+='<path d="M32 111 L25 218" stroke="#8b6845" stroke-width="8" stroke-linecap="round"/><path d="M25 111 Q25 96 39 93 Q53 96 53 111 Q53 126 39 129 Q25 126 25 111Z" fill="#8dd0ef" stroke="#e4d18b" stroke-width="4"/><path d="M39 96 L39 124 M28 111 L50 111" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>';
@@ -179,6 +213,23 @@
       head+='<path d="M66 84 Q100 70 134 84 L128 114 Q100 128 72 114Z" fill="#344154" stroke="#1d283a" stroke-width="4"/><path d="M100 95 L116 106 L100 116 L84 106Z" fill="#a8b7c7"/>';
     if(mask==='mask-flame')
       head+='<path d="M68 87 Q100 72 132 87 L127 116 Q100 128 73 116Z" fill="#9d4a37" stroke="#f2b36d" stroke-width="4"/><path d="M100 89 Q114 104 100 119 Q86 104 100 89Z" fill="#f7d58f"/>';
+
+
+    const maskFinishes={
+      'mask-copper-fox':['#a95b39','#ffe0a0'],'mask-bone-guard':['#d6c8a2','#fff4cf'],'mask-bamboo-spirit':['#4f9667','#c0f6a9'],
+      'mask-scarlet-cloth':['#a83248','#ffb7a9'],'mask-frost-wolf':['#527fba','#c9f5ff'],'mask-jade-dragon':['#278d75','#b1ffe0'],
+      'mask-sun-warrior':['#c38c35','#fff0a5'],'mask-raven-moon':['#39465f','#c8ddff'],'mask-void-stalker':['#563b82','#d2a7ff'],
+      'mask-crystal-oracle':['#69a9cd','#e0ffff'],'mask-iron-demon':['#333743','#ff6868'],'mask-storm-samurai':['#4169a0','#a6e9ff'],
+      'mask-phoenix-empress':['#a93b35','#ffd47a'],'mask-celestial-judge':['#7899ad','#e2ffff'],'mask-abyss-king':['#39254e','#e4a7ff'],
+      'mask-eternal-nebula':['#49356f','#ff9bde'],'mask-dragon-god':['#8d363c','#ffe08c']
+    };
+    const maskFinish=maskFinishes[mask];
+    if(maskFinish){
+      head+='<path d="M66 84 Q100 70 134 84 L128 116 Q100 132 72 116Z" fill="'+maskFinish[0]+'" stroke="'+maskFinish[1]+'" stroke-width="4"/>'+
+        '<path d="M74 92 L91 98 L100 91 L109 98 L126 92 M81 112 L100 121 L119 112" fill="none" stroke="'+maskFinish[1]+'" stroke-width="3"/>'+
+        '<path d="M80 102 L92 104 M108 104 L120 102" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'+
+        '<circle cx="100" cy="105" r="5" fill="'+maskFinish[1]+'"><animate attributeName="r" values="3;6;3" dur="2s" repeatCount="indefinite"/></circle>';
+    }
 
     // 4. Chapéus e elmos: todos têm a mesma linha de encaixe no alto da cabeça.
     if(hat==='hat-apprentice')
@@ -220,10 +271,28 @@
       head+='<path d="M52 78 L58 34 L79 54 L99 8 L119 54 L142 34 L148 78Z" fill="#29283f" stroke="#d2ae64" stroke-width="5" stroke-linejoin="round"/><path d="M57 78 L143 78" stroke="#f4d88d" stroke-width="7"/><path d="M99 25 L105 42 L122 47 L108 58 L111 75 L99 65 L87 75 L90 58 L76 47 L93 42Z" fill="#b48aff" stroke="#f5e0a2" stroke-width="3"/><circle cx="69" cy="67" r="5" fill="#6fe9ff"/><circle cx="130" cy="67" r="5" fill="#6fe9ff"/>';
     if(hat==='helm-astral-dragon')
       head+='<path d="M51 83 Q43 19 100 12 Q157 19 149 83 L137 103 L63 103Z" fill="#315779" stroke="#162d4e" stroke-width="7"/><path d="M66 48 L46 4 L89 32 L100 0 L111 32 L154 4 L134 48" fill="#79c9e9" stroke="#d4f5ff" stroke-width="5" stroke-linejoin="round"/><path d="M58 65 L100 81 L142 65" fill="none" stroke="#f6d98b" stroke-width="6"/><path d="M80 88 L100 95 L120 88" fill="none" stroke="#d8f5ff" stroke-width="4"/><circle cx="100" cy="43" r="6" fill="#c7f6ff"/>';
+
+    const newHatFinishes={
+      'hat-crystal-circlet':['#4d9fbc','#c6fbff'],'hat-ember-crown':['#8e3a2d','#ffd27a'],
+      'hat-astral-halo':['#7052aa','#d8c2ff'],'hat-thunder-horns':['#3d628c','#a9edff']
+    };
+    const hatFinish=newHatFinishes[hat];
+    if(hatFinish){
+      if(hat==='hat-astral-halo')head+='<ellipse cx="100" cy="20" rx="43" ry="10" fill="none" stroke="'+hatFinish[1]+'" stroke-width="4"><animate attributeName="ry" values="8;13;8" dur="2s" repeatCount="indefinite"/></ellipse><path d="M100 2 L108 16 L124 18 L111 29 L114 44 L100 36 L86 44 L89 29 L76 18 L92 16Z" fill="'+hatFinish[1]+'"/>';
+      else head+='<path d="M53 75 L62 40 L82 55 L100 21 L118 55 L138 40 L147 75Z" fill="'+hatFinish[0]+'" stroke="'+hatFinish[1]+'" stroke-width="5" stroke-linejoin="round"/><path d="M60 76 L140 76" stroke="'+hatFinish[1]+'" stroke-width="6"/><circle cx="100" cy="49" r="8" fill="'+hatFinish[1]+'"><animate attributeName="r" values="6;9;6" dur="1.8s" repeatCount="indefinite"/></circle>';
+    }
+
     if(accessory==='accessory-astral-core')
       front+='<circle cx="168" cy="152" r="22" fill="#55dfff" opacity=".26"/><path d="M168 129 L184 151 L168 175 L152 151Z" fill="#70eaff" stroke="#e1fdff" stroke-width="4"/><path d="M168 135 L168 169 M157 151 L179 151" stroke="#ffffff" stroke-width="2.5" opacity=".9"/><circle cx="168" cy="151" r="5" fill="#fff"/>';
 
-    const berserkerArt=outfit==='armor-berserker'?'<g class="arc-berserker-set"><path d="M77 91 L57 84 L39 62 L30 72 L45 105 L65 119 L73 157 L63 190 L77 211 L96 190 L104 145 L111 190 L128 211 L143 191 L132 157 L137 119 L157 105 L172 72 L163 62 L143 84 L123 91Z" fill="#17191f" stroke="#68707d" stroke-width="4" stroke-linejoin="round"/><path d="M77 94 L61 100 L53 87 L66 113 L76 133 L92 125 L100 144 L108 125 L124 133 L144 113 L157 87 L139 100 L123 94 L111 104 L100 97Z" fill="#343943" stroke="#8a929d" stroke-width="3"/><path d="M80 94 L100 82 L120 94 L128 128 L116 151 L100 159 L84 151 L72 128Z" fill="#252a32" stroke="#a0a7b1" stroke-width="3"/><path d="M84 103 L100 95 L116 103 L112 119 L100 129 L88 119Z" fill="#11151c" stroke="#6f7783" stroke-width="2"/><path d="M87 111 L98 115 M102 115 L113 111" stroke="#ff3b45" stroke-width="3" stroke-linecap="round"><animate attributeName="opacity" values=".45;1;.45" dur="1.2s" repeatCount="indefinite"/></path><path d="M77 93 L54 80 L35 52 L48 55 L65 72 L78 77 M123 93 L146 80 L165 52 L152 55 L135 72 L122 77" fill="#20242c" stroke="#a0a7b1" stroke-width="3" stroke-linejoin="round"/><path d="M82 79 L71 62 L79 43 L88 60 L100 47 L112 60 L121 43 L129 62 L118 79 L100 86Z" fill="#20242c" stroke="#929aa5" stroke-width="3" stroke-linejoin="round"/><path d="M87 73 L100 58 L113 73 L108 88 L92 88Z" fill="#11151b" stroke="#737c88" stroke-width="2"/><path d="M91 78 L98 80 M102 80 L109 78" stroke="#ff3945" stroke-width="3" stroke-linecap="round"><animate attributeName="opacity" values=".4;1;.4" dur="1s" repeatCount="indefinite"/></path><path d="M72 119 L55 127 L45 151 L59 165 L76 151 M128 119 L145 127 L155 151 L141 165 L124 151" fill="#20242c" stroke="#858e9a" stroke-width="3"/><path d="M83 158 L72 185 L83 204 L96 189 L100 165 M117 158 L128 185 L117 204 L104 189 L100 165" fill="#20242c" stroke="#858e9a" stroke-width="3"/><path d="M87 135 L100 143 L113 135 M81 150 L100 161 L119 150" fill="none" stroke="#b3bac3" stroke-width="3"/><path d="M62 99 L46 91 L34 98 L50 109 M138 99 L154 91 L166 98 L150 109" fill="#3c424d" stroke="#a0a7b1" stroke-width="3"/><path d="M94 130 L100 136 L106 130" fill="none" stroke="#d4d9df" stroke-width="2"/></g>':'';
+
+    if(accessory==='accessory-phoenix-core')front+='<circle cx="165" cy="150" r="25" fill="#ff743f" opacity=".22"/><path d="M165 124 L181 150 L165 177 L149 150Z" fill="#ff9b48" stroke="#ffe6a4" stroke-width="4"/><path d="M165 133 L165 168 M154 150 L176 150" stroke="#fff8d4" stroke-width="3"/><circle cx="165" cy="150" r="6" fill="#fff"><animate attributeName="opacity" values=".35;1;.35" dur="1s" repeatCount="indefinite"/></circle>';
+    if(accessory==='accessory-void-orb')front+='<circle cx="168" cy="151" r="23" fill="#9863e7" opacity=".22"/><circle cx="168" cy="151" r="15" fill="#59418b" stroke="#d5aaff" stroke-width="4"/><path d="M168 131 L178 151 L168 171 L158 151Z" fill="#b88aff"/><circle cx="163" cy="145" r="4" fill="#fff"/>';
+    if(accessory==='accessory-royal-sigil')front+='<path d="M100 150 L110 160 L100 180 L90 160Z" fill="#d9a943" stroke="#fff0b7" stroke-width="3"/><path d="M83 150 Q100 134 117 150 L113 164 L87 164Z" fill="#8c3b52" stroke="#f3ce7b" stroke-width="3"/><circle cx="100" cy="151" r="5" fill="#fff3b0"/>';
+    if(accessory==='accessory-thunder-circlet')front+='<ellipse cx="165" cy="153" rx="24" ry="17" fill="none" stroke="#55dfff" stroke-width="5" transform="rotate(-24 165 153)"><animate attributeName="opacity" values=".55;1;.55" dur="1.1s" repeatCount="indefinite"/></ellipse><path d="M165 130 L172 146 L184 151 L170 158 L166 175 L158 159 L146 153 L160 146Z" fill="#93efff" stroke="#fff" stroke-width="3"/>';
+
+    const vaderArt=outfit==='armor-vader'?'<g class="arc-vader-set"><path d="M74 113 Q100 101 126 113 L160 210 Q100 235 40 210Z" fill="#090d14" stroke="#38424f" stroke-width="4"/><path d="M74 121 L56 144 L67 181 L100 201 L133 181 L144 144 L126 121 L112 130 L100 121 L88 130Z" fill="#141a24" stroke="#737d8b" stroke-width="4"/><path d="M81 133 L100 146 L119 133 L113 171 L100 184 L87 171Z" fill="#05080d" stroke="#8c9aa8" stroke-width="3"/><path d="M86 151 L114 151 M88 160 L112 160 M91 169 L109 169" stroke="#bfced9" stroke-width="3"/><path d="M90 136 L90 174 M100 140 L100 180 M110 136 L110 174" stroke="#d6e0e6" stroke-width="2" opacity=".8"/><path d="M60 132 L43 148 L49 179 L67 173 L76 145 M140 132 L157 148 L151 179 L133 173 L124 145" fill="#080c13" stroke="#697583" stroke-width="4"/><path d="M78 91 Q72 43 100 32 Q128 43 122 91 L132 110 L100 122 L68 110Z" fill="#05080d" stroke="#8b96a2" stroke-width="4"/><path d="M72 73 Q74 23 100 20 Q126 23 128 73 L117 88 L83 88Z" fill="#0a0e15" stroke="#aeb9c4" stroke-width="4"/><path d="M79 77 L94 83 L88 94 L76 90Z M121 77 L106 83 L112 94 L124 90Z" fill="#ff334b" stroke="#ffb6bd" stroke-width="2"><animate attributeName="opacity" values=".65;1;.65" dur="1.3s" repeatCount="indefinite"/></path><path d="M100 90 L117 106 L100 123 L83 106Z" fill="#171d27" stroke="#a3aebb" stroke-width="3"/><path d="M92 101 L100 110 L108 101 M91 114 L100 119 L109 114" stroke="#aeb8c4" stroke-width="3"/><path d="M64 111 L45 123 L52 154 L72 147 M136 111 L155 123 L148 154 L128 147" fill="none" stroke="#222c38" stroke-width="7"/><path d="M78 186 L69 204 L84 216 L100 205 L116 216 L131 204 L122 186" fill="#090d14" stroke="#4c5868" stroke-width="3"/><path d="M82 190 L100 201 L118 190" fill="none" stroke="#c0ccd6" stroke-width="3"/><path d="M78 119 Q100 106 122 119" fill="none" stroke="#d5e1e9" stroke-width="3" opacity=".7"/></g>':'';
+    const weaponArt=weapon==='weapon-red-plasma-saber'?'<g class="arc-plasma-saber"><path d="M160 170 L185 42" stroke="#ff243f" stroke-width="12" stroke-linecap="round" opacity=".28"/><path d="M160 170 L185 42" stroke="#ff253f" stroke-width="6" stroke-linecap="round"/><path d="M160 170 L185 42" stroke="#fff4f4" stroke-width="2.2" stroke-linecap="round"/><path d="M151 166 L170 170 L175 158 L156 154Z" fill="#151a24" stroke="#aab5c3" stroke-width="3"/><path d="M152 158 L173 163 M153 168 L172 173" stroke="#dce7ef" stroke-width="2"/><circle cx="165" cy="163" r="4" fill="#ff3c55"><animate attributeName="opacity" values=".5;1;.5" dur=".8s" repeatCount="indefinite"/></circle></g>':'';
     const petArt=pet?(()=>{const wrap='<g class="arc-pet-companion"><ellipse cx="165" cy="205" rx="18" ry="4" fill="#000" opacity=".25"/><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.4s" repeatCount="indefinite"/>';const end='</g>';if(pet==='pet-dragonling')return wrap+'<path d="M150 180 Q135 164 143 148 Q154 153 159 166 M177 178 Q195 161 190 145 Q176 151 170 166" fill="#5cb7d7" stroke="#244c68" stroke-width="3"/><ellipse cx="164" cy="188" rx="17" ry="15" fill="#3f91b7" stroke="#244c68" stroke-width="3"/><path d="M151 185 Q138 189 140 201 Q151 198 157 194" fill="#3f91b7" stroke="#244c68" stroke-width="3"/><circle cx="175" cy="171" r="13" fill="#65c3df" stroke="#244c68" stroke-width="3"/><path d="M166 161 L163 150 L174 158 M179 160 L188 151 L187 165" fill="#79d3e8" stroke="#244c68" stroke-width="3"/><circle cx="179" cy="169" r="2" fill="#142b42"/><circle cx="170" cy="169" r="2" fill="#142b42"/><path d="M171 177 Q176 181 181 176" fill="none" stroke="#17374a" stroke-width="2"/><path d="M157 199 L155 205 M170 200 L171 205" stroke="#244c68" stroke-width="3" stroke-linecap="round"/>'+end;if(pet==='pet-goblin')return wrap+'<path d="M151 177 L137 168 L153 164 M179 174 L195 163 L185 182" fill="#75a94d" stroke="#354b32" stroke-width="3"/><ellipse cx="166" cy="190" rx="15" ry="18" fill="#6f9e49" stroke="#354b32" stroke-width="3"/><circle cx="166" cy="169" r="15" fill="#83b85b" stroke="#354b32" stroke-width="3"/><path d="M155 158 L150 146 L163 155 M174 156 L184 145 L180 162" fill="#a5ce6c" stroke="#354b32" stroke-width="3"/><circle cx="160" cy="169" r="2.5" fill="#202b20"/><circle cx="172" cy="169" r="2.5" fill="#202b20"/><path d="M160 179 Q166 184 173 178" fill="none" stroke="#354b32" stroke-width="2.5"/><path d="M158 204 L155 210 M174 204 L177 210" stroke="#354b32" stroke-width="4" stroke-linecap="round"/>'+end;if(pet==='pet-slime')return wrap+'<path d="M145 201 Q143 176 160 171 Q180 166 187 188 Q190 203 178 207 L151 207Z" fill="#7edb9c" stroke="#2f785c" stroke-width="3"/><ellipse cx="160" cy="188" rx="3" ry="5" fill="#164c43"/><ellipse cx="175" cy="188" rx="3" ry="5" fill="#164c43"/><path d="M162 197 Q168 202 174 197" fill="none" stroke="#2f785c" stroke-width="2.5"/><circle cx="153" cy="178" r="4" fill="#d5ffe4" opacity=".9"/><path d="M166 171 Q158 160 168 155 Q179 163 175 172" fill="#a5f5c4" stroke="#2f785c" stroke-width="2"/>'+end;if(pet==='pet-wolfcub')return wrap+'<ellipse cx="164" cy="191" rx="18" ry="14" fill="#8b9bb4" stroke="#3d4b64" stroke-width="3"/><circle cx="170" cy="173" r="14" fill="#aab8cc" stroke="#3d4b64" stroke-width="3"/><path d="M159 163 L157 148 L169 159 M176 160 L187 151 L183 168" fill="#8295b1" stroke="#3d4b64" stroke-width="3"/><path d="M164 178 Q170 184 177 178" fill="none" stroke="#3d4b64" stroke-width="2.5"/><circle cx="166" cy="171" r="2" fill="#18243a"/><circle cx="176" cy="171" r="2" fill="#18243a"/><ellipse cx="172" cy="180" rx="6" ry="4" fill="#e6eaf0"/><circle cx="173" cy="178" r="2" fill="#263448"/><path d="M150 191 Q138 183 143 174 Q153 177 156 186" fill="#aab8cc" stroke="#3d4b64" stroke-width="3"/><path d="M155 201 L154 207 M172 202 L174 208" stroke="#3d4b64" stroke-width="3" stroke-linecap="round"/>'+end;return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 160 Q184 177 177 184" fill="#f39a4e" stroke="#82472f" stroke-width="3"/><ellipse cx="166" cy="190" rx="15" ry="14" fill="#f2c36c" stroke="#82472f" stroke-width="3"/><circle cx="166" cy="173" r="13" fill="#ffd37b" stroke="#82472f" stroke-width="3"/><path d="M157 164 Q153 151 164 145 Q167 158 172 162" fill="#ff8a4c"/><circle cx="161" cy="174" r="2" fill="#633b2c"/><circle cx="171" cy="174" r="2" fill="#633b2c"/><path d="M162 181 Q166 185 171 181" fill="none" stroke="#82472f" stroke-width="2"/>'+end;})():'';
     const filterDefs=glowColor
       ? '<filter id="'+auraFilterId+'" x="-55%" y="-45%" width="210%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="8" result="softAlpha"/><feFlood flood-color="'+glowColor+'" flood-opacity=".96" result="auraTint"/><feComposite in="auraTint" in2="softAlpha" operator="in" result="coloredGlow"/><feGaussianBlur in="coloredGlow" stdDeviation="4" result="wideGlow"/><feMerge><feMergeNode in="wideGlow"/><feMergeNode in="coloredGlow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
@@ -298,7 +367,7 @@
     };
     const sideGroups=[
       {title:'Aparência',items:[['hair','Cabelos'],['hat','Chapéus e elmos']]},
-      {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios']]},
+      {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios'],['weapon','Armas']]},
       {title:'Identidade',items:[['nameColor','Cores neon']]},{title:'Poderes e títulos',items:[['aura','Auras'],['pet','Pets'],['title','Títulos']]}
     ];
     const cats='<div class="arc-side-all">'+categoryButton(['all','Todos os itens'])+'</div>'+
