@@ -341,84 +341,72 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 
 
 
-<style id="login-atmosphere">
-/* Iluminação real em camadas independentes, acima da imagem e atrás do conteúdo. */
+
+
+<style id="login-ambient-background">
+/* Efeitos aplicados diretamente ao background para não depender de camadas sobrepostas. */
 .login {
-  position: relative;
-  isolation: isolate;
-  background-image: url('./login-biblioteca2.jpg') !important;
-  background-size: cover;
-  background-position: center;
+  background-color: #081322 !important;
+  background-image:
+    linear-gradient(116deg,
+      transparent 13%,
+      rgba(117, 163, 225, .08) 21%,
+      rgba(166, 202, 245, .27) 29%,
+      rgba(130, 177, 235, .15) 36%,
+      transparent 47%),
+    linear-gradient(127deg,
+      transparent 39%,
+      rgba(117, 162, 222, .05) 47%,
+      rgba(165, 199, 241, .20) 55%,
+      rgba(124, 169, 229, .10) 62%,
+      transparent 73%),
+    radial-gradient(ellipse 32% 45% at 0% 70%,
+      rgba(255, 177, 104, .22), transparent 80%),
+    radial-gradient(ellipse 30% 43% at 100% 68%,
+      rgba(255, 195, 127, .19), transparent 82%),
+    radial-gradient(ellipse at center,
+      transparent 48%, rgba(103, 137, 207, .08) 77%,
+      rgba(111, 98, 183, .19) 100%),
+    url('./login-biblioteca2.jpg') !important;
+  background-size:
+    125% 125%,
+    135% 135%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    cover !important;
+  background-position:
+    48% 50%,
+    55% 48%,
+    0% 50%,
+    100% 50%,
+    center,
+    center !important;
+  background-repeat: no-repeat !important;
+  background-blend-mode: screen, screen, screen, screen, screen, normal !important;
+  animation: academiaAmbientDrift 22s ease-in-out infinite alternate;
 }
-.login-lighting {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  isolation: isolate;
-}
-.login-lighting span {
-  position: absolute;
-  inset: -10%;
-  display: block;
-  pointer-events: none;
-}
-.login-lighting .login-beams {
-  background:
-    linear-gradient(116deg, transparent 12%, rgba(119,162,222,.035) 20%, rgba(162,198,242,.23) 29%, rgba(132,176,231,.12) 36%, transparent 47%),
-    linear-gradient(127deg, transparent 39%, rgba(119,162,222,.025) 47%, rgba(159,193,237,.17) 55%, rgba(132,176,231,.08) 62%, transparent 73%),
-    linear-gradient(108deg, transparent 63%, rgba(135,171,228,.08) 70%, transparent 81%);
-  filter: blur(17px);
-  mix-blend-mode: screen;
-  opacity: .9;
-  transform: translate3d(-1.5%,0,0);
-  animation: loginBeamsDrift 22s ease-in-out infinite alternate;
-}
-.login-lighting .login-candlelight {
-  background:
-    radial-gradient(ellipse 27% 39% at 3% 73%, rgba(255,176,103,.27), transparent 78%),
-    radial-gradient(ellipse 25% 37% at 97% 68%, rgba(255,195,126,.23), transparent 80%),
-    radial-gradient(ellipse 18% 24% at 0% 28%, rgba(255,190,120,.10), transparent 82%);
-  filter: blur(15px);
-  mix-blend-mode: screen;
-  opacity: .82;
-  animation: loginCandlePulse 5.8s ease-in-out infinite alternate;
-}
-.login-lighting .login-edge-glow {
-  background: radial-gradient(ellipse at center, transparent 48%, rgba(111,145,215,.06) 75%, rgba(103,105,177,.18) 100%);
-  box-shadow: inset 0 0 85px rgba(111,145,215,.20), inset 0 0 165px rgba(122,103,191,.12);
-  opacity: .9;
-}
-.login .login-layout { position: relative; z-index: 2; }
-.login .author-credit { z-index: 3; }
-@keyframes loginBeamsDrift {
-  from { opacity: .68; transform: translate3d(-1.5%, .4%, 0) scale(1); }
-  to { opacity: 1; transform: translate3d(1.5%, -.5%, 0) scale(1.025); }
-}
-@keyframes loginCandlePulse {
-  from { opacity: .58; }
-  to { opacity: .96; }
+@keyframes academiaAmbientDrift {
+  from {
+    background-position: 45% 50%, 58% 48%, -3% 50%, 103% 50%, center, center;
+  }
+  to {
+    background-position: 55% 50%, 48% 52%, 3% 50%, 97% 50%, center, center;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .login-lighting .login-beams,
-  .login-lighting .login-candlelight { animation: none !important; }
+  .login { animation: none !important; }
 }
-@media (max-width: 650px) {
-  .login-lighting .login-beams { opacity: .68; }
-  .login-lighting .login-candlelight { opacity: .68; }
-  .login-lighting .login-edge-glow { opacity: .72; }
+@media (max-width: 760px) {
+  .login {
+    background-position: 45% 50%, 58% 48%, 0% 50%, 100% 50%, center, 58% center !important;
+  }
 }
 </style>
 
 </head>
 <body>
 <section class="login" id="login" aria-label="Tela inicial da Academia RPG">
-  <div class="login-lighting" aria-hidden="true">
-    <span class="login-beams"></span>
-    <span class="login-candlelight"></span>
-    <span class="login-edge-glow"></span>
-  </div>
   <div class="login-layout">
     <header class="login-brand">
       <div class="brand-emblem" aria-hidden="true">
