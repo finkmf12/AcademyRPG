@@ -265,7 +265,7 @@
     const sideGroups=[
       {title:'Aparência',items:[['hair','Cabelos'],['hat','Chapéus e elmos']]},
       {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios']]},
-      {title:'Poderes e títulos',items:[['aura','Auras'],['title','Títulos']]}
+      {title:'Identidade',items:[['nameColor','Cores neon']]},{title:'Poderes e títulos',items:[['aura','Auras'],['title','Títulos']]}
     ];
     const cats='<div class="arc-side-all">'+categoryButton(['all','Todos os itens'])+'</div>'+
       '<div class="arc-nav-groups">'+sideGroups.map(group=>
