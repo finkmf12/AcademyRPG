@@ -51,8 +51,13 @@
       'aura-phoenix':'#ff603e','aura-arcane-supreme':'#64e4ff'
     };
     const auraColor=auraColors[aura]||'';
-    const auraFilterId='arcAuraGlow-'+(aura||'none');
-    const glowFilter=auraColor?' filter="url(#'+auraFilterId+')"':'';
+    let gearGlowColor='';
+    if(hat==='helm-eclipse-crown'||outfit==='armor-solar-sovereign'||shoulders==='shoulders-celestial-titan')gearGlowColor='#ffd36b';
+    if(hat==='helm-astral-dragon'||accessory==='accessory-astral-core')gearGlowColor='#73e5ff';
+    if(cloak==='cloak-phoenix')gearGlowColor='#ff754b';
+    const glowColor=auraColor||gearGlowColor;
+    const auraFilterId='arcAuraGlow-'+(aura||hat||outfit||shoulders||cloak||accessory||'none');
+    const glowFilter=glowColor?' filter="url(#'+auraFilterId+')"':'';
     let back='',body='',head='',front='';
 
     // 1. Auras: halo, pulsação, partículas e luz projetada sobre o personagem.
@@ -184,10 +189,10 @@
     if(accessory==='accessory-astral-core')
       front+='<circle cx="168" cy="152" r="22" fill="#55dfff" opacity=".26"/><path d="M168 129 L184 151 L168 175 L152 151Z" fill="#70eaff" stroke="#e1fdff" stroke-width="4"/><path d="M168 135 L168 169 M157 151 L179 151" stroke="#ffffff" stroke-width="2.5" opacity=".9"/><circle cx="168" cy="151" r="5" fill="#fff"/>';
 
-    const filterDefs=auraColor
-      ? '<filter id="'+auraFilterId+'" x="-55%" y="-45%" width="210%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="8" result="softAlpha"/><feFlood flood-color="'+auraColor+'" flood-opacity=".96" result="auraTint"/><feComposite in="auraTint" in2="softAlpha" operator="in" result="coloredGlow"/><feGaussianBlur in="coloredGlow" stdDeviation="4" result="wideGlow"/><feMerge><feMergeNode in="wideGlow"/><feMergeNode in="coloredGlow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+    const filterDefs=glowColor
+      ? '<filter id="'+auraFilterId+'" x="-55%" y="-45%" width="210%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="8" result="softAlpha"/><feFlood flood-color="'+glowColor+'" flood-opacity=".96" result="auraTint"/><feComposite in="auraTint" in2="softAlpha" operator="in" result="coloredGlow"/><feGaussianBlur in="coloredGlow" stdDeviation="4" result="wideGlow"/><feMerge><feMergeNode in="wideGlow"/><feMergeNode in="coloredGlow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
       : '';
-    return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+(auraColor?' has-luminous-aura':'')+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 225" role="img" aria-label="Personagem medieval personalizado" style="'+svgStyle+'display:block;overflow:visible" focusable="false"><defs>'+filterDefs+'</defs><g class="arc-layer-back">'+back+'</g><g class="arc-character-glow"'+glowFilter+'><g class="arc-layer-body">'+body+'</g><g class="arc-layer-head">'+head+'</g><g class="arc-layer-front">'+front+'</g></g></svg>';
+    return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+(auraColor?' has-luminous-aura':gearGlowColor?' has-premium-glow':'')+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 225" role="img" aria-label="Personagem medieval personalizado" style="'+svgStyle+'display:block;overflow:visible" focusable="false"><defs>'+filterDefs+'</defs><g class="arc-layer-back">'+back+'</g><g class="arc-character-glow"'+glowFilter+'><g class="arc-layer-body">'+body+'</g><g class="arc-layer-head">'+head+'</g><g class="arc-layer-front">'+front+'</g></g></svg>';
   }
   function titleMarkup(appearance,variant='stage'){
     const selected=item(appearance?.title);
