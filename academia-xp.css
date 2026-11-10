@@ -176,3 +176,8 @@
 .mk-earned{color:#f2d18a;font-weight:700}
 @media(max-width:950px){.mk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.mk-hero{align-items:stretch;flex-direction:column;padding:20px}.mk-wallet{align-self:flex-start;min-width:140px}.mk-metrics{gap:7px}.mk-metrics>div{padding:10px}.mk-metrics b{font-size:17px}.mk-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mk-itembody{padding:9px}.mk-art{height:94px}.mk-icon{font-size:40px}.mk-itemtitle h4{font-size:11px}.mk-item p{font-size:10px;min-height:42px}.mk-buy{font-size:10px;padding:8px 5px}.mk-daily{align-items:flex-start;flex-direction:column}.mk-daily button{width:100%}.mk-toolbar .search{width:100%}.mk-inv{min-width:100%}}
+
+/* Aviso visível de saldo insuficiente no próprio item do Mercado Arcano */
+.mk-buy-alert{display:grid;gap:4px;margin:0 0 10px;padding:10px 11px;border:1px solid #a65d5d;border-radius:8px;background:#301b20;color:#f0c4c4;font-size:11px;line-height:1.45}
+.mk-buy-alert b{color:#ffaaaa;font-size:12px}
+.mk-buy-alert span{color:#e9caca}
