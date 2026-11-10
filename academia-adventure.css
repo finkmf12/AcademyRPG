@@ -6,6 +6,7 @@
 }
 .adv-nav-divider{margin:20px 10px 8px;padding-top:13px;border-top:1px solid #29384b;color:#8c9bb0;font-size:9px;font-weight:900;letter-spacing:2.2px}
 .rpgnav [data-adventure]{font-size:12px}
+.rpgnav [data-adventure="teacher"][hidden]{display:none!important}
 #rpgView{width:100%;max-width:1160px;margin:0 auto;padding:2px 0 48px;color:var(--adv-text)}
 #rpgView .adv-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:22px;overflow:hidden;margin:0 0 24px;padding:27px 30px;border:1px solid #3d3d45;border-radius:15px;background:linear-gradient(115deg,rgba(19,31,48,.98),rgba(29,35,51,.94) 64%,rgba(55,43,37,.80));box-shadow:0 14px 35px #0003}
 #rpgView .adv-hero:after{content:"";position:absolute;right:-75px;top:-140px;width:340px;height:340px;border:1px solid rgba(205,170,111,.16);border-radius:50%;box-shadow:0 0 0 24px rgba(205,170,111,.025),0 0 0 54px rgba(205,170,111,.02);pointer-events:none}
