@@ -96,6 +96,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 @media(max-width:650px){.sidebar{position:relative;width:100%;height:auto;padding:15px}.brand{padding-bottom:14px}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow:auto;gap:5px;padding-top:12px}.nav button{white-space:nowrap;width:auto;padding:10px}.main{margin:0;padding:22px 16px}.cards{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.topbar{align-items:flex-start}.user-pill{display:none}}
 </style>
 <link rel="stylesheet" href="./academia-xp.css">
+<link rel="stylesheet" href="./academia-avatar.css">
 <link rel="stylesheet" href="./academia-adventure.css">
 
 <style id="login-layout-fix">
@@ -492,7 +493,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
   <aside class="sidebar">
     <div class="brand"><div class="brand-mark"><span>⚔</span></div><div><strong>Academia RPG</strong><small>ÁREA DE ESTUDOS</small></div></div>
     <div class="nav-label nav-label-player">JOGADOR</div>
-    <nav class="rpgnav rpgnav-profile"><button data-rpg="perfil"><span class="ico">★</span> Perfil do Jogador</button></nav>
+    <nav class="rpgnav rpgnav-profile"><button data-rpg="perfil"><span class="ico">★</span> Perfil do Jogador</button><button data-rpg="atelier"><span class="ico">✦</span> Ateliê Arcano</button></nav>
     <div class="nav-label nav-label-library">BIBLIOTECA</div>
     <nav class="nav">
       <button class="active" data-page="inicio"><span class="ico">⌂</span> Visão geral</button>
@@ -699,5 +700,6 @@ window.AcademiaCtx={get supabase(){return supabase},get user(){return authUser},
 initialize().catch(error=>{console.error(error);toast('Falha ao iniciar. Confira a configuração do Supabase.');});
 </script>
 <script type="module" src="./academia-xp.js"></script>
+<script type="module" src="./academia-avatar.js"></script>
 <script type="module" src="./academia-adventure.js"></script>
 </body></html>
