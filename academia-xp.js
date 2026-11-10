@@ -201,7 +201,7 @@ function next() {
   if (quiz.i < quiz.qs.length - 1) { quiz.i++; quiz.ans = false; renderQuiz(); } else finish();
 }
 
-async async function finish() {
+async function finish() {
   const z = quiz;
   $('rpgView').innerHTML = '<div class="panel"><div class="empty"><b>Validando resultado e calculando XP...</b></div></div>';
   let xpHtml = '';
