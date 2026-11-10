@@ -23,7 +23,7 @@ end $$;
 create table if not exists public.avatar_items (
   id text primary key check (id ~ '^[a-z0-9_-]{3,60}$'),
   name text not null,
-  slot text not null check (slot in ('hair','hat','outfit','cloak','mask','accessory','aura')),
+  slot text not null check (slot in ('hair','hat','outfit','shoulders','cloak','mask','accessory','aura')),
   rarity text not null check (rarity in ('Comum','Incomum','Raro','Épico','Lendário')),
   icon text not null,
   description text not null,
@@ -76,6 +76,19 @@ values
   ('aura-celestial','Aura Celestial','aura','Lendário','🌠','Um halo raro reservado aos grandes exploradores.','aura_celestial','shop',1050,null),
   ('aura-dedication','Aura da Dedicação','aura','Lendário','✨','Recompensa especial por alcançar o nível 5.','aura_dedication','achievement',0,'nivel5'),
   ('armor-logic','Armadura da Lógica','outfit','Épico','⚙️','Concedida a quem explora todas as categorias de estudo.','outfit_logic','achievement',0,'explorador')
+  ('horns-infernal','Chifres do Inferno','hat','Lendário','😈','Chifres enormes com pontas rubras para uma presença intimidadora.','horns_infernal','shop',980,null),
+  ('horns-ancient','Chifres Ancestrais','hat','Lendário','🐏','Chifres dourados conquistados ao alcançar o nível 5.','horns_ancient','achievement',0,'nivel5'),
+  ('helm-berserker','Elmo do Berserker','hat','Épico','⚔️','Capacete pesado com grandes proteções laterais.','helm_berserker','shop',760,null),
+  ('helm-dragon','Elmo do Dragão','hat','Lendário','🐉','Elmo escarlate com crista e detalhes de dragão.','helm_dragon','shop',1180,null),
+  ('helm-paladin','Elmo do Paladino','hat','Lendário','🛡️','Elmo prateado concedido aos mestres do gabarito.','helm_paladin','achievement',0,'gabarito'),
+  ('helm-shadow','Elmo das Sombras','hat','Épico','🌑','Elmo negro com detalhes arcanos violeta.','helm_shadow','shop',890,null),
+  ('armor-colossus','Armadura do Colosso','outfit','Lendário','🦾','Armadura de placas largas, reforços e núcleo luminoso.','armor_colossus','shop',1450,null),
+  ('armor-dragon','Armadura do Dragão','outfit','Lendário','🐲','Armadura escamada recebida após concluir um simulado.','armor_dragon','achievement',0,'simulado'),
+  ('armor-paladin','Armadura do Paladino','outfit','Épico','⚜️','Armadura clara com detalhes dourados e peitoral reforçado.','armor_paladin','shop',1120,null),
+  ('armor-shadow','Armadura do Eclipse','outfit','Épico','🌘','Placas escuras com inscrições violetas.','armor_shadow','shop',1050,null),
+  ('shoulders-titan','Ombreiras Titânicas','shoulders','Épico','🛡️','Ombreiras largas de aço para ampliar a silhueta do guerreiro.','shoulders_titan','shop',620,null),
+  ('shoulders-dragon','Ombreiras do Dragão','shoulders','Lendário','🐉','Placas escarlates com pontas inspiradas em dragões.','shoulders_dragon','shop',880,null),
+  ('shoulders-paladin','Ombreiras do Campeão','shoulders','Lendário','🏅','Recompensa para quem explora todas as categorias.','shoulders_paladin','achievement',0,'explorador')
 on conflict (id) do update set
   name=excluded.name,slot=excluded.slot,rarity=excluded.rarity,icon=excluded.icon,
   description=excluded.description,asset_key=excluded.asset_key,
