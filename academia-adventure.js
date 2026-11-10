@@ -22,40 +22,61 @@
   const metric=(label,value,icon)=>`<article class="adv-stat"><span>${icon}</span><small>${esc(label)}</small><strong>${esc(value)}</strong></article>`;
   const bar=(v,t)=>`<div class="adv-progress" role="progressbar" aria-valuenow="${t?Math.min(100,Math.round(v/t*100)):0}" aria-valuemin="0" aria-valuemax="100"><i style="width:${t?Math.min(100,Math.round(v/t*100)):0}%"></i></div>`;
   const badge=(s,k='')=>`<span class="adv-badge ${esc(k)}">${esc(s)}</span>`;
-  const FLAG_COLOR_OPTIONS=[['#9f3e40','Carmesim'],['#3b638a','Azul real'],['#34465d','Azul ardósia'],['#426c56','Verde bosque'],['#936533','Bronze'],['#71538c','Violeta'],['#d0b36b','Ouro antigo'],['#303b4d','Aço escuro'],['#d9d6cd','Marfim']];
-  const FLAG_PATTERNS=[['solid','Liso'],['horizontal','Faixas horizontais'],['vertical','Faixas verticais'],['diagonal','Diagonal'],['cross','Cruz'],['chevron','Chevrons'],['quartered','Partido']];
-  const FLAG_SYMBOLS=['⚔️','🐉','🦉','🦅','🐺','🛡️','✦','♛','🌙','🔥'];
+  const FLAG_COLOR_OPTIONS=[['#9f3e40','Carmesim'],['#3b638a','Azul real'],['#34465d','Azul ardósia'],['#426c56','Verde bosque'],['#936533','Bronze'],['#71538c','Violeta'],['#d0b36b','Ouro antigo'],['#303b4d','Aço escuro'],['#d9d6cd','Marfim'],['#263d32','Verde esmeralda'],['#5b315f','Ametista'],['#8b542e','Cobre'],['#a7b6c9','Prata lunar'],['#20202d','Ônix'],['#b84e35','Vermelho rubi'],['#477b83','Turquesa'],['#d6a84f','Dourado solar'],['#6d789e','Azul místico']];
+  const FLAG_PATTERNS=[['solid','Liso'],['horizontal','Faixas horizontais'],['vertical','Faixas verticais'],['diagonal','Diagonal'],['cross','Cruz'],['chevron','Chevrons'],['quartered','Partido'],['waves','Ondas'],['diamond','Losangos'],['stripes','Listras triplas'],['sunburst','Raio solar']];
+  const FLAG_SYMBOLS=['⚔️','🐉','🦉','🦅','🐺','🛡️','✦','♛','🌙','🔥','🦁','🦌','🦊','🗡️','🏰','⚜️','☀️','❖','🪽','💎','🌿','👑'];
+  const FLAG_CRESTS=[['classic','Clássico'],['heater','Medieval'],['kite','Pipa'],['round','Circular'],['tower','Torre'],['pointed','Pontudo']];
+  const FLAG_SHIELDS=[['steel','Aço polido'],['royal','Real dourado'],['obsidian','Obsidiana'],['winged','Alado']];
+  const GUILD_SHOP_ITEMS=[
+    ['guild-crest-dragon','Brasão do Dragão','crest','🐉'],['guild-crest-phoenix','Brasão da Fênix','crest','🔥'],
+    ['guild-shield-royal','Escudo da Realeza','shield','🛡️'],['guild-shield-obsidian','Escudo de Obsidiana','shield','⚔️'],
+    ['guild-effect-aurora','Aura Boreal','effect','✨'],['guild-effect-flame','Chamas Arcanas','effect','🔥'],['guild-effect-runes','Runas Luminosas','effect','ᚱ']
+  ];
+  const ownedGuildItems=type=>[['','Nenhum item equipado'],...((S.guildItems||[]).filter(x=>!type||x.id.startsWith('guild-'+type+'-')).map(x=>[x.id,x.name]))];
   const flagConfig=raw=>({
     primary:FLAG_COLOR_OPTIONS.some(x=>x[0]===raw?.primary)?raw.primary:'#303b4d',
     secondary:FLAG_COLOR_OPTIONS.some(x=>x[0]===raw?.secondary)?raw.secondary:'#d0b36b',
     pattern:FLAG_PATTERNS.some(x=>x[0]===raw?.pattern)?raw.pattern:'diagonal',
     symbol:FLAG_SYMBOLS.includes(raw?.symbol)?raw.symbol:'⚔️',
+    crest:FLAG_CRESTS.some(x=>x[0]===raw?.crest)?raw.crest:'heater',
+    shield:FLAG_SHIELDS.some(x=>x[0]===raw?.shield)?raw.shield:'steel',
+    crestItem:GUILD_SHOP_ITEMS.some(x=>x[0]===raw?.crestItem&&x[2]==='crest')?raw.crestItem:'',
+    shieldItem:GUILD_SHOP_ITEMS.some(x=>x[0]===raw?.shieldItem&&x[2]==='shield')?raw.shieldItem:'',
+    effectItem:GUILD_SHOP_ITEMS.some(x=>x[0]===raw?.effectItem&&x[2]==='effect')?raw.effectItem:'',
     motto:String(raw?.motto||'').slice(0,48)
   });
   const flagMarkup=(raw,size='mini')=>{
-    const f=flagConfig(raw);
-    return `<div class="adv-flag adv-flag-${size} adv-flag--${f.pattern}" style="--flag-primary:${f.primary};--flag-secondary:${f.secondary}" role="img" aria-label="Bandeira da guilda"><span class="adv-flag-symbol">${esc(f.symbol)}</span></div>`;
+    const f=flagConfig(raw),classes=['adv-flag','adv-flag-'+size,'adv-flag--'+f.pattern,'adv-flag-shape-'+f.crest,'adv-flag-shield-'+f.shield];
+    if(f.crestItem)classes.push('adv-flag-'+f.crestItem);
+    if(f.shieldItem)classes.push('adv-flag-'+f.shieldItem);
+    if(f.effectItem)classes.push('adv-flag-'+f.effectItem);
+    return `<div class="${classes.join(' ')}" style="--flag-primary:${f.primary};--flag-secondary:${f.secondary}" role="img" aria-label="Brasão e escudo da guilda"><span class="adv-flag-symbol">${esc(f.symbol)}</span><i class="adv-flag-glint"></i></div>`;
   };
   function flagOptions(options,selected){return options.map(([value,label])=>`<option value="${esc(value)}" ${value===selected?'selected':''}>${esc(label)}</option>`).join('');}
   function flagEditor(g){
     const f=flagConfig(g.flag_config);
-    return `<section class="adv-panel adv-flag-panel"><div class="adv-section-head"><div><h3>Estúdio de bandeiras</h3><small>Crie um símbolo que represente a história da sua guilda.</small></div><span class="adv-flag-editor-mark">⚑</span></div>
+    return `<section class="adv-panel adv-flag-panel"><div class="adv-section-head"><div><h3>Forja de brasões e escudos</h3><small>Personalize a heráldica da guilda com cores, símbolos e relíquias compradas.</small></div><span class="adv-flag-editor-mark">⚜</span></div>
       <form id="advGuildFlagForm" class="adv-flag-editor" data-adv-form="save-guild-flag">
-        <div class="adv-flag-preview-wrap"><div class="adv-flag-preview" id="advFlagPreview">${flagMarkup(f,'preview')}</div><small>Prévia da bandeira</small><p id="advFlagMottoPreview" class="adv-flag-motto-preview">${esc(f.motto||'O lema da guilda aparecerá aqui')}</p></div>
+        <div class="adv-flag-preview-wrap"><div class="adv-flag-preview" id="advFlagPreview">${flagMarkup(f,'preview')}</div><small>Prévia ao vivo do brasão</small><p id="advFlagMottoPreview" class="adv-flag-motto-preview">${esc(f.motto||'O lema da guilda aparecerá aqui')}</p></div>
         <div class="adv-flag-controls">
           <label>Cor principal<select id="advFlagPrimary">${flagOptions(FLAG_COLOR_OPTIONS,f.primary)}</select></label>
           <label>Cor secundária<select id="advFlagSecondary">${flagOptions(FLAG_COLOR_OPTIONS,f.secondary)}</select></label>
-          <label>Desenho<select id="advFlagPattern">${flagOptions(FLAG_PATTERNS,f.pattern)}</select></label>
+          <label>Desenho da bandeira<select id="advFlagPattern">${flagOptions(FLAG_PATTERNS,f.pattern)}</select></label>
           <label>Símbolo central<select id="advFlagSymbol">${flagOptions(FLAG_SYMBOLS.map(x=>[x,x]),f.symbol)}</select></label>
+          <label>Formato do brasão<select id="advFlagCrest">${flagOptions(FLAG_CRESTS,f.crest)}</select></label>
+          <label>Acabamento do escudo<select id="advFlagShield">${flagOptions(FLAG_SHIELDS,f.shield)}</select></label>
+          <label>Brasão especial da loja<select id="advFlagCrestItem">${flagOptions(ownedGuildItems('crest'),f.crestItem)}</select></label>
+          <label>Escudo especial da loja<select id="advFlagShieldItem">${flagOptions(ownedGuildItems('shield'),f.shieldItem)}</select></label>
+          <label>Efeito luminoso da loja<select id="advFlagEffectItem">${flagOptions(ownedGuildItems('effect'),f.effectItem)}</select></label>
           <label class="adv-flag-motto-field">Lema da guilda<input id="advFlagMotto" maxlength="48" value="${esc(f.motto)}" placeholder="Ex.: Unidos pela sabedoria"></label>
-          <button class="adv-btn" type="submit">Salvar bandeira</button>
-          <small class="adv-flag-permission">Apenas o líder pode alterar a bandeira. Todos os membros verão a versão salva.</small>
+          <button class="adv-btn" type="submit">Salvar heráldica</button>
+          <small class="adv-flag-permission">Somente o líder pode alterar. Itens especiais precisam estar no inventário do líder; todos os membros verão a heráldica salva.</small>
         </div>
       </form></section>`;
   }
   function updateFlagPreview(){
     const wrap=$('advFlagPreview');if(!wrap)return;
-    const f=flagConfig({primary:$('advFlagPrimary')?.value,secondary:$('advFlagSecondary')?.value,pattern:$('advFlagPattern')?.value,symbol:$('advFlagSymbol')?.value,motto:$('advFlagMotto')?.value});
+    const f=flagConfig({primary:$('advFlagPrimary')?.value,secondary:$('advFlagSecondary')?.value,pattern:$('advFlagPattern')?.value,symbol:$('advFlagSymbol')?.value,crest:$('advFlagCrest')?.value,shield:$('advFlagShield')?.value,crestItem:$('advFlagCrestItem')?.value,shieldItem:$('advFlagShieldItem')?.value,effectItem:$('advFlagEffectItem')?.value,motto:$('advFlagMotto')?.value});
     wrap.innerHTML=flagMarkup(f,'preview');
     const motto=$('advFlagMottoPreview');if(motto)motto.textContent=f.motto||'O lema da guilda aparecerá aqui';
   }
@@ -171,6 +192,13 @@
 
   async function guilds(){
     const [mine,all]=await Promise.all([rpc('get_my_guild'),rpc('list_guilds')]);
+    S.guildItems=[];
+    if(mine?.guild?.owner){
+      const owned=await C().supabase.from('user_cosmetics').select('item_id').eq('user_id',C().user.id);
+      if(owned.error)throw owned.error;
+      const ids=(owned.data||[]).map(x=>x.item_id).filter(id=>GUILD_SHOP_ITEMS.some(x=>x[0]===id));
+      if(ids.length){const catalog=await C().supabase.from('market_items').select('id,name,icon').in('id',ids).eq('category','guild');if(catalog.error)throw catalog.error;S.guildItems=catalog.data||[];}
+    }
     const directory=(all||[]).map(g=>`<article class="adv-guild-row"><div class="adv-guild-crest">${flagMarkup(g.flag_config,'mini')}</div><div class="adv-guild-info"><b>${esc(g.name)}</b><small>${esc(g.description||'Uma guilda em busca de novos aventureiros.')}</small><span>${n(g.members)} / 6 membros · ${n(g.total_xp)} XP somados</span></div>${g.joined?badge('Sua guilda','good'):badge('Guilda aberta')}</article>`).join('');
     if(mine?.guild){
       const g=mine.guild,ms=mine.members||[],f=flagConfig(g.flag_config);
@@ -243,7 +271,7 @@
   async function claim(id){const r=await rpc('claim_weekly_mission',{p_mission_id:id});if(!r.ok)toast(r.reason==='claimed'?'Esta missão já foi resgatada nesta semana.':`Missão incompleta: ${n(r.progress)} de ${n(r.target)}.`);else toast(`Recompensa recebida: +${n(r.xp_awarded)} XP e +${n(r.coins_awarded)} Coins.`);return missions();}
   async function createGuild(e){e.preventDefault();const r=await rpc('create_guild',{p_name:$('advGuildName').value.trim(),p_tag:$('advGuildTag').value.trim().toUpperCase(),p_description:$('advGuildDescription').value.trim()});toast(`Guilda ${r.tag} fundada! Código de convite: ${r.invite_code}.`);return guilds();}
   async function joinGuild(e){e.preventDefault();const r=await rpc('join_guild',{p_invite_code:$('advGuildCode').value.trim().toUpperCase()});toast(`Você entrou na guilda [${r.guild_tag}] ${r.guild_name}.`);return guilds();}
-  async function saveGuildFlag(e){e.preventDefault();await rpc('save_guild_flag',{p_primary:$('advFlagPrimary').value,p_secondary:$('advFlagSecondary').value,p_pattern:$('advFlagPattern').value,p_symbol:$('advFlagSymbol').value,p_motto:$('advFlagMotto').value.trim()});toast('Bandeira salva. Todos os membros já podem vê-la.');return guilds();}
+  async function saveGuildFlag(e){e.preventDefault();await rpc('save_guild_flag',{p_primary:$('advFlagPrimary').value,p_secondary:$('advFlagSecondary').value,p_pattern:$('advFlagPattern').value,p_symbol:$('advFlagSymbol').value,p_motto:$('advFlagMotto').value.trim(),p_crest:$('advFlagCrest').value,p_shield:$('advFlagShield').value,p_crest_item:$('advFlagCrestItem').value||null,p_shield_item:$('advFlagShieldItem').value||null,p_effect_item:$('advFlagEffectItem').value||null});toast('Heráldica salva. Todos os membros já podem vê-la.');return guilds();}
   async function saveMission(e){e.preventDefault();await rpc('teacher_save_mission',{p_id:$('advMissionId').value.trim(),p_title:$('advMissionTitle').value.trim(),p_description:$('advMissionDescription').value.trim(),p_kind:$('advMissionKind').value,p_target:Number($('advMissionTarget').value),p_xp_reward:Number($('advMissionXp').value),p_coin_reward:Number($('advMissionCoins').value),p_active:true});S.missionDraft=null;toast('Missão salva e sincronizada com o banco.');return teacher();}
   async function saveBoss(e){e.preventDefault();await rpc('teacher_save_boss',{p_id:$('advBossId').value.trim(),p_name:$('advBossName').value.trim(),p_category:$('advBossCategory').value,p_description:$('advBossDescription').value.trim(),p_min_correct:Number($('advBossMin').value),p_xp_reward:Number($('advBossXp').value),p_coin_reward:Number($('advBossCoins').value),p_active:true});S.bossDraft=null;toast('Chefe salvo na Arena.');return teacher();}
 
