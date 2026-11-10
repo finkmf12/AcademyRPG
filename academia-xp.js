@@ -212,7 +212,9 @@ function renderMarket() {
   const frame=inv.find(x=>x.equipped&&x.item.category==='frames')?.item;
   const avatar=S?.p?.avatar||'🧙', name=S?.p?.adventurer_name||'Aventureiro';
   const catButtons=MARKET_CATEGORIES.map(([key,label])=>`<button class="mk-filter ${marketCategory===key?'active':''}" data-market-cat="${key}">${label}</button>`).join('');
-  const inventoryHtml=inv.length?inv.map(x=>`<div class="mk-inv"><span>${esc(x.item.icon)}</span><div class="mk-inv-info"><b>${esc(x.item.name)}</b><small>${x.equipped?'Equipado':'Disponível'}</small></div><button data-market-act="equip" data-id="${esc(x.item.id)}" data-equipped="${x.equipped}">${x.equipped?'Desequipar':'Equipar'}</button></div>`).join(''):'<div class="mk-empty">Seu inventário ainda está vazio. Escolha um tesouro no catálogo.</div>';
+  const inventoryHtml=inv.length?inv.map(x=>x.item.category==='guild'
+    ? `<div class="mk-inv mk-inv-guild"><span>${esc(x.item.icon)}</span><div class="mk-inv-info"><b>${esc(x.item.name)}</b><small>Comprado · disponível na aba Guildas para o líder aplicar</small></div></div>`
+    : `<div class="mk-inv"><span>${esc(x.item.icon)}</span><div class="mk-inv-info"><b>${esc(x.item.name)}</b><small>${x.equipped?'Equipado':'Disponível'}</small></div><button data-market-act="equip" data-id="${esc(x.item.id)}" data-equipped="${x.equipped}">${x.equipped?'Desequipar':'Equipar'}</button></div>`).join(''):'<div class="mk-empty">Seu inventário ainda está vazio. Escolha um tesouro no catálogo.</div>';
   const history=M.transactions.length?M.transactions.slice(0,12).map(t=>`<div class="mk-history-row"><span>${esc(t.description)}</span><b class="${t.amount>0?'plus':'minus'}">${t.amount>0?'+':''}${t.amount} Coins</b></div>`).join(''):'<div class="mk-empty">Suas movimentações aparecerão aqui.</div>';
   el.innerHTML=`
     ${g?'<div class="rpg-note">Modo convidado: você pode conhecer os tesouros, mas precisa entrar com Google para ganhar, comprar e salvar Coins no seu perfil.</div>':''}
