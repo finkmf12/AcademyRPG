@@ -96,6 +96,87 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 @media(max-width:650px){.sidebar{position:relative;width:100%;height:auto;padding:15px}.brand{padding-bottom:14px}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow:auto;gap:5px;padding-top:12px}.nav button{white-space:nowrap;width:auto;padding:10px}.main{margin:0;padding:22px 16px}.cards{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.topbar{align-items:flex-start}.user-pill{display:none}}
 </style>
 <link rel="stylesheet" href="./academia-xp.css">
+
+<style id="login-layout-fix">
+/* Ajuste definitivo do alinhamento da tela inicial */
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 34px 20px 76px;
+}
+.login-layout {
+  width: min(100%, 640px);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.login-brand,
+.login-card,
+.login-categories {
+  flex: 0 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+.login-brand { width: min(590px, 100%); }
+.brand-emblem { margin-left: auto; margin-right: auto; }
+.brand-plaque { width: 100%; text-align: center; }
+.brand-plaque h1 {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #f5d99e;
+  font-family: Georgia, serif;
+  font-size: clamp(36px, 6vw, 58px);
+  line-height: 1.05;
+  letter-spacing: 1.5px;
+}
+.brand-plaque p {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #e8ca89;
+}
+.login-card { width: min(510px, 100%); text-align: center; }
+.login-card > * { margin-left: auto; margin-right: auto; }
+.login-card .google-login,
+.login-card .chatgpt-login,
+.login-card .guest-login { width: 100%; }
+.login-categories {
+  width: min(620px, 100%);
+  justify-self: center;
+  margin-top: 0;
+}
+.login-footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+}
+.author-credit { left: 20px; right: auto; }
+@media (max-width: 760px) {
+  .login { padding: 24px 15px 72px; }
+  .login-layout { width: min(100%, 540px); gap: 12px; }
+  .login-brand, .login-card, .login-categories { width: 100%; }
+  .brand-plaque h1 { font-size: clamp(31px, 8vw, 46px); }
+}
+@media (max-width: 430px) {
+  .login { padding: 20px 12px 68px; }
+  .login-layout { gap: 10px; }
+  .brand-plaque h1 { font-size: clamp(28px, 8vw, 34px); }
+  .author-credit { left: 10px; right: auto; }
+}
+@media (max-height: 760px) and (min-width: 761px) {
+  .login { padding-top: 16px; padding-bottom: 58px; }
+  .login-layout { gap: 9px; }
+}
+</style>
 </head>
 <body>
 <section class="login" id="login" aria-label="Tela inicial da Academia RPG">
@@ -202,7 +283,7 @@ const labels = {
 const $ = id => document.getElementById(id);
 const isConfigured = () => SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('COLE_AQUI') && SUPABASE_PUBLISHABLE_KEY.length > 20 && !SUPABASE_PUBLISHABLE_KEY.includes('COLE_AQUI');
 function toast(message) { const el=$('toast'); el.textContent=message; el.style.display='block'; clearTimeout(window.academiaToastTimer); window.academiaToastTimer=setTimeout(()=>el.style.display='none',4200); }
-function showLogin() { $('login').style.display='grid'; $('app').style.display='none'; }
+function showLogin() { $('login').style.display='flex'; $('app').style.display='none'; }
 function enterApp() {
   $('login').style.display='none'; $('app').style.display='block';
   $('userEmail').textContent = guestMode ? 'Convidado · neste navegador' : (authUser?.email || 'Conta Google conectada');
