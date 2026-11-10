@@ -71,3 +71,40 @@
 @media(max-width:1000px){.arc-item-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.arc-hero{grid-template-columns:1fr;padding:18px;gap:16px}.arc-stage{min-height:285px}.arc-stage>.arc-avatar{height:190px}.arc-item-grid{gap:9px}.arc-item-visual{height:145px}.arc-item-visual .arc-avatar{height:137px;width:120px}}
 @media(max-width:480px){.arc-item-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arc-item-copy{padding:9px}.arc-item-card h4{font-size:12px}.arc-item-card p{font-size:8px;min-height:44px}.arc-item-actions{grid-template-columns:1fr}.arc-preview-btn,.arc-item-main{min-height:32px}.arc-item-visual{height:128px}.arc-item-visual .arc-avatar{height:124px;width:106px}.arc-toolbar{align-items:flex-start}.arc-tabs{width:100%}.arc-tab{flex:1}}
+
+
+/* Visuais de batalha: mais escala, contraste e presença */
+.arc-item-visual{
+  height:205px;
+  background:
+    radial-gradient(ellipse at 50% 53%,rgba(194,151,83,.20),transparent 49%),
+    radial-gradient(ellipse at 50% 20%,rgba(123,92,166,.27),transparent 55%),
+    linear-gradient(145deg,#26334a,#111a2b 78%);
+}
+.arc-item-visual .arc-avatar{
+  width:174px;
+  height:194px;
+  filter:drop-shadow(0 8px 9px rgba(0,0,0,.55));
+}
+.arc-item-card.arc-rarity-epic .arc-item-visual{
+  background:radial-gradient(ellipse at 50% 52%,rgba(145,92,190,.3),transparent 58%),linear-gradient(145deg,#302743,#121a2b 80%);
+}
+.arc-item-card.arc-rarity-legendary .arc-item-visual{
+  background:radial-gradient(ellipse at 50% 52%,rgba(207,163,78,.32),transparent 58%),linear-gradient(145deg,#3b3026,#171b29 80%);
+}
+.arc-rarity-legendary{border-color:#a88950;box-shadow:inset 0 0 24px #d5b36a13,0 0 0 1px #a889501c}
+.arc-rarity-epic{border-color:#82609e;box-shadow:inset 0 0 20px #a77bd01a}
+.arc-stage>.arc-avatar{
+  width:min(100%,245px);
+  height:235px;
+  filter:drop-shadow(0 9px 13px rgba(0,0,0,.55));
+}
+@media(max-width:760px){
+  .arc-item-visual{height:165px}
+  .arc-item-visual .arc-avatar{height:155px;width:140px}
+  .arc-stage>.arc-avatar{height:210px}
+}
+@media(max-width:480px){
+  .arc-item-visual{height:150px}
+  .arc-item-visual .arc-avatar{height:143px;width:125px}
+}
