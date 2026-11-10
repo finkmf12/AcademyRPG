@@ -96,6 +96,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 @media(max-width:650px){.sidebar{position:relative;width:100%;height:auto;padding:15px}.brand{padding-bottom:14px}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow:auto;gap:5px;padding-top:12px}.nav button{white-space:nowrap;width:auto;padding:10px}.main{margin:0;padding:22px 16px}.cards{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.topbar{align-items:flex-start}.user-pill{display:none}}
 </style>
 <link rel="stylesheet" href="./academia-xp.css">
+<link rel="stylesheet" href="./academia-adventure.css">
 
 <style id="login-layout-fix">
 /* Ajuste definitivo do alinhamento da tela inicial */
@@ -688,4 +689,5 @@ window.AcademiaCtx={get supabase(){return supabase},get user(){return authUser},
 initialize().catch(error=>{console.error(error);toast('Falha ao iniciar. Confira a configuração do Supabase.');});
 </script>
 <script type="module" src="./academia-xp.js"></script>
+<script type="module" src="./academia-adventure.js"></script>
 </body></html>
