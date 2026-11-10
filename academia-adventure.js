@@ -130,7 +130,7 @@
     const r=await rpc('get_leaderboard',{p_period:S.period}),rows=r.entries||[];
     const list=rows.map(e=>`<div class="adv-rank-row ${e.rank<=3?'top-'+e.rank:''} ${e.is_me?'is-me':''}">
       <span class="adv-rank-number">${e.rank<=3?['♛','Ⅱ','Ⅲ'][e.rank-1]:n(e.rank)}</span><span class="adv-rank-avatar">${window.AcademiaAvatar ? window.AcademiaAvatar.render(e.appearance||{},'rank',e.class) : esc(e.avatar||'🧙')}</span>
-      <div class="adv-rank-name"><b>${esc(e.name)}</b>${window.AcademiaAvatar?.titleMarkup(e.appearance||{},'rank') || ''}<small>${esc(e.class||'Aventureiro')} · Nível ${n(e.level)}</small></div>
+      <div class="adv-rank-name"><b>${window.AcademiaAvatar?.nameMarkup(e.name,e.appearance||{})||esc(e.name)}</b>${window.AcademiaAvatar?.titleMarkup(e.appearance||{},'rank') || ''}<small>${esc(e.class||'Aventureiro')} · Nível ${n(e.level)}</small></div>
       <strong>${n(e.xp)} <small>XP</small></strong>${e.is_me?badge('Você','ready'):''}</div>`).join('');
     const me=r.my_rank?`Sua posição: #${n(r.my_rank)}`:'Seu personagem ainda não aparece nesta classificação.';
     $('rpgView').innerHTML=`<section class="adv-hero adv-rank-hero"><div><div class="adv-kicker">SALÃO DOS CAMPEÕES</div><h3>O conhecimento é sua maior arma.</h3><p>${esc(me)} Complete seu personagem para escolher o nome que será exibido aos outros aventureiros.</p></div><div class="adv-hero-mark">♛</div></section>
@@ -206,7 +206,7 @@
         ${g.active?'':'<div class="adv-warning">Esta guilda foi temporariamente suspensa pelo professor. Seus membros podem consultar os dados e sair normalmente.</div>'}
         ${g.owner?flagEditor(g):''}
         <section class="adv-panel"><div class="adv-section-head"><div><h3>Companheiros de jornada</h3><small>${n(ms.length)} de 6 vagas ocupadas</small></div>${g.owner&&g.invite_code?`<button class="adv-btn adv-btn-soft" data-adv="copy-invite" data-code="${esc(g.invite_code)}">Copiar convite · ${esc(g.invite_code)}</button>`:''}</div>
-        <div class="adv-member-list">${ms.map(m=>`<div class="adv-member"><span class="adv-rank-avatar">${esc(m.avatar||'🧙')}</span><div><b>${esc(m.name)} ${m.is_me?'(você)':''}</b><small>${esc(m.role==='leader'?'Líder':m.role==='officer'?'Oficial':'Membro')} · ${esc(m.class||'Aventureiro')}</small></div><strong>${n(m.xp)} XP</strong></div>`).join('')}</div></section>
+        <div class="adv-member-list">${ms.map(m=>`<div class="adv-member"><span class="adv-rank-avatar">${esc(m.avatar||'🧙')}</span><div><b>${window.AcademiaAvatar?.nameMarkup(m.name,m.appearance||{})||esc(m.name)} ${m.is_me?'(você)':''}</b><small>${esc(m.role==='leader'?'Líder':m.role==='officer'?'Oficial':'Membro')} · ${esc(m.class||'Aventureiro')}</small></div><strong>${n(m.xp)} XP</strong></div>`).join('')}</div></section>
         <div class="adv-guild-actions"><p class="adv-footnote">O líder pode compartilhar o código de convite com até cinco companheiros.</p><button class="adv-btn adv-btn-danger" data-adv="leave-guild">Sair da guilda</button></div>`;return;
     }
     $('rpgView').innerHTML=`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">AVENTUREIRO SOLITÁRIO?</div><h3>Encontre sua companhia.</h3><p>Crie uma guilda para liderar seus aliados ou entre em uma usando o código enviado pelo líder.</p></div><div class="adv-hero-mark">⚑</div></section>
