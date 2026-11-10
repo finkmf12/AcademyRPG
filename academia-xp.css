@@ -53,7 +53,7 @@
 .cls:hover{border-color:#947343}.cls.on{border-color:var(--gold);background:#1b2a3d}
 
 
-/* Fundo do login: somente o papel de parede, sem partículas ou camadas animadas. */
+/* Login — luz ambiente cinematográfica, sem partículas ou elementos flutuantes. */
 .login{
   isolation:isolate;
   background-color:#081322;
@@ -61,14 +61,59 @@
   background-size:cover;
   background-position:center;
 }
-.login:before,
-.login:after{
-  content:none!important;
-  display:none!important;
-  animation:none!important;
+
+/* Feixes largos e difusos de luz fria, como luz atravessando vitrais. */
+.login:before{
+  content:""!important;
+  display:block!important;
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    linear-gradient(116deg,transparent 0 15%,rgba(129,171,221,.025) 21%,rgba(151,190,235,.075) 27%,rgba(129,171,221,.025) 34%,transparent 42%),
+    linear-gradient(126deg,transparent 0 43%,rgba(117,162,218,.018) 49%,rgba(151,190,235,.055) 55%,rgba(117,162,218,.018) 61%,transparent 69%),
+    radial-gradient(ellipse at 24% 4%,rgba(107,153,215,.09),transparent 48%),
+    radial-gradient(ellipse at 50% 46%,rgba(5,12,22,.24) 0%,rgba(5,12,22,.10) 49%,rgba(3,9,17,.18) 100%);
+  opacity:.82;
+  animation:loginWindowGlow 18s ease-in-out infinite alternate;
 }
-.login .login-layout{position:relative;z-index:2}
-.login .author-credit{z-index:3}
+
+/* Reflexos quentes de velas nas laterais e um halo frio muito discreto nas bordas. */
+.login:after{
+  content:""!important;
+  display:block!important;
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 30% 42% at 0% 65%,rgba(255,183,112,.105),transparent 78%),
+    radial-gradient(ellipse 28% 40% at 100% 62%,rgba(255,194,126,.085),transparent 80%),
+    radial-gradient(ellipse at 50% 48%,transparent 56%,rgba(102,133,190,.075) 78%,rgba(105,105,172,.12) 100%);
+  mix-blend-mode:screen;
+  opacity:.72;
+  animation:loginCandleGlow 11s ease-in-out infinite alternate;
+}
+
+.login .login-layout{position:relative;z-index:1}
+.login .author-credit{z-index:2}
+
+@keyframes loginWindowGlow{
+  from{opacity:.72}
+  to{opacity:.88}
+}
+@keyframes loginCandleGlow{
+  from{opacity:.62}
+  to{opacity:.78}
+}
+@media(prefers-reduced-motion:reduce){
+  .login:before,.login:after{animation:none!important}
+}
+@media(max-width:650px){
+  .login:before{opacity:.68}
+  .login:after{opacity:.60}
+}
 
 
 /* Mercado Arcano — loja integrada à conta e ao inventário */
