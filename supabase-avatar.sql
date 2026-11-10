@@ -91,6 +91,8 @@ create table if not exists public.user_avatar_items (
 );
 create index if not exists user_avatar_items_user_idx
   on public.user_avatar_items(user_id,unlocked_at desc);
+create index if not exists user_avatar_items_item_idx
+  on public.user_avatar_items(item_id);
 
 alter table public.avatar_items enable row level security;
 alter table public.user_avatar_items enable row level security;
@@ -166,6 +168,7 @@ as $$
 declare v_uid uuid:=auth.uid(); v_item public.avatar_items%rowtype; v_appearance jsonb;
 begin
   if v_uid is null then raise exception 'Não autenticado'; end if;
+  perform pg_advisory_xact_lock(hashtextextended(v_uid::text,1));
   select * into v_item from public.avatar_items where id=p_item_id and active=true;
   if not found then raise exception 'Visual indisponível'; end if;
   if not exists(select 1 from public.user_avatar_items where user_id=v_uid and item_id=p_item_id) then
