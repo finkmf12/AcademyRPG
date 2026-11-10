@@ -69,7 +69,8 @@ const ACH = {
 const HEAD = {
   sala: ['TREINAMENTO', 'Sala de Treinamento', 'Teste seus conhecimentos, ganhe XP e evolua de nível.'],
   perfil: ['JOGADOR', 'Perfil do Jogador', 'Acompanhe seu nível, suas conquistas e o histórico de XP.'],
-  market: ['TESOUROS', 'Mercado Arcano', 'Conquiste Coins, personalize seu personagem e equipe suas relíquias.']
+  market: ['TESOUROS', 'Mercado Arcano', 'Conquiste Coins, personalize seu personagem e equipe suas relíquias.'],
+  atelier: ['PERSONAGEM', 'Ateliê Arcano', 'Monte seu visual, experimente equipamentos e equipe suas recompensas.']
 };
 const MARKET_DEMO_ITEMS = [
   {id:'title-apprentice',name:'Aprendiz Arcano',category:'titles',price:50,rarity:'Comum',icon:'📜',description:'O primeiro passo de uma grande jornada.'},
@@ -94,7 +95,8 @@ const box = t => `<div class="panel"><div class="empty">${t}</div></div>`;
 function mini() {
   const el = $('xpMini'); if (!S) { el.innerHTML = ''; return; }
   const i = info();
-  el.innerHTML = `<div class="xm-top"><span class="xm-av">${esc(S.p.avatar)}</span><div><b>${esc(S.p.adventurer_name || 'Aventureiro')}</b>Nível ${i.L}${CLASSES[S.p.class] ? ' · ' + CLASSES[S.p.class].name : ''}</div></div><div class="bar"><i style="width:${i.pct}%"></i></div>${i.xp} XP · faltam ${i.b - i.xp} para o nível ${i.L + 1}`;
+  const avatar = window.AcademiaAvatar ? window.AcademiaAvatar.render(S.p.appearance || {}, 'mini', S.p.class) : esc(S.p.avatar);
+  el.innerHTML = `<div class="xm-top"><span class="xm-av">${avatar}</span><div><b>${esc(S.p.adventurer_name || 'Aventureiro')}</b>Nível ${i.L}${CLASSES[S.p.class] ? ' · ' + CLASSES[S.p.class].name : ''}</div></div><div class="bar"><i style="width:${i.pct}%"></i></div>${i.xp} XP · faltam ${i.b - i.xp} para o nível ${i.L + 1}`;
 }
 
 async function fetchAll() {
@@ -141,6 +143,11 @@ function openRpg(v) {
       .catch(e => { M = { error: e.message || String(e) }; if (isOpen && view === 'market') render(); });
     return;
   }
+  if (v === 'atelier') {
+    if (window.AcademiaAvatar) window.AcademiaAvatar.open();
+    else $('rpgView').innerHTML = '<div class="panel"><div class="empty">O Ateliê Arcano não foi carregado. Atualize a página.</div></div>';
+    return;
+  }
   render();
 }
 function closeRpg() {
@@ -150,6 +157,7 @@ function closeRpg() {
 
 function render() {
   if (view === 'market') renderMarket();
+  else if (view === 'atelier') window.AcademiaAvatar?.renderAtelier();
   else if (view === 'perfil') renderPerfil();
   else if (quiz) renderQuiz();
   else if (resultHtml) $('rpgView').innerHTML = resultHtml;
@@ -208,7 +216,7 @@ function renderMarket() {
   const history=M.transactions.length?M.transactions.slice(0,12).map(t=>`<div class="mk-history-row"><span>${esc(t.description)}</span><b class="${t.amount>0?'plus':'minus'}">${t.amount>0?'+':''}${t.amount} Coins</b></div>`).join(''):'<div class="mk-empty">Suas movimentações aparecerão aqui.</div>';
   el.innerHTML=`
     ${g?'<div class="rpg-note">Modo convidado: você pode conhecer os tesouros, mas precisa entrar com Google para ganhar, comprar e salvar Coins no seu perfil.</div>':''}
-    <section class="mk-hero"><div><span class="mk-eyebrow">✦ A feira dos aventureiros ✦</span><h3>Seu personagem. Suas escolhas.</h3><p>Conquiste moedas estudando e personalize sua identidade nos reinos da Academia.</p><div class="mk-rewards"><span>Quiz <b>+10</b></span><span>Sequência de 5 <b>+20</b></span><span>Conquista <b>+40</b></span><span>Missão diária <b>+30</b></span></div></div><div class="mk-wallet"><span>🪙</span><small>SUA CARTEIRA</small><strong>${g?'—':M.balance.toLocaleString('pt-BR')+' Coins'}</strong></div></section>
+    <section class="mk-hero"><div><span class="mk-eyebrow">✦ A feira dos aventureiros ✦</span><h3>Seu personagem. Suas escolhas.</h3><p>Conquiste moedas estudando e personalize sua identidade nos reinos da Academia.</p><div class="mk-rewards"><span>Quiz <b>+10</b></span><span>Sequência de 5 <b>+20</b></span><span>Conquista <b>+40</b></span><span>Missão diária <b>+30</b></span></div></div><button class="mk-atelier-cta" data-act="atelier">✦ Abrir o Ateliê Arcano</button><div class="mk-wallet"><span>🪙</span><small>SUA CARTEIRA</small><strong>${g?'—':M.balance.toLocaleString('pt-BR')+' Coins'}</strong></div></section>
     <div class="mk-metrics"><div><small>Itens no inventário</small><b>${g?'—':inv.length}</b></div><div><small>Itens equipados</small><b>${g?'—':equipped}</b></div><div><small>Próxima raridade</small><b>Épica</b></div></div>
     <section class="mk-daily"><div><b>📜 Missão diária</b><small>Resgate sua recompensa uma vez por dia.</small></div><button data-market-act="daily" ${g||!M.dailyAvailable?'disabled':''}>${g?'Entre para resgatar':M.dailyAvailable?'Resgatar +30 Coins':'Concluída hoje'}</button></section>
     <div class="mk-toolbar"><h3>Catálogo de tesouros</h3><input class="search" id="marketSearch" value="${esc(marketQuery)}" placeholder="Buscar item..." aria-label="Buscar item"></div>
@@ -377,9 +385,8 @@ function renderPerfil() {
   const body = tab === 'conquistas'
     ? `<div class="ach-grid">${Object.entries(ACH).map(([id, a]) => `<div class="ach ${S.unlocked.has(id) ? '' : 'lock'}"><span>${a[0]}</span><div><b>${a[1]}</b><small>${a[2]}</small></div></div>`).join('')}</div>`
     : `<div class="file-list">${S.events.length ? S.events.map(ev => `<div class="file-row"><div class="file-icon">✨</div><div class="file-info"><strong>${esc(ev.description || ev.source)}</strong><small>${new Date(ev.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</small></div><span class="xp-plus">+${ev.xp} XP</span></div>`).join('') : '<div class="empty"><b>Nenhum XP ganho ainda.</b>Complete um quiz na Sala de Treinamento para começar.</div>'}</div>`;
-  el.innerHTML = `${S.p.adventurer_name && !editing ? '' : charForm()}<div class="panel pf"><div class="pf-av">${esc(S.p.avatar)}</div><div class="pf-info"><h3>${esc(S.p.adventurer_name || 'Aventureiro sem nome')}</h3><div class="sub">${CLASSES[S.p.class] ? CLASSES[S.p.class].icon + ' ' + CLASSES[S.p.class].name + ' · ' : ''}Nível ${i.L} · ${i.xp} XP</div>${S.p.adventurer_name && !editing ? '<button class="secondary" data-act="editchar" style="width:auto;margin:8px 0 0;padding:7px 14px">Editar personagem</button>' : ''}
-  <div class="bar big"><i style="width:${i.pct}%"></i></div><small class="sub">${i.xp - i.a} de ${i.b - i.a} XP neste nível · faltam ${i.b - i.xp} para o nível ${i.L + 1}</small>
-  <div class="av-pick">${AVATARS.map(a => `<button data-act="avatar" data-v="${a}" class="${a === S.p.avatar ? 'on' : ''}" aria-label="Avatar ${a}">${a}</button>`).join('')}</div></div></div>
+  el.innerHTML = `${S.p.adventurer_name && !editing ? '' : charForm()}<div class="panel pf"><div class="pf-av">${window.AcademiaAvatar ? window.AcademiaAvatar.render(S.p.appearance || {}, 'profile', S.p.class) : esc(S.p.avatar)}</div><div class="pf-info"><h3>${esc(S.p.adventurer_name || 'Aventureiro sem nome')}</h3><div class="sub">${CLASSES[S.p.class] ? CLASSES[S.p.class].icon + ' ' + CLASSES[S.p.class].name + ' · ' : ''}Nível ${i.L} · ${i.xp} XP</div><div class="arc-profile-actions"><button class="secondary" data-act="atelier">Personalizar visual</button>${S.p.adventurer_name && !editing ? '<button class="secondary" data-act="editchar">Editar nome e classe</button>' : ''}</div>
+  <div class="bar big"><i style="width:${i.pct}%"></i></div><small class="sub">${i.xp - i.a} de ${i.b - i.a} XP neste nível · faltam ${i.b - i.xp} para o nível ${i.L + 1}</small></div></div>
   <div class="rpg-stats">${stats}</div>
   <div class="rpg-tabs"><button data-tab="conquistas" class="${tab === 'conquistas' ? 'on' : ''}">Conquistas (${S.unlocked.size}/${Object.keys(ACH).length})</button><button data-tab="historico" class="${tab === 'historico' ? 'on' : ''}">Histórico de XP</button></div>${body}`;
 }
@@ -409,6 +416,7 @@ async function setAvatar(v) {
   S.p.avatar = v; mini(); render();
 }
 
+document.addEventListener('academia-avatar-changed',e=>{if(S?.p){S.p.appearance=e.detail?.appearance||{};mini();if(isOpen&&view==='perfil')renderPerfil();}});
 $('rpgView').addEventListener('click', e => {
   const marketButton=e.target.closest('[data-market-act]');
   if(marketButton){marketAction(marketButton);return;}
@@ -421,6 +429,7 @@ $('rpgView').addEventListener('click', e => {
   else if (a === 'ans') answer(+b.dataset.i);
   else if (a === 'next') next();
   else if (a === 'exit') { quiz = null; resultHtml = null; render(); }
+  else if (a === 'atelier') openRpg('atelier');
   else if (a === 'avatar') setAvatar(b.dataset.v);
   else if (a === 'class') { pickClass = b.dataset.v; document.querySelectorAll('.cls').forEach(x => x.classList.toggle('on', x === b)); }
   else if (a === 'editchar') { editing = true; pickClass = S.p.class; render(); }
