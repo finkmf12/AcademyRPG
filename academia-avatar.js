@@ -6,12 +6,12 @@
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const S={catalog:[],owned:[],appearance:{},balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
-    ['all','Todos'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
+    ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
     ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios'],
     ['aura','Auras'],['title','Títulos']
   ];
-  const SLOT_NAME={hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura',title:'Título'};
-  const SLOT_ICON={all:'✦',hair:'✂',hat:'♛',outfit:'⚔',shoulders:'🛡',cloak:'◈',mask:'◉',accessory:'✧',aura:'☼',title:'♕'};
+  const SLOT_NAME={nameColor:'Cor do nome',hair:'Cabelo',hat:'Chapéu / elmo',outfit:'Armadura',shoulders:'Ombreiras',cloak:'Capa',mask:'Máscara',accessory:'Acessório',aura:'Aura',title:'Título'};
+  const SLOT_ICON={all:'✦',nameColor:'✧',hair:'✂',hat:'♛',outfit:'⚔',shoulders:'🛡',cloak:'◈',mask:'◉',accessory:'✧',aura:'☼',title:'♕'};
   const ACH_NAME={
     primeiro:'Primeiro passo',sequencia:'Sequência de fogo',gabarito:'Gabarito',
     explorador:'Explorador',simulado:'Veterano',nivel5:'Nível 5',
@@ -27,6 +27,8 @@
     assassino:{coat:'#52677d',trim:'#c2a8d5',dark:'#26364d'}
   };
   function item(id){return S.catalog.find(x=>x.id===id);}
+  function nameColorClass(id){return ({'name-neon-cyan':'arc-name-neon-cyan','name-neon-pink':'arc-name-neon-pink','name-neon-purple':'arc-name-neon-purple','name-neon-green':'arc-name-neon-green','name-neon-gold':'arc-name-neon-gold','name-neon-red':'arc-name-neon-red'})[id]||'';}
+  function nameMarkup(name,appearance,variant){const id=appearance?.nameColor||'';const cls=nameColorClass(id);return '<span class="'+cls+'">'+esc(name)+'</span>';}
   function owns(id){return S.owned.some(x=>x.item_id===id);}
   function equipped(id){return Object.values(S.appearance||{}).includes(id);}
   function getPreviewAppearance(){
@@ -241,7 +243,9 @@
     const premium=x.rarity==='Lendário'||Number(x.price)>=2000;
     const visual=x.slot==='title'
       ? '<div class="arc-title-card-preview">'+titleMarkup(preview,'card')+'<small>PRÉVIA DO TÍTULO</small></div>'
-      : render(preview,'item',S.playerClass);
+      : x.slot==='nameColor'
+        ? '<div class="arc-name-color-preview"><b class="'+nameColorClass(x.id)+'">Aventureiro</b><small>PRÉVIA DA COR DO NOME</small></div>'
+        : render(preview,'item',S.playerClass);
     return '<article class="arc-item-card arc-rarity-'+(RARITY[x.rarity]||'common')+(premium?' arc-premium-card':'')+(x.slot==='title'?' arc-title-item-card':'')+(x.slot==='aura'?' arc-aura-item-card':'')+'"><div class="arc-item-visual">'+visual+'</div><div class="arc-item-copy"><div class="arc-item-top"><span>'+esc(SLOT_NAME[x.slot]||x.slot)+'</span><b>'+esc(x.rarity)+'</b></div><h4>'+esc(x.name)+'</h4><p>'+esc(x.description)+'</p><div class="arc-item-bottom">'+action+'</div><div class="arc-item-actions"><button class="arc-preview-btn '+(S.previewId===x.id?'active':'')+'" data-avatar-action="preview" data-id="'+esc(x.id)+'">'+(S.previewId===x.id?'Em prévia':'Experimentar')+'</button>'+main+'</div></div></article>';
   }
   function renderAtelier(){
@@ -329,5 +333,5 @@
     });
   }
   document.addEventListener('academia-avatar-changed',e=>{if(e.detail?.appearance)S.appearance=e.detail.appearance;});
-  window.AcademiaAvatar={render,open,renderAtelier,titleMarkup};
+  window.AcademiaAvatar={render,open,renderAtelier,titleMarkup,nameMarkup};
 })();
