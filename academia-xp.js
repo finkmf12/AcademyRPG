@@ -159,7 +159,7 @@ function render() {
 
 async function loadMarket() {
   if (C().guest) {
-    M = { guest:true, balance:0, items:MARKET_DEMO_ITEMS, inventory:[], transactions:[], dailyAvailable:false };
+    M = { guest:true, balance:0, items:MARKET_DEMO_ITEMS, inventory:[], transactions:[], dailyAvailable:false, notice:null };
     return;
   }
   const sb = C().supabase;
@@ -173,16 +173,18 @@ async function loadMarket() {
   const bad=[daily,wallet,items,inventory,transactions].find(r=>r.error);
   if(bad) throw bad.error;
   M={guest:false,balance:wallet.data?.balance||0,items:items.data||[],inventory:inventory.data||[],
-    transactions:transactions.data||[],dailyAvailable:daily.data===true};
+    transactions:transactions.data||[],dailyAvailable:daily.data===true,notice:null};
 }
 
 function marketItemCard(item) {
   const owned=(M.inventory||[]).some(x=>x.item_id===item.id);
   const cat=MARKET_CATEGORIES.find(x=>x[0]===item.category)?.[1]||'Relíquia';
+  const notice=M.notice?.id===item.id?'<div class="mk-buy-alert" role="alert"><b>Coins insuficientes</b><span>Este item custa '+item.price+' Coins. Você tem '+M.balance+' Coins e precisa de mais '+Math.max(0,item.price-M.balance)+'.</span></div>':'';
   return `<article class="mk-item">
     <div class="mk-art"><span class="mk-rarity">${esc(item.rarity)}</span><span class="mk-icon">${esc(item.icon)}</span></div>
     <div class="mk-itembody"><div class="mk-itemtitle"><div><h4>${esc(item.name)}</h4><small>${esc(cat)}</small></div><strong>${item.price} C</strong></div>
     <p>${esc(item.description)}</p>
+    ${notice}
     <button class="mk-buy ${owned?'owned':''}" data-market-act="buy" data-id="${esc(item.id)}" ${owned||M.guest?'disabled':''}>${owned?'✓ No inventário':M.guest?'Entre para adquirir':'Adquirir item'}</button></div>
   </article>`;
 }
@@ -227,17 +229,35 @@ async function marketAction(button) {
       if(error)throw error;
       C().toast(data>0?'Missão diária concluída: +30 Coins!':'Você já resgatou a missão diária de hoje.');
     }else if(action==='buy'){
+      const item=M.items.find(x=>x.id===id);
       const {data,error}=await C().supabase.rpc('market_buy_item',{p_item_id:id});
       if(error)throw error;
-      if(!data.ok) C().toast(data.reason==='owned'?'Você já possui este item.':'Coins insuficientes para adquirir este tesouro.');
-      else C().toast('Tesouro adquirido e adicionado ao inventário!');
+      if(!data.ok){
+        if(data.reason==='owned'){
+          M.notice={id,message:'Você já possui este item.'};
+          C().toast('Você já possui este item.');
+        }else if(['insufficient','insufficient_funds','insufficient_balance'].includes(data.reason)){
+          const missing=Math.max(0,(item?.price||0)-M.balance);
+          M.notice={id};
+          C().toast(`Coins insuficientes: este item custa ${item?.price||0}, você tem ${M.balance} e faltam ${missing} Coins.`);
+        }else{
+          M.notice={id,message:'Não foi possível concluir a compra. Tente novamente.'};
+          C().toast('Não foi possível concluir a compra. Tente novamente.');
+        }
+      }else{
+        M.notice=null;
+        C().toast('Tesouro adquirido e adicionado ao inventário!');
+      }
     }else if(action==='equip'){
       const equipped=button.dataset.equipped==='true';
       const {error}=await C().supabase.rpc('market_equip_item',{p_item_id:id,p_equipped:!equipped});
       if(error)throw error;
       C().toast(equipped?'Item desequipado.':'Item equipado no seu perfil!');
     }
-    await loadMarket();renderMarket();
+    const notice=M?.notice||null;
+    await loadMarket();
+    M.notice=notice;
+    renderMarket();
   }catch(e){C().toast('Não foi possível concluir a ação: '+(e.message||e));button.disabled=false;}
 }
 
