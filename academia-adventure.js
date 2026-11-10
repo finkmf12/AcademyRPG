@@ -44,7 +44,7 @@
     const c=C();if(!HEAD[page])return;
     if(!c?.user||c.guest){toast('Entre com sua conta Google para usar este recurso. O modo convidado não salva progresso.');return;}
     if(page==='teacher'&&!S.teacher){toast('O painel do professor é restrito a contas autorizadas.');return;}
-    mount();S.page=page;$('home').style.display='none';$('library').style.display='none';$('rpgView').style.display='block';
+    mount();S.page=page;$('home').style.display='none';$('library').style.display='none';$('storageNotice').style.display='none';$('rpgView').style.display='block';
     document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.rpgnav button').forEach(b=>b.classList.toggle('active',b.dataset.rpg===page||b.dataset.adventure===page));
     $('pageKicker').textContent=HEAD[page][0];$('pageTitle').textContent=HEAD[page][1];$('pageSub').textContent=HEAD[page][2];
