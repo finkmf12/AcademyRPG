@@ -555,3 +555,10 @@
   .arc-title-profile{max-width:100%;white-space:normal}
   .arc-title-rank{max-width:100%}
 }
+
+.arc-avatar.has-premium-glow{
+  filter:drop-shadow(0 0 8px rgba(255,210,110,.6)) drop-shadow(0 8px 10px rgba(0,0,0,.5));
+}
+.arc-stage .arc-avatar.has-premium-glow{
+  filter:drop-shadow(0 0 13px rgba(255,218,129,.8)) drop-shadow(0 9px 12px rgba(0,0,0,.55));
+}
