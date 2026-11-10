@@ -10,12 +10,13 @@
   const HEAD={
     missions:['JORNADA SEMANAL','Quadro de Missões','Desafios renovados a cada semana. Cumpra objetivos, receba XP e Coins.'],
     ranking:['SALÃO DOS CAMPEÕES','Ranking de Aventureiros','A evolução de cada aventureiro registrada na Academia.'],
+    story:['JORNADA DO AVENTUREIRO','Modo História','Explore regiões, enfrente monstros e evolua em uma campanha individual.'],
     bosses:['ARENA DE COMBATE','Arena dos Chefes','Responda aos enigmas, proteja sua energia e conquiste recompensas.'],
     guilds:['SALÃO DAS GUILDAS','Guildas','Reúna aliados, compartilhe um código e evoluam em equipe.'],
     friends:['COMPANHEIROS DE JORNADA','Amigos','Encontre aventureiros e reúna seus aliados.'],
     teacher:['MESTRE DA ACADEMIA','Painel do Professor','Acompanhe a turma e administre a jornada de aprendizagem.']
   };
-  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',guildTab:'directory',guildQuery:'',friendQuery:'',friendResults:[],studentQuery:'',missionDraft:null,bossDraft:null,battle:null,flagDraft:null,busy:false};
+  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',guildTab:'directory',guildQuery:'',friendQuery:'',friendResults:[],studentQuery:'',missionDraft:null,bossDraft:null,battle:null,storyBattle:null,storyState:null,flagDraft:null,busy:false};
   const toast=m=>C()?.toast?.(m);
   async function rpc(name,args={}){const c=C();if(!c?.supabase||!c.user||c.guest)throw Error('Entre com sua conta Google para usar este recurso.');const {data,error}=await c.supabase.rpc(name,args);if(error)throw error;return data;}
   const wait=m=>`<div class="adv-panel"><div class="adv-loading"><span class="adv-spinner"></span>${esc(m||'Consultando os registros da Academia...')}</div></div>`;
@@ -93,6 +94,7 @@
     nav.insertAdjacentHTML('beforeend',`
       <button type="button" data-adventure="missions"><span class="ico">✦</span> Missões Semanais</button>
       <button type="button" data-adventure="ranking"><span class="ico">♛</span> Ranking</button>
+      <button type="button" data-adventure="story"><span class="ico">📜</span> Modo História</button>
       <button type="button" data-adventure="bosses"><span class="ico">🐉</span> Arena dos Chefes</button>
       <button type="button" data-adventure="guilds"><span class="ico">⚑</span> Guildas</button>
       <button type="button" data-adventure="friends"><span class="ico">♟</span> Amigos</button>
@@ -100,8 +102,8 @@
   }
   async function sync(){
     const c=C();if(!c)return;const key=c.guest?'guest':(c.user?.id||null),admin=$('advTeacherNav');
-    if(!key){S.userKey=null;S.teacher=false;S.data=null;S.battle=null;if(admin)admin.hidden=true;return;}
-    if(key===S.userKey)return;S.userKey=key;S.teacher=false;S.data=null;S.battle=null;
+    if(!key){S.userKey=null;S.teacher=false;S.data=null;S.battle=null;S.storyBattle=null;S.storyState=null;if(admin)admin.hidden=true;return;}
+    if(key===S.userKey)return;S.userKey=key;S.teacher=false;S.data=null;S.battle=null;S.storyBattle=null;S.storyState=null;
     if(c.guest){if(admin)admin.hidden=true;return;}
     try{S.teacher=!!(await rpc('is_academy_teacher'));}catch(e){console.warn('Perfil docente:',e.message);}
     if(admin)admin.hidden=!S.teacher;if(S.page==='teacher'&&!S.teacher)open('missions');
@@ -116,7 +118,7 @@
     $('pageKicker').textContent=HEAD[page][0];$('pageTitle').textContent=HEAD[page][1];$('pageSub').textContent=HEAD[page][2];
     $('rpgView').innerHTML=wait();load().catch(e=>{$('rpgView').innerHTML=fail(e.message||'Erro inesperado.');});
   }
-  async function load(){if(S.page==='missions')return missions();if(S.page==='ranking')return ranking();if(S.page==='bosses')return bosses();if(S.page==='guilds')return guilds();if(S.page==='friends')return friends();if(S.page==='teacher')return teacher();}
+  async function load(){if(S.page==='missions')return missions();if(S.page==='ranking')return ranking();if(S.page==='story')return story();if(S.page==='bosses')return bosses();if(S.page==='guilds')return guilds();if(S.page==='friends')return friends();if(S.page==='teacher')return teacher();}
 
   async function missions(){
     const items=await rpc('get_weekly_missions');
@@ -146,6 +148,68 @@
       <section class="adv-panel"><div class="adv-section-head"><div><h3>Classificação</h3><small>Somente XP validado pela Academia.</small></div></div><div class="adv-rank-list">${list||'<div class="adv-empty">Ainda não há aventureiros no ranking. Seja o primeiro a treinar!</div>'}</div></section>
       <p class="adv-footnote">O ranking mostra apenas nome de aventureiro, avatar, classe, nível e XP. E-mails não são exibidos.</p>`;
   }
+
+  const STORY_MONSTERS={goblin:'👺',spider:'🕷️',shaman:'🧙','goblin-king':'👑',kobold:'⛏️',orc:'🏹','orc-brute':'🪓','orc-general':'⚔️',skeleton:'💀',archer:'🏹',knight:'🛡️',lich:'☠️',draconian:'🐲',wyvern:'🐉','dragon-warden':'🐉','ancient-dragon':'🐉','primordial-dragon':'🔥'};
+  function storyArt(e,large=false){const icon=STORY_MONSTERS[e.monster_key]||'👾';return '<div class="adv-story-art'+(large?' large':'')+(e.is_boss?' boss':'')+'"><span>'+icon+'</span><i></i></div>';}
+  async function story(){
+    if(S.storyBattle&&!S.storyBattle.result)return storyFight();
+    const data=await rpc('get_story_state');S.storyState=data;
+    const encounters=data.encounters||[],current=encounters.find(x=>Number(x.stage_order)===Number(data.current_stage));
+    const cleared=encounters.filter(x=>x.status==='cleared').length,pct=data.total_stages?Math.round(cleared/data.total_stages*100):0;
+    const chapters=[...new Map(encounters.map(x=>[x.chapter,x.chapter_name])).entries()];
+    const chapterHtml=chapters.map(([chapter,name])=>{
+      const rows=encounters.filter(x=>x.chapter===chapter);
+      const nodes=rows.map(e=>{
+        const status=e.status,klass=status==='cleared'?'cleared':status==='available'?'available':'locked';
+        const tag=status==='cleared'?badge('Derrotado','good'):status==='available'?badge('Sua próxima batalha','ready'):badge('Bloqueado');
+        const difficulty=['','Iniciante','Intermediário','Avançado','Lendário'][Number(e.difficulty)]||'';
+        const btn=status==='available'?'<button class="adv-btn" data-adv="start-story" data-id="'+esc(e.id)+'">⚔ Enfrentar</button>':status==='cleared'?'<button class="adv-btn adv-btn-done" disabled>✓ Concluído</button>':'<button class="adv-btn adv-btn-disabled" disabled>🔒 Bloqueado</button>';
+        return '<article class="adv-story-node '+klass+(e.is_boss?' is-boss':'')+'">'+tag+storyArt(e)+'<div class="adv-story-node-copy"><small>ETAPA '+e.stage_order+(e.is_boss?' · CHEFE':' · MONSTRO')+'</small><h4>'+esc(e.name)+'</h4><p>'+esc(e.description)+'</p><div class="adv-story-meta"><span>'+difficulty+'</span><span>'+e.question_count+' questões</span><span>'+e.required_correct+' acertos para vencer</span></div><div class="adv-reward-line"><span>✧ '+n(e.xp_reward)+' XP</span><span>🪙 '+n(e.coin_reward)+' Coins</span></div>'+btn+'</div></article>';
+      }).join('');
+      return '<section class="adv-story-chapter"><div class="adv-story-chapter-head"><div><small>REGIÃO '+chapter+'</small><h3>'+esc(name)+'</h3></div><span>'+rows.filter(x=>x.status==='cleared').length+' / '+rows.length+'</span></div><div class="adv-story-nodes">'+nodes+'</div></section>';
+    }).join('');
+    const heroTitle=data.completed?'A campanha foi concluída!':current?'A jornada continua em '+current.region_name:'Sua lenda começa aqui';
+    const heroText=data.completed?'Você atravessou todas as regiões e derrotou o Dragão Primordial. Seu nome ficará marcado na história da Academia.':current?'Sua próxima batalha é contra '+current.name+'. Vença para desbloquear a próxima criatura.':'Prepare-se para explorar a primeira região.';
+    $('rpgView').innerHTML='<section class="adv-story-hero"><div><div class="adv-kicker">CAMPANHA INDIVIDUAL · 17 ETAPAS</div><h3>'+esc(heroTitle)+'</h3><p>'+esc(heroText)+'</p><div class="adv-story-progress-label"><span>Progresso da campanha</span><b>'+cleared+' / '+data.total_stages+' etapas</b></div>'+bar(cleared,data.total_stages)+'</div><div class="adv-story-hero-mark">📜</div></section>'+
+      '<div class="adv-story-stats">'+metric('Vitórias registradas',n(data.total_victories),'⚔️')+metric('Regiões','4 + final','🗺️')+metric('Progresso',pct+'%','✦')+'</div>'+
+      '<div class="adv-story-intro"><div><span class="adv-kicker">MAPA DA JORNADA</span><h3>Seu caminho até o Dragão Primordial</h3><p>As questões ficam mais difíceis a cada região. Derrote os monstros para liberar o próximo caminho.</p></div><span class="adv-story-legend">'+badge('Concluído','good')+' '+badge('Disponível','ready')+' '+badge('Bloqueado')+'</span></div>'+
+      (chapterHtml||'<div class="adv-panel adv-empty">A campanha ainda não possui etapas cadastradas.</div>')+
+      '<p class="adv-footnote">Cada vitória concede XP e Coins uma única vez. Se for derrotado, você pode tentar novamente a mesma criatura. Seu avanço é individual e fica salvo na conta.</p>';
+  }
+  async function startStory(id){
+    if(S.busy)return;S.busy=true;$('rpgView').innerHTML=wait('A criatura se aproxima. Preparando os enigmas...');
+    try{const d=await rpc('start_story_battle',{p_encounter_id:id});S.storyBattle={id:d.session_id,encounter:d.encounter,questions:d.questions||[],index:0,correct:0,wrong:0,answered:false,result:null};await storyFight();}
+    catch(e){$('rpgView').innerHTML=fail(e.message||'Não foi possível iniciar esta batalha.');}
+    finally{S.busy=false;}
+  }
+  function storyFight(){
+    const b=S.storyBattle;if(!b)return story();const e=b.encounter,q=b.questions[b.index];
+    if(b.result)return storyResult(b.result);
+    const foeHp=Math.max(0,e.required_correct-b.correct),heroHp=Math.max(0,3-b.wrong);
+    const kind=e.is_boss?'CHEFE DA REGIÃO':'ENCONTRO DE COMBATE';
+    $('rpgView').innerHTML='<section class="adv-story-fight-banner"><div><div class="adv-kicker">'+kind+' · ETAPA '+e.stage_order+'</div><h3>'+esc(e.name)+'</h3><p>'+esc(e.description)+'</p><span class="adv-story-region">'+esc(e.chapter_name)+'</span></div>'+storyArt(e,true)+'</section>'+
+      '<section class="adv-story-hud"><div class="adv-hp-card boss-hp"><div class="adv-hp-top"><b>👹 Resistência do monstro</b><strong>'+foeHp+' golpes restantes</strong></div>'+bar(e.required_correct-foeHp,e.required_correct)+'<small>Cada resposta correta enfraquece a criatura.</small></div><div class="adv-hp-card hero-hp"><div class="adv-hp-top"><b>🛡 Sua energia</b><strong>'+heroHp+' / 3</strong></div>'+bar(heroHp,3)+'<small>Erros reduzem sua energia, mas você pode concluir o desafio.</small></div></section>'+
+      '<section class="adv-panel adv-question-panel adv-story-question"><div class="adv-question-top"><span>Conhecimento nível '+e.difficulty+' · Questão '+(b.index+1)+' de '+b.questions.length+'</span><button class="adv-link-btn" data-adv="leave-story">Voltar ao mapa</button></div>'+bar(b.index,b.questions.length)+'<h3>'+esc(q.prompt)+'</h3><div class="adv-answer-list">'+q.options.map((o,i)=>'<button class="adv-answer '+(b.answered&&b.selected===i?(b.lastCorrect?'correct':'incorrect'):'')+'" data-adv="answer-story" data-index="'+i+'" '+(b.answered?'disabled':'')+'><b>'+'ABCD'[i]+'</b><span>'+esc(o)+'</span></button>').join('')+'</div><div id="advStoryFeedback">'+(b.answered?'<div class="adv-feedback '+(b.lastCorrect?'correct':'incorrect')+'">'+(b.lastCorrect?'Golpe certeiro!':'A criatura resistiu ao golpe.')+' '+esc(b.explanation||'')+'<button class="adv-btn" data-adv="next-story">'+(b.index===b.questions.length-1?'Concluir combate':'Próxima questão')+'</button></div>':'<p class="adv-muted">Escolha uma alternativa para atacar. A resposta é conferida pelo servidor.</p>')+'</div></section>';
+  }
+  async function answerStory(index){
+    const b=S.storyBattle;if(!b||b.answered||S.busy)return;const q=b.questions[b.index],answer=q?.options?.[index];if(answer==null)return;S.busy=true;
+    const fb=$('advStoryFeedback');if(fb)fb.textContent='Avaliando seu ataque...';
+    try{const r=await rpc('answer_quiz_question',{p_session:b.id,p_question_id:q.id,p_answer:answer});b.answered=true;b.selected=index;b.lastCorrect=!!r.is_correct;b.explanation=r.explanation||'';if(r.is_correct)b.correct++;else b.wrong++;storyFight();}
+    catch(e){if(fb)fb.innerHTML='<div class="adv-feedback incorrect">'+esc(e.message||'Não foi possível validar a resposta.')+'<button class="adv-btn adv-btn-soft" data-adv="retry-story-answer">Tentar novamente</button></div>';}
+    finally{S.busy=false;}
+  }
+  async function finishStory(){
+    const b=S.storyBattle;if(!b||S.busy)return;S.busy=true;$('rpgView').innerHTML=wait('Avaliando o resultado da batalha...');
+    try{b.result=await rpc('finish_story_battle',{p_session:b.id});storyFight();const r=b.result;if(r.won)toast('Vitória! +'+n(r.xp_awarded)+' XP e +'+n(r.coins_awarded)+' Coins.');else toast('A criatura resistiu. Você pode tentar novamente!');}
+    catch(e){$('rpgView').innerHTML=fail(e.message||'Não foi possível registrar o combate.');}
+    finally{S.busy=false;}
+  }
+  function storyResult(r){
+    const b=S.storyBattle,e=b.encounter;
+    if(r.won)return '<section class="adv-story-result victory"><div class="adv-story-result-mark">🏆</div><div class="adv-kicker">'+(r.campaign_complete?'FIM DA CAMPANHA':'VITÓRIA NA JORNADA')+'</div><h3>'+(r.campaign_complete?'O Dragão Primordial foi derrotado!':'Você derrotou '+esc(e.name)+'!')+'</h3><p>Você acertou '+n(r.correct)+' de '+n(r.total)+' questões e abriu o tesouro da batalha.</p><div class="adv-result-rewards"><b>✧ +'+n(r.xp_awarded)+' XP</b><b>🪙 +'+n(r.coins_awarded)+' Coins</b></div><button class="adv-btn" data-adv="story-continue">'+(r.campaign_complete?'Ver campanha concluída':'Avançar para a próxima etapa')+'</button></section>';
+    return '<section class="adv-story-result defeat"><div class="adv-story-result-mark">🛡️</div><div class="adv-kicker">FIM DO COMBATE</div><h3>'+esc(e.name)+' venceu desta vez.</h3><p>Você acertou '+n(r.correct)+' de '+n(r.total)+' questões. São necessários '+n(r.required)+' acertos para vencer.</p><p class="adv-muted">Revise o conteúdo e tente novamente. Seu progresso anterior permanece salvo.</p><button class="adv-btn" data-adv="story-retry">Tentar novamente</button><button class="adv-btn adv-btn-soft" data-adv="story-map">Voltar ao mapa</button></section>';
+  }
+
   async function bosses(){
     if(S.battle&&!S.battle.result)return fight();
     const list=await rpc('get_boss_catalog');
@@ -303,6 +367,13 @@
     if(a==='invite-friend'){try{await navigator.clipboard.writeText(b.dataset.code);toast('Código da guilda copiado. Envie ao amigo!');}catch{toast('Código: '+b.dataset.code);}return;}
     if(a==='claim')return claim(b.dataset.id);
     if(a==='period'){S.period=b.dataset.period;return ranking();}
+    if(a==='start-story')return startStory(b.dataset.id);
+    if(a==='answer-story')return answerStory(Number(b.dataset.index));
+    if(a==='retry-story-answer'){S.storyBattle.answered=false;return storyFight();}
+    if(a==='next-story'){if(S.storyBattle.index===S.storyBattle.questions.length-1)return finishStory();S.storyBattle.index++;S.storyBattle.answered=false;return storyFight();}
+    if(a==='story-continue'||a==='story-map'){S.storyBattle=null;return story();}
+    if(a==='story-retry'){const id=S.storyBattle.encounter.id;S.storyBattle=null;return startStory(id);}
+    if(a==='leave-story'){S.storyBattle=null;return story();}
     if(a==='start-boss')return startBoss(b.dataset.id);
     if(a==='answer-boss')return answerBoss(Number(b.dataset.index));
     if(a==='retry-boss-answer'){S.battle.answered=false;return fight();}
