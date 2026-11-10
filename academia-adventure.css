@@ -225,3 +225,11 @@
   #rpgView .adv-flag-controls{grid-template-columns:1fr}
   #rpgView .adv-flag-motto-field,#rpgView .adv-flag-controls>.adv-btn,#rpgView .adv-flag-permission{grid-column:auto}
 }
+
+
+/* Identidade visual da seção Aventura */
+.adv-nav-divider{color:#b39ae5;border-top-color:#51436b}
+.adv-nav-divider:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin:0 8px 1px 0;background:#a98ce4;box-shadow:0 0 9px #a98ce4}
+.rpgnav [data-adventure]{border-color:transparent;transition:background .18s,border-color .18s,color .18s}
+.rpgnav [data-adventure]:hover,.rpgnav [data-adventure].active{background:linear-gradient(90deg,#302448,#1b2436);border-color:#70599a;color:#d5c1ff}
+.rpgnav [data-adventure] .ico{color:#b9a0eb}
