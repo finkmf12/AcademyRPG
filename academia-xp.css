@@ -130,3 +130,16 @@
 .mk-buy-alert{display:grid;gap:4px;margin:0 0 10px;padding:10px 11px;border:1px solid #a65d5d;border-radius:8px;background:#301b20;color:#f0c4c4;font-size:11px;line-height:1.45}
 .mk-buy-alert b{color:#ffaaaa;font-size:12px}
 .mk-buy-alert span{color:#e9caca}
+
+
+/* Identidade visual dos grupos de navegação */
+.nav-label{font-weight:800}
+.nav-label-player{color:#d8bd82}
+.nav-label-library{color:#79b9e8}
+.nav-label-training{color:#d9ae68}
+.nav-label-player:before,.nav-label-library:before,.nav-label-training:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;margin:0 8px 1px 0;background:currentColor;box-shadow:0 0 9px currentColor}
+.nav button:hover,.nav button.active{background:linear-gradient(90deg,#18324a,#1b2a3d);border-color:#477da3;color:#a9d9ff}
+.rpgnav-training button:hover,.rpgnav-training button.active{background:linear-gradient(90deg,#33291c,#1b2a3d);border-color:#8b7047;color:#f0ce91}
+.rpgnav-profile button{background:#24251f;border-color:#665638;color:#e8d19d}
+.rpgnav-profile button:hover,.rpgnav-profile button.active{background:linear-gradient(90deg,#3a3020,#24283a);border-color:#c19a56;color:#ffe0a0}
+.rpgnav-profile .ico{color:#e6c477}
