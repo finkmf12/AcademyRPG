@@ -111,10 +111,8 @@
       ? '<span class="arc-item-unlock '+(own?'is-owned':'is-locked')+'">'+(own?'✦ Desbloqueado':'🔒 '+esc(ach))+'</span>'
       : '<span class="arc-item-price">'+Number(x.price).toLocaleString('pt-BR')+' Coins</span>';
     let main='';
-    if(reward)main=own
-      ? '<button class="arc-item-main equipped" data-avatar-action="equip" data-id="'+esc(x.id)+'">'+(eq?'Equipado':'Equipar')+'</button>'
-      : '<button class="arc-item-main locked" disabled>Conquiste a medalha</button>';
-    else if(own)main='<button class="arc-item-main owned" disabled>✓ No inventário</button>';
+    if(own)main='<button class="arc-item-main '+(eq?'equipped':'owned')+'" data-avatar-action="'+(eq?'unequip':'equip')+'" data-id="'+esc(x.id)+'">'+(eq?'Desequipar':'Equipar')+'</button>';
+    else if(reward)main='<button class="arc-item-main locked" disabled>Conquiste a medalha</button>';
     else main='<button class="arc-item-main" data-avatar-action="buy" data-id="'+esc(x.id)+'">Comprar por '+Number(x.price).toLocaleString('pt-BR')+' C</button>';
     return '<article class="arc-item-card arc-rarity-'+(RARITY[x.rarity]||'common')+'"><div class="arc-item-visual">'+render(preview,'item',S.playerClass)+'</div><div class="arc-item-copy"><div class="arc-item-top"><span>'+esc(SLOT_NAME[x.slot]||x.slot)+'</span><b>'+esc(x.rarity)+'</b></div><h4>'+esc(x.name)+'</h4><p>'+esc(x.description)+'</p><div class="arc-item-bottom">'+action+'</div><div class="arc-item-actions"><button class="arc-preview-btn '+(S.previewId===x.id?'active':'')+'" data-avatar-action="preview" data-id="'+esc(x.id)+'">'+(S.previewId===x.id?'Em prévia':'Experimentar')+'</button>'+main+'</div></div></article>';
   }
