@@ -26,7 +26,7 @@ Neste mundo, os jogadores assumem o papel de estudantes/heróis em uma academia 
 
 Este projeto foi desenvolvido utilizando as seguintes tecnologias:
 
-* **Front-end:** HTML, JavaScript
+* **Front-end:** HTML
 * **Back-end:** Node.JS
 * **Banco de Dados:** SupaBase
 * **Hospedagem/Deploy:** Vercel.app
