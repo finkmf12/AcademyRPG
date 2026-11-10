@@ -14,7 +14,7 @@
     guilds:['SALÃO DAS GUILDAS','Guildas','Reúna aliados, compartilhe um código e evoluam em equipe.'],
     teacher:['MESTRE DA ACADEMIA','Painel do Professor','Acompanhe a turma e administre a jornada de aprendizagem.']
   };
-  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',studentQuery:'',missionDraft:null,bossDraft:null,battle:null,busy:false};
+  const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',studentQuery:'',missionDraft:null,bossDraft:null,battle:null,flagDraft:null,busy:false};
   const toast=m=>C()?.toast?.(m);
   async function rpc(name,args={}){const c=C();if(!c?.supabase||!c.user||c.guest)throw Error('Entre com sua conta Google para usar este recurso.');const {data,error}=await c.supabase.rpc(name,args);if(error)throw error;return data;}
   const wait=m=>`<div class="adv-panel"><div class="adv-loading"><span class="adv-spinner"></span>${esc(m||'Consultando os registros da Academia...')}</div></div>`;
@@ -22,6 +22,43 @@
   const metric=(label,value,icon)=>`<article class="adv-stat"><span>${icon}</span><small>${esc(label)}</small><strong>${esc(value)}</strong></article>`;
   const bar=(v,t)=>`<div class="adv-progress" role="progressbar" aria-valuenow="${t?Math.min(100,Math.round(v/t*100)):0}" aria-valuemin="0" aria-valuemax="100"><i style="width:${t?Math.min(100,Math.round(v/t*100)):0}%"></i></div>`;
   const badge=(s,k='')=>`<span class="adv-badge ${esc(k)}">${esc(s)}</span>`;
+  const FLAG_COLOR_OPTIONS=[['#9f3e40','Carmesim'],['#3b638a','Azul real'],['#426c56','Verde bosque'],['#936533','Bronze'],['#71538c','Violeta'],['#d0b36b','Ouro antigo'],['#303b4d','Aço escuro'],['#d9d6cd','Marfim']];
+  const FLAG_PATTERNS=[['solid','Liso'],['horizontal','Faixas horizontais'],['vertical','Faixas verticais'],['diagonal','Diagonal'],['cross','Cruz'],['chevron','Chevrons'],['quartered','Partido']];
+  const FLAG_SYMBOLS=['⚔️','🐉','🦉','🦅','🐺','🛡️','✦','♛','🌙','🔥'];
+  const flagConfig=raw=>({
+    primary:FLAG_COLOR_OPTIONS.some(x=>x[0]===raw?.primary)?raw.primary:'#303b4d',
+    secondary:FLAG_COLOR_OPTIONS.some(x=>x[0]===raw?.secondary)?raw.secondary:'#d0b36b',
+    pattern:FLAG_PATTERNS.some(x=>x[0]===raw?.pattern)?raw.pattern:'diagonal',
+    symbol:FLAG_SYMBOLS.includes(raw?.symbol)?raw.symbol:'⚔️',
+    motto:String(raw?.motto||'').slice(0,48)
+  });
+  const flagMarkup=(raw,size='mini')=>{
+    const f=flagConfig(raw);
+    return `<div class="adv-flag adv-flag-${size} adv-flag--${f.pattern}" style="--flag-primary:${f.primary};--flag-secondary:${f.secondary}" role="img" aria-label="Bandeira da guilda"><span class="adv-flag-symbol">${esc(f.symbol)}</span></div>`;
+  };
+  function flagOptions(options,selected){return options.map(([value,label])=>`<option value="${esc(value)}" ${value===selected?'selected':''}>${esc(label)}</option>`).join('');}
+  function flagEditor(g){
+    const f=flagConfig(g.flag_config);
+    return `<section class="adv-panel adv-flag-panel"><div class="adv-section-head"><div><h3>Estúdio de bandeiras</h3><small>Crie um símbolo que represente a história da sua guilda.</small></div><span class="adv-flag-editor-mark">⚑</span></div>
+      <form id="advGuildFlagForm" class="adv-flag-editor" data-adv-form="save-guild-flag">
+        <div class="adv-flag-preview-wrap"><div class="adv-flag-preview" id="advFlagPreview">${flagMarkup(f,'preview')}</div><small>Prévia da bandeira</small><p id="advFlagMottoPreview" class="adv-flag-motto-preview">${esc(f.motto||'O lema da guilda aparecerá aqui')}</p></div>
+        <div class="adv-flag-controls">
+          <label>Cor principal<select id="advFlagPrimary">${flagOptions(FLAG_COLOR_OPTIONS,f.primary)}</select></label>
+          <label>Cor secundária<select id="advFlagSecondary">${flagOptions(FLAG_COLOR_OPTIONS,f.secondary)}</select></label>
+          <label>Desenho<select id="advFlagPattern">${flagOptions(FLAG_PATTERNS,f.pattern)}</select></label>
+          <label>Símbolo central<select id="advFlagSymbol">${flagOptions(FLAG_SYMBOLS.map(x=>[x,x]),f.symbol)}</select></label>
+          <label class="adv-flag-motto-field">Lema da guilda<input id="advFlagMotto" maxlength="48" value="${esc(f.motto)}" placeholder="Ex.: Unidos pela sabedoria"></label>
+          <button class="adv-btn" type="submit">Salvar bandeira</button>
+          <small class="adv-flag-permission">Apenas o líder pode alterar a bandeira. Todos os membros verão a versão salva.</small>
+        </div>
+      </form></section>`;
+  }
+  function updateFlagPreview(){
+    const wrap=$('advFlagPreview');if(!wrap)return;
+    const f=flagConfig({primary:$('advFlagPrimary')?.value,secondary:$('advFlagSecondary')?.value,pattern:$('advFlagPattern')?.value,symbol:$('advFlagSymbol')?.value,motto:$('advFlagMotto')?.value});
+    wrap.innerHTML=flagMarkup(f,'preview');
+    const motto=$('advFlagMottoPreview');if(motto)motto.textContent=f.motto||'O lema da guilda aparecerá aqui';
+  }
 
   function mount(){
     const nav=document.querySelector('.rpgnav');if(!nav||nav.querySelector('[data-adventure="missions"]'))return;
@@ -134,11 +171,12 @@
 
   async function guilds(){
     const [mine,all]=await Promise.all([rpc('get_my_guild'),rpc('list_guilds')]);
-    const directory=(all||[]).map(g=>`<article class="adv-guild-row"><div class="adv-guild-crest">${esc(g.tag)}</div><div class="adv-guild-info"><b>${esc(g.name)}</b><small>${esc(g.description||'Uma guilda em busca de novos aventureiros.')}</small><span>${n(g.members)} / 6 membros · ${n(g.total_xp)} XP somados</span></div>${g.joined?badge('Sua guilda','good'):badge('Guilda aberta')}</article>`).join('');
+    const directory=(all||[]).map(g=>`<article class="adv-guild-row"><div class="adv-guild-crest">${flagMarkup(g.flag_config,'mini')}</div><div class="adv-guild-info"><b>${esc(g.name)}</b><small>${esc(g.description||'Uma guilda em busca de novos aventureiros.')}</small><span>${n(g.members)} / 6 membros · ${n(g.total_xp)} XP somados</span></div>${g.joined?badge('Sua guilda','good'):badge('Guilda aberta')}</article>`).join('');
     if(mine?.guild){
-      const g=mine.guild,ms=mine.members||[];
-      $('rpgView').innerHTML=`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">SUA BANDEIRA</div><h3>${esc(g.name)} <small>[${esc(g.tag)}]</small></h3><p>${esc(g.description||'Uma irmandade de aventureiros.')}</p></div><div class="adv-hero-mark">⚑</div></section>
+      const g=mine.guild,ms=mine.members||[],f=flagConfig(g.flag_config);
+      $('rpgView').innerHTML=`<section class="adv-hero adv-guild-hero"><div><div class="adv-kicker">SUA BANDEIRA</div><h3>${esc(g.name)} <small>[${esc(g.tag)}]</small></h3><p>${esc(g.description||'Uma irmandade de aventureiros.')}</p></div><div class="adv-guild-flag-side">${flagMarkup(f,'hero')}${f.motto?`<small>${esc(f.motto)}</small>`:''}</div></section>
         ${g.active?'':'<div class="adv-warning">Esta guilda foi temporariamente suspensa pelo professor. Seus membros podem consultar os dados e sair normalmente.</div>'}
+        ${g.owner?flagEditor(g):''}
         <section class="adv-panel"><div class="adv-section-head"><div><h3>Companheiros de jornada</h3><small>${n(ms.length)} de 6 vagas ocupadas</small></div>${g.owner&&g.invite_code?`<button class="adv-btn adv-btn-soft" data-adv="copy-invite" data-code="${esc(g.invite_code)}">Copiar convite · ${esc(g.invite_code)}</button>`:''}</div>
         <div class="adv-member-list">${ms.map(m=>`<div class="adv-member"><span class="adv-rank-avatar">${esc(m.avatar||'🧙')}</span><div><b>${esc(m.name)} ${m.is_me?'(você)':''}</b><small>${esc(m.role==='leader'?'Líder':m.role==='officer'?'Oficial':'Membro')} · ${esc(m.class||'Aventureiro')}</small></div><strong>${n(m.xp)} XP</strong></div>`).join('')}</div></section>
         <div class="adv-guild-actions"><p class="adv-footnote">O líder pode compartilhar o código de convite com até cinco companheiros.</p><button class="adv-btn adv-btn-danger" data-adv="leave-guild">Sair da guilda</button></div>`;return;
@@ -205,6 +243,7 @@
   async function claim(id){const r=await rpc('claim_weekly_mission',{p_mission_id:id});if(!r.ok)toast(r.reason==='claimed'?'Esta missão já foi resgatada nesta semana.':`Missão incompleta: ${n(r.progress)} de ${n(r.target)}.`);else toast(`Recompensa recebida: +${n(r.xp_awarded)} XP e +${n(r.coins_awarded)} Coins.`);return missions();}
   async function createGuild(e){e.preventDefault();const r=await rpc('create_guild',{p_name:$('advGuildName').value.trim(),p_tag:$('advGuildTag').value.trim().toUpperCase(),p_description:$('advGuildDescription').value.trim()});toast(`Guilda ${r.tag} fundada! Código de convite: ${r.invite_code}.`);return guilds();}
   async function joinGuild(e){e.preventDefault();const r=await rpc('join_guild',{p_invite_code:$('advGuildCode').value.trim().toUpperCase()});toast(`Você entrou na guilda [${r.guild_tag}] ${r.guild_name}.`);return guilds();}
+  async function saveGuildFlag(e){e.preventDefault();await rpc('save_guild_flag',{p_primary:$('advFlagPrimary').value,p_secondary:$('advFlagSecondary').value,p_pattern:$('advFlagPattern').value,p_symbol:$('advFlagSymbol').value,p_motto:$('advFlagMotto').value.trim()});toast('Bandeira salva. Todos os membros já podem vê-la.');return guilds();}
   async function saveMission(e){e.preventDefault();await rpc('teacher_save_mission',{p_id:$('advMissionId').value.trim(),p_title:$('advMissionTitle').value.trim(),p_description:$('advMissionDescription').value.trim(),p_kind:$('advMissionKind').value,p_target:Number($('advMissionTarget').value),p_xp_reward:Number($('advMissionXp').value),p_coin_reward:Number($('advMissionCoins').value),p_active:true});S.missionDraft=null;toast('Missão salva e sincronizada com o banco.');return teacher();}
   async function saveBoss(e){e.preventDefault();await rpc('teacher_save_boss',{p_id:$('advBossId').value.trim(),p_name:$('advBossName').value.trim(),p_category:$('advBossCategory').value,p_description:$('advBossDescription').value.trim(),p_min_correct:Number($('advBossMin').value),p_xp_reward:Number($('advBossXp').value),p_coin_reward:Number($('advBossCoins').value),p_active:true});S.bossDraft=null;toast('Chefe salvo na Arena.');return teacher();}
 
@@ -233,8 +272,9 @@
   const root=$('rpgView');
   if(root){
     root.addEventListener('click',e=>{const b=e.target.closest('[data-adv]');if(!b||b.disabled)return;action(b).catch(err=>{console.error('Ação da Aventura:',err);toast(err.message||'Não foi possível concluir esta ação.');});});
-    root.addEventListener('submit',e=>{const f=e.target.closest('[data-adv-form]');if(!f)return;const map={'create-guild':createGuild,'join-guild':joinGuild,'save-mission':saveMission,'save-boss':saveBoss};if(map[f.dataset.advForm])map[f.dataset.advForm](e).catch(err=>toast(err.message||'Não foi possível salvar.'));});
-    root.addEventListener('input',e=>{if(e.target.id!=='advStudentSearch')return;S.studentQuery=e.target.value;const q=S.studentQuery.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const rows=(S.data?.students||[]).filter(x=>`${x.name} ${x.guild_name||''} ${x.class||''}`.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));const body=root.querySelector('.adv-table tbody');if(body)body.innerHTML=rows.map(x=>`<tr><td><span class="adv-table-player">${esc(x.avatar||'🧙')} <b>${esc(x.name)}</b><small>${esc(x.class||'Sem classe')}</small></span></td><td>${n(x.total_xp)}</td><td>${n(x.quizzes)}</td><td>${n(x.correct)} / ${n(x.questions)}</td><td>${n(x.coins)}</td><td>${esc(x.guild_name||'—')}</td></tr>`).join('')||'<tr><td colspan="6" class="adv-empty">Nenhum aluno corresponde à busca.</td></tr>';});
+    root.addEventListener('submit',e=>{const f=e.target.closest('[data-adv-form]');if(!f)return;const map={'create-guild':createGuild,'join-guild':joinGuild,'save-guild-flag':saveGuildFlag,'save-mission':saveMission,'save-boss':saveBoss};if(map[f.dataset.advForm])map[f.dataset.advForm](e).catch(err=>toast(err.message||'Não foi possível salvar.'));});
+    root.addEventListener('input',e=>{if(e.target.id==='advStudentSearch'){S.studentQuery=e.target.value;const q=S.studentQuery.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const rows=(S.data?.students||[]).filter(x=>`${x.name} ${x.guild_name||''} ${x.class||''}`.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));const body=root.querySelector('.adv-table tbody');if(body)body.innerHTML=rows.map(x=>`<tr><td><span class="adv-table-player">${esc(x.avatar||'🧙')} <b>${esc(x.name)}</b><small>${esc(x.class||'Sem classe')}</small></span></td><td>${n(x.total_xp)}</td><td>${n(x.quizzes)}</td><td>${n(x.correct)} / ${n(x.questions)}</td><td>${n(x.coins)}</td><td>${esc(x.guild_name||'—')}</td></tr>`).join('')||'<tr><td colspan="6" class="adv-empty">Nenhum aluno corresponde à busca.</td></tr>';return;}if(e.target.closest('#advGuildFlagForm'))updateFlagPreview();});
+    root.addEventListener('change',e=>{if(e.target.closest('#advGuildFlagForm'))updateFlagPreview();});
   }
   document.addEventListener('click',e=>{const b=e.target.closest('[data-adventure]');if(b)open(b.dataset.adventure);});
   function accountChanged(){mount();sync().catch(e=>console.warn('Conta da Academia:',e.message));}
