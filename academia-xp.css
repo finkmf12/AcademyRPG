@@ -161,3 +161,29 @@
 .sidebar::-webkit-scrollbar-thumb:hover{
   background:linear-gradient(180deg,#b99a62,#786044);
 }
+
+
+/* Entrada direta para o novo guarda-roupa, sem alterar a loja existente */
+.mk-atelier-cta{
+  align-self:center;
+  border:1px solid #a88a5a;
+  border-radius:8px;
+  padding:10px 13px;
+  background:linear-gradient(135deg,#d8b777,#a9824d);
+  color:#20190f;
+  font-size:10px;
+  font-weight:850;
+  white-space:nowrap;
+}
+.mk-atelier-cta:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.pf-av{
+  width:112px;
+  height:126px;
+  flex:none;
+  overflow:hidden;
+  border-radius:12px;
+  border:1px solid #806b4c;
+  background:radial-gradient(ellipse at 50% 35%,#5c4b78,#111d2c 75%);
+}
+.pf-av .arc-avatar{width:100%;height:100%;max-width:none;max-height:none}
+.xm-av .arc-avatar{width:36px;height:40px}
