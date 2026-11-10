@@ -58,7 +58,7 @@
     if(outfit==='outfit-royal'){coat='#263d78';trim='#f0d18b';dark='#18264d';}
     if(outfit==='outfit-arcane'){coat='#634b8d';trim='#d9b8f0';dark='#342650';}
     if(outfit==='outfit-perfect'){coat='#76559b';trim='#f2d991';dark='#382952';}
-    if(outfit==='outfit_logic'){coat='#60717b';trim='#a9d6df';dark='#2d3d4a';}
+    if(outfit==='armor-logic'){coat='#60717b';trim='#a9d6df';dark='#2d3d4a';}
     out+='<path d="M69 126 Q100 108 131 126 L146 194 Q100 210 54 194Z" fill="'+coat+'" stroke="'+dark+'" stroke-width="4" stroke-linejoin="round"/><path d="M77 126 Q100 139 123 126 L112 163 L100 176 L88 163Z" fill="'+trim+'" opacity=".94"/><path d="M100 143 L100 190" stroke="'+dark+'" stroke-width="3"/><path d="M62 177 Q100 186 138 177 L141 188 Q100 199 59 188Z" fill="'+dark+'" stroke="'+trim+'" stroke-width="2"/><circle cx="100" cy="183" r="5" fill="'+trim+'"/>';
     if(outfit==='outfit-royal'||outfit==='outfit-perfect'||outfit==='outfit_logic')out+='<path d="M78 147 L88 157 L100 147 L112 157 L122 147" fill="none" stroke="'+trim+'" stroke-width="3"/>';
     // Pescoço, orelhas e rosto.
