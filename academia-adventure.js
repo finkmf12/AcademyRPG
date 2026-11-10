@@ -61,8 +61,8 @@
   }
 
   function mount(){
-    const nav=document.querySelector('.rpgnav');if(!nav||nav.querySelector('[data-adventure="missions"]'))return;
-    nav.insertAdjacentHTML('beforeend',`<div class="adv-nav-divider">AVENTURA</div>
+    const nav=document.querySelector('.rpgnav-adventure');if(!nav||nav.querySelector('[data-adventure="missions"]'))return;
+    nav.insertAdjacentHTML('beforeend',`
       <button type="button" data-adventure="missions"><span class="ico">✦</span> Missões Semanais</button>
       <button type="button" data-adventure="ranking"><span class="ico">♛</span> Ranking</button>
       <button type="button" data-adventure="bosses"><span class="ico">🐉</span> Arena dos Chefes</button>
