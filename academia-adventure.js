@@ -22,7 +22,7 @@
   const metric=(label,value,icon)=>`<article class="adv-stat"><span>${icon}</span><small>${esc(label)}</small><strong>${esc(value)}</strong></article>`;
   const bar=(v,t)=>`<div class="adv-progress" role="progressbar" aria-valuenow="${t?Math.min(100,Math.round(v/t*100)):0}" aria-valuemin="0" aria-valuemax="100"><i style="width:${t?Math.min(100,Math.round(v/t*100)):0}%"></i></div>`;
   const badge=(s,k='')=>`<span class="adv-badge ${esc(k)}">${esc(s)}</span>`;
-  const FLAG_COLOR_OPTIONS=[['#9f3e40','Carmesim'],['#3b638a','Azul real'],['#426c56','Verde bosque'],['#936533','Bronze'],['#71538c','Violeta'],['#d0b36b','Ouro antigo'],['#303b4d','Aço escuro'],['#d9d6cd','Marfim']];
+  const FLAG_COLOR_OPTIONS=[['#9f3e40','Carmesim'],['#3b638a','Azul real'],['#34465d','Azul ardósia'],['#426c56','Verde bosque'],['#936533','Bronze'],['#71538c','Violeta'],['#d0b36b','Ouro antigo'],['#303b4d','Aço escuro'],['#d9d6cd','Marfim']];
   const FLAG_PATTERNS=[['solid','Liso'],['horizontal','Faixas horizontais'],['vertical','Faixas verticais'],['diagonal','Diagonal'],['cross','Cruz'],['chevron','Chevrons'],['quartered','Partido']];
   const FLAG_SYMBOLS=['⚔️','🐉','🦉','🦅','🐺','🛡️','✦','♛','🌙','🔥'];
   const flagConfig=raw=>({
