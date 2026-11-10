@@ -95,15 +95,7 @@ async function fetchAll() {
   S = { p: r[0].data, events: r[1].data, attempts: r[2].data, unlocked: new Set(r[3].data.map(x => x.achievement_id)), days: r[4].count || 0 };
 }
 
-async function checkAch() {
-  const out = [], st = { attempts: S.attempts, xp: S.p.total_xp, days: S.days };
-  for (const [id, a] of Object.entries(ACH)) {
-    if (S.unlocked.has(id) || !a[3](st)) continue;
-    const r = await C().supabase.rpc('unlock_achievement', { p_id: id });
-    if (!r.error) { S.unlocked.add(id); out.push(id); }
-  }
-  return out;
-}
+async function checkAch() { return []; }
 
 async function init() {
   const c = C(); S = null; err = null; mini();
@@ -151,14 +143,21 @@ function renderSala() {
   $('rpgView').innerHTML = `${note}<div class="stats">${st}</div><div class="section-head"><h3>Escolha uma categoria</h3></div><div class="cards">${cards}</div>`;
 }
 
-function start(cat) {
-  const pool = cat === 'simulado' ? sh(ALL.flatMap(k => Q[k])).slice(0, SIM_N) : sh(Q[cat]);
-  resultHtml = null;
-  quiz = {
-    cat, id: crypto.randomUUID(), i: 0, correct: 0, streak: 0, best: 0, ans: false,
-    qs: pool.map(([t, c, ...r]) => { const e = r.pop(); return { t, e, o: sh([{ t: c, ok: true }, ...r.map(x => ({ t: x, ok: false }))]) }; })
-  };
-  render();
+async function start(cat) {
+  resultHtml = null; quiz = null;
+  $('rpgView').innerHTML = '<div class="panel"><div class="empty"><b>Preparando seu desafio...</b></div></div>';
+  try {
+    const { data, error } = await C().supabase.rpc('start_quiz', { p_category: cat });
+    if (error) throw error;
+    quiz = {
+      cat, id: data.session_id, i: 0, correct: 0, streak: 0, best: 0, ans: false,
+      qs: data.questions.map(q => ({ id: q.id, t: q.prompt, o: q.options.map(t => ({ t, ok: false })) })),
+      results: []
+    };
+    render();
+  } catch (e) {
+    $('rpgView').innerHTML = box('Não foi possível iniciar o quiz: ' + esc(e.message || e));
+  }
 }
 
 function renderQuiz() {
@@ -168,13 +167,33 @@ function renderQuiz() {
   <div class="qz-opts">${q.o.map((o, i) => `<button class="qz-opt" data-act="ans" data-i="${i}"><b>${'ABCD'[i]}</b>${esc(o.t)}</button>`).join('')}</div><div id="qzFb"></div></div>`;
 }
 
-function answer(i) {
+async function answer(i) {
   if (!quiz || quiz.ans) return;
-  const q = quiz.qs[quiz.i], ok = q.o[i].ok; quiz.ans = true;
-  quiz.correct += ok ? 1 : 0; quiz.streak = ok ? quiz.streak + 1 : 0; quiz.best = Math.max(quiz.best, quiz.streak);
-  document.querySelectorAll('.qz-opt').forEach((b, j) => { b.disabled = true; b.classList.toggle('ok', q.o[j].ok); b.classList.toggle('bad', j === i && !ok); });
-  $('qzStreak').textContent = `🔥 ${quiz.streak} seguidas`;
-  $('qzFb').innerHTML = `<div class="qz-exp ${ok ? 'ok' : 'bad'}"><b>${ok ? '✔ Resposta correta!' : '✘ Resposta incorreta.'}</b> ${esc(q.e)}</div><button class="primary" data-act="next">${quiz.i === quiz.qs.length - 1 ? 'Ver resultado' : 'Próxima questão'}</button>`;
+  const q = quiz.qs[quiz.i], selected = q.o[i];
+  if (!selected) return;
+  quiz.ans = true;
+  document.querySelectorAll('.qz-opt').forEach(b => b.disabled = true);
+  $('qzFb').innerHTML = '<div class="qz-exp">Verificando sua resposta...</div>';
+  try {
+    const { data, error } = await C().supabase.rpc('answer_quiz_question', {
+      p_session: quiz.id, p_question_id: q.id, p_answer: selected.t
+    });
+    if (error) throw error;
+    quiz.correct = data.correct_count;
+    quiz.streak = data.current_streak;
+    quiz.best = data.best_streak;
+    quiz.results.push(data.is_correct);
+    document.querySelectorAll('.qz-opt').forEach((b, j) => {
+      b.classList.toggle('ok', data.is_correct && j === i);
+      b.classList.toggle('bad', !data.is_correct && j === i);
+    });
+    $('qzStreak').textContent = `🔥 ${quiz.streak} seguidas`;
+    $('qzFb').innerHTML = `<div class="qz-exp ${data.is_correct ? 'ok' : 'bad'}"><b>${data.is_correct ? '✔ Resposta correta!' : '✘ Resposta incorreta.'}</b> ${esc(data.explanation)}</div><button class="primary" data-act="next">${quiz.i === quiz.qs.length - 1 ? 'Ver resultado' : 'Próxima questão'}</button>`;
+  } catch (e) {
+    quiz.ans = false;
+    document.querySelectorAll('.qz-opt').forEach(b => b.disabled = false);
+    $('qzFb').innerHTML = `<div class="rpg-note">Não foi possível validar a resposta: ${esc(e.message || e)}. Tente novamente.</div>`;
+  }
 }
 
 function next() {
@@ -182,29 +201,34 @@ function next() {
   if (quiz.i < quiz.qs.length - 1) { quiz.i++; quiz.ans = false; renderQuiz(); } else finish();
 }
 
-async function finish() {
-  const z = quiz, n = z.qs.length, pct = Math.round(z.correct / n * 100);
-  $('rpgView').innerHTML = '<div class="panel"><div class="empty"><b>Calculando seu resultado...</b></div></div>';
+async async function finish() {
+  const z = quiz;
+  $('rpgView').innerHTML = '<div class="panel"><div class="empty"><b>Validando resultado e calculando XP...</b></div></div>';
   let xpHtml = '';
-  if (C().guest) xpHtml = '<div class="rpg-note">Modo convidado: entre com a conta Google para ganhar e salvar XP.</div>';
-  else if (!S) xpHtml = '<div class="rpg-note">O XP não foi salvo porque o sistema de XP não está ativo no Supabase.</div>';
-  else {
-    try {
-      const before = levelOf(S.p.total_xp);
-      const r = await C().supabase.rpc('record_quiz', { p_attempt: z.id, p_category: z.cat, p_correct: z.correct, p_total: n, p_streak: z.best });
-      if (r.error) throw r.error;
-      await fetchAll(); const ach = await checkAch(), after = levelOf(S.p.total_xp), total = r.data.xp + (r.data.streak_xp || 0);
+  try {
+    const before = S ? levelOf(S.p.total_xp) : 1;
+    const { data, error } = await C().supabase.rpc('finish_quiz', { p_session: z.id });
+    if (error) throw error;
+    if (!C().guest) {
+      await fetchAll();
+      const after = levelOf(S.p.total_xp);
       mini();
+      const total = (data.xp || 0) + (data.streak_xp || 0);
       xpHtml = total > 0
-        ? `<div class="res-xp">+${total} XP</div><p class="sub">${z.cat === 'simulado' ? 'Simulado' : 'Quiz'} +${r.data.xp}${r.data.streak_xp ? ` · Sequência de 5 acertos +${r.data.streak_xp}` : ''}</p>`
-        : '<div class="rpg-note">Nenhum XP novo desta vez: a conclusão já foi registrada ou o limite diário de XP foi atingido.</div>';
-      if (after > before) xpHtml += `<p><b>🎉 Você subiu para o nível ${after}!</b></p>`;
-      ach.forEach(id => xpHtml += `<p>🏅 Nova conquista: <b>${ACH[id][1]}</b></p>`);
-    } catch (e) { xpHtml = `<div class="rpg-note">Não foi possível salvar o XP: ${esc(e.message || e)}</div>`; }
+        ? `<div class="res-xp">+${total} XP</div><p class="sub">${z.cat === 'simulado' ? 'Simulado' : 'Quiz'} +${data.xp || 0}${data.streak_xp ? ` · Sequência de 5 acertos +${data.streak_xp}` : ''}</p>`
+        : '<div class="rpg-note">Resultado validado. Nenhum XP novo desta vez: você já recebeu a recompensa desta categoria hoje ou atingiu o limite diário.</div>';
+      if (after > before) xpHtml += `<p><b>Você subiu para o nível ${after}!</b></p>`;
+      (data.achievements || []).forEach(id => { if (ACH[id]) xpHtml += `<p>🏅 Nova conquista: <b>${ACH[id][1]}</b></p>`; });
+    } else {
+      xpHtml = '<div class="rpg-note">Resultado validado. Entre com Google para salvar XP e conquistas no seu perfil.</div>';
+    }
+  } catch (e) {
+    xpHtml = `<div class="rpg-note">Não foi possível finalizar o quiz: ${esc(e.message || e)}</div>`;
   }
+  const n = z.qs.length, correct = z.correct, pct = Math.round(correct / n * 100);
   const perf = pct >= 85 ? ['🏆', 'Excelente desempenho!'] : pct >= 60 ? ['👍', 'Bom desempenho'] : ['📚', 'Continue treinando'];
   quiz = null;
-  resultHtml = `<div class="panel res"><div class="big">${perf[0]}</div><h3>${perf[1]}</h3><p class="sub">${z.correct} de ${n} acertos (${pct}%) · melhor sequência: ${z.best}</p><div class="bar big"><i style="width:${pct}%"></i></div>${xpHtml}
+  resultHtml = `<div class="panel res"><div class="big">${perf[0]}</div><h3>${perf[1]}</h3><p class="sub">${correct} de ${n} acertos (${pct}%) · melhor sequência: ${z.best}</p><div class="bar big"><i style="width:${pct}%"></i></div>${xpHtml}
   <button class="primary" data-act="start" data-cat="${z.cat}">Tentar novamente</button><button class="secondary" data-act="exit">Voltar à Sala</button></div>`;
   render();
 }
