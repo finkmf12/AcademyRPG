@@ -22,6 +22,12 @@
   const metric=(label,value,icon)=>`<article class="adv-stat"><span>${icon}</span><small>${esc(label)}</small><strong>${esc(value)}</strong></article>`;
   const bar=(v,t)=>`<div class="adv-progress" role="progressbar" aria-valuenow="${t?Math.min(100,Math.round(v/t*100)):0}" aria-valuemin="0" aria-valuemax="100"><i style="width:${t?Math.min(100,Math.round(v/t*100)):0}%"></i></div>`;
   const badge=(s,k='')=>`<span class="adv-badge ${esc(k)}">${esc(s)}</span>`;
+  const bossImage=(boss,large=false)=>{
+    const files={'guardiao-dados':'boss-guardiao-dados.svg','sentinela-codigo':'boss-sentinela-codigo.svg','oraculo-uml':'boss-oraculo-uml.svg'};
+    const key=String(boss?.id||'');
+    const file=files[key]||files[({'banco':'guardiao-dados','programacao':'sentinela-codigo','modelagem':'oraculo-uml'})[boss?.category]]||files['guardiao-dados'];
+    return '<img class="adv-boss-portrait'+(large?' large':'')+'" src="./assets/'+file+'" alt="Retrato de '+esc(boss?.name||'chefe da Academia')+'" loading="eager">';
+  };
   const FLAG_COLOR_OPTIONS=[['#9f3e40','Carmesim'],['#3b638a','Azul real'],['#34465d','Azul ardósia'],['#426c56','Verde bosque'],['#936533','Bronze'],['#71538c','Violeta'],['#d0b36b','Ouro antigo'],['#303b4d','Aço escuro'],['#d9d6cd','Marfim'],['#263d32','Verde esmeralda'],['#5b315f','Ametista'],['#8b542e','Cobre'],['#a7b6c9','Prata lunar'],['#20202d','Ônix'],['#b84e35','Vermelho rubi'],['#477b83','Turquesa'],['#d6a84f','Dourado solar'],['#6d789e','Azul místico']];
   const FLAG_PATTERNS=[['solid','Liso'],['horizontal','Faixas horizontais'],['vertical','Faixas verticais'],['diagonal','Diagonal'],['cross','Cruz'],['chevron','Chevrons'],['quartered','Partido'],['waves','Ondas'],['diamond','Losangos'],['stripes','Listras triplas'],['sunburst','Raio solar']];
   const FLAG_SYMBOLS=['⚔️','🐉','🦉','🦅','🐺','🛡️','✦','♛','🌙','🔥','🦁','🦌','🦊','🗡️','🏰','⚜️','☀️','❖','🪽','💎','🌿','👑'];
@@ -143,7 +149,7 @@
     const list=await rpc('get_boss_catalog');
     const cards=(list||[]).map(b=>{
       const icon={programacao:'⌘',banco:'▤',modelagem:'◇',geral:'✦'}[b.category]||'🐉';
-      return `<article class="adv-boss-card ${b.defeated?'defeated':''}"><div class="adv-boss-art"><span>${icon}</span><small>${esc(cat(b.category))}</small></div>
+      return `<article class="adv-boss-card ${b.defeated?'defeated':''}"><div class="adv-boss-art">${bossImage(b)}<small>${esc(cat(b.category))}</small></div>
         <div class="adv-boss-content">${badge(b.defeated?'Derrotado nesta semana':'Chefe disponível',b.defeated?'good':'danger')}<h4>${esc(b.name)}</h4><p>${esc(b.description)}</p>
         <div class="adv-boss-requirement">Vitória: <b>${n(b.min_correct)} acertos de 6</b></div><div class="adv-reward-line"><span>✧ ${n(b.xp_reward)} XP</span><span>🪙 ${n(b.coin_reward)} Coins</span></div>
         <small class="adv-muted">${b.best_correct?`Melhor tentativa: ${n(b.best_correct)}/6`:'Nenhuma tentativa nesta semana'}</small>
@@ -162,7 +168,7 @@
   function fight(){
     const b=S.battle;if(!b)return bosses();const boss=b.boss,done=!!b.result,q=b.questions[b.index];
     const bossHp=Math.max(0,boss.min_correct-b.correct),heroHp=Math.max(0,3-b.wrong);
-    $('rpgView').innerHTML=`<section class="adv-fight-banner"><div class="adv-fight-title"><div class="adv-kicker">ARENA DE COMBATE</div><h3>${esc(boss.name)}</h3><p>${esc(boss.description)}</p></div><div class="adv-fight-rune">⚔</div></section>
+    $('rpgView').innerHTML=`<section class="adv-fight-banner"><div class="adv-fight-title"><div class="adv-kicker">ARENA DE COMBATE</div><h3>${esc(boss.name)}</h3><p>${esc(boss.description)}</p></div><div class="adv-fight-portrait">${bossImage(boss,true)}</div></section>
       <section class="adv-fight-hud"><div class="adv-hp-card boss-hp"><div class="adv-hp-top"><b>🐉 Energia do chefe</b><strong>${n(bossHp)} / ${n(boss.min_correct)}</strong></div>${bar(boss.min_correct-bossHp,boss.min_correct)}<small>Cada acerto enfraquece o guardião.</small></div>
       <div class="adv-hp-card hero-hp"><div class="adv-hp-top"><b>🛡 Sua resistência</b><strong>${n(heroHp)} / 3</strong></div>${bar(heroHp,3)}<small>Erros reduzem sua energia de combate.</small></div></section>
       ${done?bossResult(b.result):`<section class="adv-panel adv-question-panel"><div class="adv-question-top"><span>${esc(cat(boss.category))} · Enigma ${b.index+1} de ${b.questions.length}</span><button class="adv-link-btn" data-adv="leave-boss">Retornar à arena</button></div>
