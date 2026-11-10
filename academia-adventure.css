@@ -293,3 +293,85 @@
 #rpgView .adv-guild-directory .adv-badge{flex:0 0 auto}
 #rpgView .adv-guild-directory [hidden]{display:none!important}
 @media(max-width:760px){#rpgView .adv-guild-directory{grid-template-columns:1fr}#rpgView .adv-guild-directory-tools{align-items:stretch;flex-direction:column}#rpgView .adv-guild-directory-tools input{max-width:none;width:100%}}
+
+
+/* Modo História — campanha individual */
+.adv-story-hero,.adv-story-fight-banner{
+  display:grid;grid-template-columns:minmax(0,1fr) 130px;align-items:center;gap:22px;
+  position:relative;overflow:hidden;padding:28px 30px;margin:0 0 18px;
+  border:1px solid rgba(139,115,190,.42);border-radius:16px;
+  background:radial-gradient(circle at 84% 38%,rgba(112,75,170,.25),transparent 30%),linear-gradient(120deg,#111d2b 0%,#1d2039 58%,#271b36 100%);
+  box-shadow:inset 0 1px rgba(255,255,255,.04),0 14px 32px rgba(0,0,0,.18);
+}
+.adv-story-hero h3,.adv-story-fight-banner h3{margin:8px 0;color:#f2e7d1;font:600 clamp(23px,3vw,34px) Georgia,serif}
+.adv-story-hero p,.adv-story-fight-banner p{max-width:700px;color:#aeb8c8;line-height:1.65;margin:0 0 14px}
+.adv-story-hero-mark{display:grid;place-items:center;font-size:76px;filter:drop-shadow(0 0 18px rgba(175,130,255,.62));animation:adv-story-float 4s ease-in-out infinite}
+.adv-story-progress-label{display:flex;justify-content:space-between;gap:10px;margin:14px 0 7px;color:#aab5c5;font-size:12px}
+.adv-story-progress-label b{color:#e4cb97}
+.adv-story-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 24px}
+.adv-story-intro{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:8px 0 14px}
+.adv-story-intro h3{margin:5px 0;color:#e8dfd0;font:600 21px Georgia,serif}
+.adv-story-intro p{margin:0;color:#91a0b4;font-size:13px;line-height:1.5}
+.adv-story-legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px}
+.adv-story-chapter{margin:0 0 18px;padding:17px;border:1px solid #2b3c53;border-radius:14px;background:linear-gradient(145deg,rgba(16,29,44,.88),rgba(13,22,36,.96))}
+.adv-story-chapter-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 13px;padding-bottom:12px;border-bottom:1px solid rgba(113,132,158,.2)}
+.adv-story-chapter-head small{color:#b69a6d;font-size:9px;font-weight:850;letter-spacing:1.5px}
+.adv-story-chapter-head h3{margin:4px 0 0;color:#e8dfd0;font:600 19px Georgia,serif}
+.adv-story-chapter-head>span{padding:5px 9px;border:1px solid #394e66;border-radius:30px;background:#142337;color:#a9bad0;font-size:11px;font-weight:800}
+.adv-story-nodes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:10px}
+.adv-story-node{display:grid;grid-template-columns:82px minmax(0,1fr);align-items:start;gap:9px 13px;padding:13px;border:1px solid #33445b;border-radius:12px;background:rgba(9,18,30,.72);transition:border-color .2s,transform .2s,box-shadow .2s}
+.adv-story-node>.adv-badge{grid-column:1/-1;width:max-content;max-width:100%}
+.adv-story-node.available{border-color:rgba(214,180,111,.75);box-shadow:0 0 0 1px rgba(214,180,111,.1),0 0 20px rgba(214,180,111,.08)}
+.adv-story-node.available:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.24),0 0 20px rgba(214,180,111,.12)}
+.adv-story-node.is-boss{background:linear-gradient(145deg,rgba(52,24,31,.44),rgba(10,19,31,.9))}
+.adv-story-node.is-boss.available{border-color:rgba(218,104,94,.75);box-shadow:0 0 22px rgba(194,55,55,.12)}
+.adv-story-node.locked{opacity:.62;filter:saturate(.62)}
+.adv-story-art{position:relative;display:grid;place-items:center;width:76px;height:82px;align-self:center;border:1px solid rgba(143,157,190,.35);border-radius:14px;background:radial-gradient(circle at 50% 44%,rgba(100,130,190,.25),rgba(23,31,53,.92) 70%);overflow:hidden}
+.adv-story-art span{position:relative;z-index:1;font-size:42px;line-height:1;filter:drop-shadow(0 0 9px rgba(180,180,255,.45));animation:adv-story-float 3.2s ease-in-out infinite}
+.adv-story-art i{position:absolute;inset:15%;border-radius:50%;background:rgba(100,116,210,.16);filter:blur(12px)}
+.adv-story-art.boss{border-color:rgba(229,105,84,.65);background:radial-gradient(circle at 50% 45%,rgba(187,45,54,.34),rgba(39,19,35,.96) 72%)}
+.adv-story-art.boss span{filter:drop-shadow(0 0 10px rgba(255,83,66,.75));animation:adv-story-boss-pulse 2.4s ease-in-out infinite}
+.adv-story-art.large{width:132px;height:132px;border-radius:22px}
+.adv-story-art.large span{font-size:76px}
+.adv-story-node-copy{min-width:0}
+.adv-story-node-copy>small{color:#a9916b;font-size:9px;font-weight:850;letter-spacing:1.1px}
+.adv-story-node-copy h4{margin:4px 0 5px;color:#f0e5d5;font:600 18px Georgia,serif}
+.adv-story-node-copy p{min-height:39px;margin:0 0 9px;color:#9eacbf;font-size:12px;line-height:1.5}
+.adv-story-meta{display:flex;flex-wrap:wrap;gap:5px 10px;color:#aeb9c9;font-size:10px}
+.adv-story-meta span+span:before{content:"·";margin-right:9px;color:#6e8199}
+.adv-story-node .adv-reward-line{margin:10px 0}
+.adv-story-node .adv-btn{width:100%;margin-top:2px}
+.adv-story-fight-banner{grid-template-columns:minmax(0,1fr) 150px;border-color:rgba(195,94,82,.55);background:radial-gradient(circle at 85% 50%,rgba(174,50,55,.24),transparent 32%),linear-gradient(120deg,#111d2b,#271b2a 100%)}
+.adv-story-region{display:inline-block;margin-top:4px;padding:5px 9px;border:1px solid rgba(207,168,109,.34);border-radius:20px;color:#d6bc8e;font-size:10px}
+.adv-story-hud{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.adv-story-question{border-color:rgba(133,111,166,.45)}
+.adv-story-question>h3{line-height:1.5}
+.adv-story-result{max-width:680px;margin:18px auto;padding:34px 28px;text-align:center;border:1px solid #3e594d;border-radius:16px;background:linear-gradient(145deg,#10251f,#111e2b);box-shadow:0 16px 38px rgba(0,0,0,.22)}
+.adv-story-result.defeat{border-color:#70454b;background:linear-gradient(145deg,#2a171e,#111e2b)}
+.adv-story-result-mark{margin-bottom:10px;font-size:54px;filter:drop-shadow(0 0 14px rgba(224,185,111,.45))}
+.adv-story-result h3{margin:8px 0;color:#f1e5d2;font:600 27px Georgia,serif}
+.adv-story-result p{color:#aeb9c9;line-height:1.6}
+.adv-story-result .adv-btn{margin:8px 5px 0}
+@keyframes adv-story-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes adv-story-boss-pulse{0%,100%{transform:scale(.98);filter:drop-shadow(0 0 8px rgba(255,66,66,.6))}50%{transform:scale(1.08);filter:drop-shadow(0 0 17px rgba(255,40,55,.95))}}
+@media(max-width:700px){
+  .adv-story-hero,.adv-story-fight-banner{grid-template-columns:minmax(0,1fr) 78px;padding:20px 17px;gap:10px}
+  .adv-story-hero-mark{font-size:52px}
+  .adv-story-art.large{width:76px;height:84px;border-radius:14px}
+  .adv-story-art.large span{font-size:46px}
+  .adv-story-stats{gap:7px}
+  .adv-story-intro{display:block}
+  .adv-story-legend{justify-content:flex-start;margin-top:10px}
+  .adv-story-chapter{padding:11px}
+  .adv-story-nodes{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:480px){
+  .adv-story-hud{grid-template-columns:1fr}
+  .adv-story-stats{grid-template-columns:1fr}
+  .adv-story-node{grid-template-columns:64px minmax(0,1fr);padding:10px;gap:8px}
+  .adv-story-art{width:60px;height:70px}
+  .adv-story-art span{font-size:34px}
+  .adv-story-node-copy h4{font-size:16px}
+  .adv-story-node-copy p{min-height:0}
+}
+@media(prefers-reduced-motion:reduce){.adv-story-hero-mark,.adv-story-art span{animation:none!important}}
