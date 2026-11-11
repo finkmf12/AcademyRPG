@@ -2,6 +2,7 @@
 // Arquivo novo: usa o Supabase e o login já existentes via window.AcademiaCtx. Todo XP é gravado por funções do banco (supabase-xp.sql).
 const $ = id => document.getElementById(id), C = () => window.AcademiaCtx;
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = value => Number(value || 0).toLocaleString('pt-BR');
 const sh = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(p => p[1]);
 const need = L => 50 * L * (L - 1);                       // XP acumulado para chegar ao nível L (nível 2 = 100, 3 = 300, 4 = 600...)
 const levelOf = xp => { let L = 1; while (xp >= need(L + 1)) L++; return L; };
