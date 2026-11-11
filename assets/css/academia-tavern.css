@@ -132,3 +132,37 @@
 @media(max-width:600px){#rpgView .tvn-hero{min-height:0;padding:22px 18px}#rpgView .tvn-hero-art{width:78px;height:78px;margin:0 1px 0 0}#rpgView .tvn-hero-rune{width:49px;height:49px;font-size:37px}#rpgView .tvn-hero-art>span,#rpgView .tvn-hero-art>b{font-size:11px}#rpgView .tvn-hero-meta{flex-wrap:wrap;gap:7px;margin-top:13px}#rpgView .tvn-tab{gap:8px;padding:10px}#rpgView .tvn-tab-icon{width:29px;height:29px;font-size:15px}#rpgView .tvn-tab b{font-size:12px}#rpgView .tvn-tab small{font-size:9px}#rpgView .tvn-tab em{display:none}#rpgView .tvn-feed{height:410px;padding:13px 11px}#rpgView .tvn-chat-head{padding:13px 12px}#rpgView .tvn-channel-status{padding:5px 6px;font-size:7px}#rpgView .tvn-composer{padding:10px}#rpgView .tvn-compose-row{gap:6px}#rpgView .tvn-send{min-width:72px;padding:0 9px}#rpgView .tvn-composer-hint{font-size:7px}#rpgView .tvn-side{grid-template-columns:1fr}#rpgView .tvn-rules-card{grid-column:auto}}
 @media(max-width:390px){#rpgView .tvn-hero-art{display:none}#rpgView .tvn-tabbar{gap:6px}#rpgView .tvn-tab{padding:9px 7px}#rpgView .tvn-tab-icon{width:25px;height:25px}#rpgView .tvn-channel-mark{width:36px;height:36px;font-size:20px}#rpgView .tvn-channel-title h3{font-size:15px}#rpgView .tvn-message{gap:7px}#rpgView .tvn-message-avatar{width:29px;height:29px;font-size:15px}}
 @media(prefers-reduced-motion:reduce){#rpgView .tvn-hero-art>i,#rpgView .tvn-spinner,#rpgView .tvn-message{animation:none!important;transition:none!important}}
+
+
+/* Selo exclusivo do proprietário — aparece junto ao nome de Visage no chat global */
+#rpgView .tvn-owner-tag{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  flex:none;margin-left:2px;padding:3px 7px;border:1px solid rgba(255,222,132,.88);
+  border-radius:5px;overflow:hidden;isolation:isolate;
+  color:#fff2c2;font:900 8px/1 Inter,Arial,sans-serif;letter-spacing:1.05px;
+  background:linear-gradient(112deg,#563714 0%,#a97427 24%,#f2d17e 47%,#8d5c1f 70%,#4b3016 100%);
+  background-size:220% 100%;box-shadow:0 0 6px rgba(255,194,77,.52),0 0 15px rgba(255,185,62,.24),inset 0 1px rgba(255,248,210,.45);
+  text-shadow:0 1px 2px rgba(50,25,4,.95),0 0 7px rgba(255,238,171,.48);
+  animation:tvnOwnerGlow 3.2s ease-in-out infinite
+}
+#rpgView .tvn-owner-tag:before{
+  content:"";position:absolute;z-index:-1;top:-40%;bottom:-40%;left:-55%;width:34%;
+  transform:skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,235,.8),transparent);
+  animation:tvnOwnerShine 3.8s ease-in-out infinite
+}
+#rpgView .tvn-owner-tag>span{font-size:8px;color:#fff3bb;text-shadow:0 0 7px #fff0a5}
+@keyframes tvnOwnerGlow{
+  0%,100%{background-position:0% 50%;box-shadow:0 0 5px rgba(255,194,77,.42),0 0 12px rgba(255,185,62,.18),inset 0 1px rgba(255,248,210,.4)}
+  50%{background-position:100% 50%;box-shadow:0 0 9px rgba(255,216,116,.76),0 0 20px rgba(255,185,62,.36),inset 0 1px rgba(255,255,225,.7)}
+}
+@keyframes tvnOwnerShine{
+  0%,32%{left:-55%;opacity:0}
+  46%{opacity:.9}
+  62%,100%{left:130%;opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  #rpgView .tvn-owner-tag,#rpgView .tvn-owner-tag:before{animation:none}
+}
+@media(max-width:600px){
+  #rpgView .tvn-owner-tag{padding:3px 5px;font-size:7px;letter-spacing:.8px}
+}
