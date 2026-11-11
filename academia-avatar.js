@@ -55,7 +55,6 @@
     };
     const auraColor=auraColors[aura]||'';
     const specialMovingAuras=["aura-aurora-crown","aura-storm-convergence","aura-infernal-crown","aura-lunar-eclipse","aura-spectral-chain","aura-rune-tempest","aura-titan-heart","aura-celestial-wings","aura-verdant-tempest","aura-thunder-seraph","aura-oceanic-tide","aura-chrono-runes","aura-frost-wisp","aura-abyssal-shards","aura-starfall","aura-dragon-soul"];
-    const _legacySpecialMovingAuras=['aura-verdant-tempest','aura-thunder-seraph','aura-oceanic-tide','aura-chrono-runes','aura-frost-wisp','aura-abyssal-shards','aura-starfall','aura-dragon-soul'];
     const isSpecialMovingAura=specialMovingAuras.includes(aura);
     let gearGlowColor='';
     if(hat==='helm-eclipse-crown'||outfit==='armor-solar-sovereign'||shoulders==='shoulders-celestial-titan')gearGlowColor='#ffd36b';
