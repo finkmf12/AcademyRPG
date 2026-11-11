@@ -14,7 +14,8 @@
     bosses:['ARENA DE COMBATE','Arena dos Chefes','Responda aos enigmas, proteja sua energia e conquiste recompensas.'],
     guilds:['SALÃO DAS GUILDAS','Guildas','Reúna aliados, compartilhe um código e evoluam em equipe.'],
     friends:['COMPANHEIROS DE JORNADA','Amigos','Encontre aventureiros e reúna seus aliados.'],
-    teacher:['MESTRE DA ACADEMIA','Painel do Professor','Acompanhe a turma e administre a jornada de aprendizagem.']
+    teacher:['MESTRE DA ACADEMIA','Painel do Professor','Acompanhe a turma e administre a jornada de aprendizagem.'],
+    news:['CENTRAL DE NOTÍCIAS','Notícias da Academia','Atualizações, novidades e comunicados importantes do reino.']
   };
   const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',guildTab:'directory',guildQuery:'',friendQuery:'',friendResults:[],studentQuery:'',missionDraft:null,bossDraft:null,battle:null,storyBattle:null,storyState:null,flagDraft:null,busy:false};
   const toast=m=>C()?.toast?.(m);
@@ -90,6 +91,9 @@
   }
 
   function mount(){
+    const community=document.querySelector('.rpgnav-community');
+    if(community&&!community.querySelector('[data-adventure="news"]'))community.insertAdjacentHTML('beforeend',`
+      <button type="button" data-adventure="news"><span class="ico">▣</span> Notícias da Academia</button>`);
     const nav=document.querySelector('.rpgnav-adventure');if(!nav||nav.querySelector('[data-adventure="missions"]'))return;
     nav.insertAdjacentHTML('beforeend',`
       <button type="button" data-adventure="missions"><span class="ico">✦</span> Missões Semanais</button>
@@ -123,7 +127,19 @@
     $('pageKicker').textContent=HEAD[page][0];$('pageTitle').textContent=HEAD[page][1];$('pageSub').textContent=HEAD[page][2];
     $('rpgView').innerHTML=wait();load().catch(e=>{$('rpgView').innerHTML=fail(e.message||'Erro inesperado.');});
   }
-  async function load(){if(S.page==='missions')return missions();if(S.page==='ranking')return ranking();if(S.page==='story')return story();if(S.page==='bosses')return bosses();if(S.page==='guilds')return guilds();if(S.page==='friends')return friends();if(S.page==='teacher')return teacher();}
+  async function load(){if(S.page==='news')return news();if(S.page==='missions')return missions();if(S.page==='ranking')return ranking();if(S.page==='story')return story();if(S.page==='bosses')return bosses();if(S.page==='guilds')return guilds();if(S.page==='friends')return friends();if(S.page==='teacher')return teacher();}
+
+  function news(){
+    const stories=[
+      {category:'ATELIÊ ARCANO',date:'11 NOV 2026',tag:'VISUAIS',icon:'✧',title:'Novas auras e efeitos especiais chegam ao Ateliê',copy:'O catálogo de auras foi ampliado com efeitos animados próprios: folhas que sobem, relâmpagos, ondas, runas flutuantes, cristais, estrelas cadentes e energia dracônica.'},
+      {category:'MODO HISTÓRIA',date:'11 NOV 2026',tag:'AVENTURA',icon:'⚔',title:'A campanha segue até o Dragão Primordial',copy:'São 17 etapas em quatro regiões e um confronto final. Cada vitória libera o próximo inimigo e entrega recompensas pela primeira conclusão.'},
+      {category:'ARENA DOS CHEFES',date:'11 NOV 2026',tag:'DESAFIO DIÁRIO',icon:'♛',title:'Dez questões avançadas em cada batalha',copy:'Os chefes agora exigem pelo menos oito acertos em dez perguntas. Cada guardião pode ser derrotado uma vez por dia, com novas questões sorteadas nas tentativas.'},
+      {category:'MERCADO ARCANO',date:'11 NOV 2026',tag:'ECONOMIA 2.0',icon:'◉',title:'Mais Coins para conquistar seus visuais',copy:'O baú diário entrega 2.500 Coins. Quizzes concedem Coins, sequências recebem bônus e as recompensas de chefes e missões ajudam a acelerar a coleção.'},
+      {category:'COMUNIDADE',date:'11 NOV 2026',tag:'JOGUE EM GRUPO',icon:'⚑',title:'Guildas, amigos e sugestões dos aventureiros',copy:'Reúna colegas em uma guilda, convide amigos e use o botão de feedback para enviar ideias diretamente ao responsável pela Academia.'}
+    ];
+    const cards=stories.map((item,index)=>'<article class="news-article '+(index===0?'news-article-featured':'')+'"><div class="news-article-art news-art-'+index+'"><span>'+item.icon+'</span><i></i></div><div class="news-article-copy"><div class="news-article-meta"><span>'+item.category+'</span><time>'+item.date+'</time></div><h4>'+item.title+'</h4><p>'+item.copy+'</p><div class="news-article-footer"><span class="news-tag">'+item.tag+'</span><span class="news-read-mark">✦ ACADEMIA RPG</span></div></div></article>').join('');
+    $('rpgView').innerHTML='<section class="news-masthead"><div class="news-masthead-copy"><span class="news-kicker">✦ BOLETIM OFICIAL DO REINO ✦</span><h3>Notícias da Academia</h3><p>Novidades, atualizações e avisos importantes em um só lugar. Confira o que mudou e escolha sua próxima aventura.</p><div class="news-masthead-meta"><span>ATUALIZAÇÕES DO REINO</span><i></i><span>EDIÇÃO DE 11 NOV 2026</span></div></div><div class="news-masthead-art" aria-hidden="true"><span>✦</span><i></i><b>✧</b></div></section><div class="news-feed-heading"><div><small>FIQUE POR DENTRO</small><h3>Últimas novidades</h3></div><span>'+stories.length+' comunicados</span></div><section class="news-feed">'+cards+'</section><p class="news-footnote">As notícias desta página são comunicados internos sobre recursos e atualizações da Academia RPG.</p>';
+  }
 
   async function missions(){
     const items=await rpc('get_weekly_missions');
