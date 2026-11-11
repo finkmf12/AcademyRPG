@@ -486,3 +486,32 @@
   #rpgView .adv-podium-place.place-1 .adv-podium-avatar{height:108px}
   #rpgView .adv-podium-place.place-1 .adv-podium-avatar svg{max-height:108px!important}
 }
+
+
+/* Expansão do Mercado Arcano das Guildas — escudos, brasões e efeitos */
+#rpgView .adv-flag-guild-shield-dragonsteel{border:3px solid #c46b42;box-shadow:0 0 0 2px #47271f,0 0 20px #e35c3788,inset 0 0 18px #ff7b3c55;background-image:repeating-linear-gradient(135deg,transparent 0 9px,#f7a36b28 10px 12px,transparent 13px 20px)}
+#rpgView .adv-flag-guild-shield-frostguard{border:3px solid #9beaff;box-shadow:0 0 0 2px #28536e,0 0 22px #62dfff99,inset 0 0 20px #d7fbff77;background-image:linear-gradient(135deg,#c9f8ff55,transparent 35%,#69cfff44 65%,#f3ffff66)}
+#rpgView .adv-flag-guild-shield-sunforged{border:3px double #ffe49a;box-shadow:0 0 0 2px #7b5420,0 0 25px #ffc84eaa,inset 0 0 20px #ffe8a977;background-image:repeating-linear-gradient(45deg,transparent 0 14px,#fff0b52b 15px 17px)}
+#rpgView .adv-flag-guild-shield-voidglass{border:3px solid #b7a0ff;box-shadow:0 0 0 2px #34234e,0 0 25px #9a69ff99,inset 0 0 20px #160b36;background-image:linear-gradient(145deg,#d2b8ff55,transparent 28%,#24103f99 68%,#7a58bd66)}
+#rpgView .adv-flag-guild-shield-emerald{border:4px ridge #7ce6a1;box-shadow:0 0 0 2px #174b36,0 0 22px #37d98788,inset 0 0 18px #a0ffca66;background-image:repeating-linear-gradient(60deg,transparent 0 13px,#a5ffd32b 14px 16px)}
+#rpgView .adv-flag-guild-shield-bloodmoon{border:3px double #ff657a;box-shadow:0 0 0 2px #401724,0 0 26px #ff284eaa,inset 0 0 24px #6e102b;background-image:repeating-linear-gradient(125deg,transparent 0 17px,#ff53612c 18px 20px)}
+#rpgView .adv-flag-guild-shield-storm{border:3px solid #83dfff;box-shadow:0 0 0 2px #244d72,0 0 26px #4bbdffbb,inset 0 0 20px #7deaff66;background-image:repeating-linear-gradient(115deg,transparent 0 22px,#b4efff33 23px 25px)}
+#rpgView .adv-flag-guild-shield-royal-marble{border:5px double #e8d5ae;box-shadow:0 0 0 2px #755c3e,0 0 18px #e4c58a77,inset 0 0 18px #fff;background-image:repeating-linear-gradient(155deg,transparent 0 18px,#fff8e933 19px 21px,#8f785422 22px 23px)}
+#rpgView .adv-flag-guild-shield-runic{border:3px solid #8dcbff;box-shadow:0 0 0 2px #283d68,0 0 26px #62aaffaa,inset 0 0 20px #6f8cff66;background-image:repeating-radial-gradient(circle at 50% 50%,transparent 0 13px,#8ddcff22 14px 16px)}
+#rpgView .adv-flag-guild-shield-abyss{border:4px double #a7baff;box-shadow:0 0 0 2px #27264f,0 0 30px #8b7dffbb,inset 0 0 24px #5adfff66;background-image:repeating-conic-gradient(from 20deg,transparent 0 18deg,#b5a5ff2b 19deg 22deg,transparent 23deg 40deg)}
+#rpgView .adv-flag-guild-crest-wolf .adv-flag-symbol{filter:drop-shadow(0 0 8px #d8e8ff);text-shadow:0 0 12px #c4ddff,0 2px 4px #000}
+#rpgView .adv-flag-guild-crest-griffin .adv-flag-symbol{filter:drop-shadow(0 0 9px #f6cf73);text-shadow:0 0 14px #f5c96a,0 2px 4px #000}
+#rpgView .adv-flag-guild-crest-serpent .adv-flag-symbol{filter:drop-shadow(0 0 8px #69d6a0);text-shadow:0 0 12px #48d69b,0 2px 4px #000}
+#rpgView .adv-flag-guild-crest-starfire .adv-flag-symbol{filter:drop-shadow(0 0 10px #ffad55);text-shadow:0 0 16px #ff7c45,0 2px 4px #000}
+#rpgView .adv-flag-guild-crest-celestial .adv-flag-symbol{filter:drop-shadow(0 0 10px #86cfff);text-shadow:0 0 16px #8aafff,0 2px 4px #000}
+#rpgView .adv-flag-guild-effect-mist{animation:advGuildMist 5s ease-in-out infinite;filter:drop-shadow(0 0 8px #b7eaff99)}
+#rpgView .adv-flag-guild-effect-lightning{animation:advGuildLightning 2.4s steps(2,end) infinite;filter:drop-shadow(0 0 8px #6ddfff)}
+#rpgView .adv-flag-guild-effect-stardust{animation:advGuildStardust 4s ease-in-out infinite;filter:drop-shadow(0 0 10px #e0c6ff)}
+#rpgView .adv-flag-guild-effect-shadow{animation:advGuildShadow 3s ease-in-out infinite;filter:drop-shadow(0 0 10px #9b58ff)}
+#rpgView .adv-flag-guild-effect-divine{animation:advGuildDivine 3.5s ease-in-out infinite;filter:drop-shadow(0 0 12px #ffe08a)}
+@keyframes advGuildMist{0%,100%{box-shadow:0 0 12px #9bdcff66,inset 0 0 15px #d7f5ff44}50%{box-shadow:0 0 27px #d8f4ffcc,inset 0 0 22px #9bdcff88}}
+@keyframes advGuildLightning{0%,84%,100%{box-shadow:0 0 12px #54caff66}86%{box-shadow:0 0 32px #b7f4ff, inset 0 0 18px #80ddff}90%{box-shadow:0 0 9px #54caff55}}
+@keyframes advGuildStardust{0%,100%{box-shadow:0 0 12px #b89aff66,inset 0 0 12px #fff2}50%{box-shadow:0 0 28px #e0c6ffbb,inset 0 0 20px #d2aaff77}}
+@keyframes advGuildShadow{0%,100%{box-shadow:0 0 12px #6b35aa66,inset 0 0 15px #32134d88}50%{box-shadow:0 0 30px #a85cffbb,inset 0 0 24px #641e9b}}
+@keyframes advGuildDivine{0%,100%{box-shadow:0 0 14px #e8c66a77,inset 0 0 16px #fff3}50%{box-shadow:0 0 32px #ffe7aacc,inset 0 0 25px #fff7}}
+@media(prefers-reduced-motion:reduce){#rpgView .adv-flag-guild-effect-mist,#rpgView .adv-flag-guild-effect-lightning,#rpgView .adv-flag-guild-effect-stardust,#rpgView .adv-flag-guild-effect-shadow,#rpgView .adv-flag-guild-effect-divine{animation:none}}
