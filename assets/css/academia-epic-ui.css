@@ -1,0 +1,124 @@
+/* Academia RPG · acabamento do perfil lendário, quadro de missões e notificações */
+.epic-notice-stack{
+  position:fixed;z-index:12000;top:20px;right:20px;width:min(390px,calc(100vw - 28px));
+  display:grid;gap:11px;pointer-events:none
+}
+.epic-notice{
+  --notice-accent:#d9bd80;position:relative;isolation:isolate;overflow:hidden;display:grid;
+  grid-template-columns:48px minmax(0,1fr) 26px;align-items:center;gap:12px;
+  padding:14px 13px 17px;border:1px solid color-mix(in srgb,var(--notice-accent) 58%,#34475d);
+  border-radius:15px;background:linear-gradient(125deg,rgba(24,42,57,.98),rgba(17,27,45,.98));
+  box-shadow:0 16px 44px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.08);
+  color:#f5f0e4;pointer-events:auto;animation:epicNoticeIn .34s cubic-bezier(.2,.8,.2,1) both
+}
+.epic-notice:before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(circle at 0 50%,color-mix(in srgb,var(--notice-accent) 24%,transparent),transparent 58%)}
+.epic-notice:after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--notice-accent);box-shadow:0 0 16px var(--notice-accent)}
+.epic-notice-achievement{--notice-accent:#e9c36d;background:linear-gradient(125deg,#382d20,#1a2636 72%)}
+.epic-notice-level{--notice-accent:#9bd7f3;background:linear-gradient(125deg,#19364a,#18283e 72%)}
+.epic-notice-reward{--notice-accent:#9bd9b7;background:linear-gradient(125deg,#1b3c36,#182b3d 72%)}
+.epic-notice-victory{--notice-accent:#e9a86d;background:linear-gradient(125deg,#472b2c,#20283d 72%)}
+.epic-notice-success{--notice-accent:#c5a6ed}
+.epic-notice-seal{width:46px;height:46px;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--notice-accent) 75%,transparent);border-radius:13px;background:rgba(8,17,29,.52);font-size:24px;filter:drop-shadow(0 0 9px color-mix(in srgb,var(--notice-accent) 45%,transparent))}
+.epic-notice-content{display:grid;min-width:0;gap:3px}
+.epic-notice-eyebrow{color:var(--notice-accent);font-size:8px;font-weight:900;letter-spacing:1.65px}
+.epic-notice-title{color:#fff0d2;font:600 16px Georgia,serif;line-height:1.2}
+.epic-notice-message{color:#c7d7df;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.epic-notice-close{align-self:start;width:25px;height:25px;border:0;border-radius:7px;background:rgba(255,255,255,.06);color:#d7e0e7;font-size:19px;line-height:1;cursor:pointer}
+.epic-notice-close:hover{background:rgba(255,255,255,.13);color:#fff}
+.epic-notice-progress{position:absolute;left:0;bottom:0;height:2px;width:100%;transform-origin:left;background:var(--notice-accent);animation:epicNoticeTimer 5.6s linear both}
+.epic-notice.is-leaving{animation:epicNoticeOut .25s ease-in both}
+@keyframes epicNoticeIn{from{opacity:0;transform:translateX(24px) scale(.97)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes epicNoticeOut{to{opacity:0;transform:translateX(20px) scale(.98)}}
+@keyframes epicNoticeTimer{to{transform:scaleX(0)}}
+
+/* Perfil do jogador: ficha com presença visual e dados reais */
+#rpgView .pf-legend{
+  position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(210px,.75fr);
+  gap:22px;margin:0 0 15px;padding:22px;border:1px solid rgba(224,192,125,.48);border-radius:17px;
+  background:radial-gradient(circle at 12% 48%,rgba(223,184,105,.16),transparent 29%),linear-gradient(125deg,#1d3545,#172439 58%,#28253b);
+  box-shadow:0 14px 34px rgba(2,12,22,.28),inset 0 1px rgba(255,255,255,.07)
+}
+#rpgView .pf-legend:before{content:"";position:absolute;z-index:-1;inset:8px;border:1px solid rgba(255,224,160,.12);border-radius:11px;pointer-events:none}
+#rpgView .pf-legend-main{display:flex;align-items:center;gap:18px;min-width:0}
+#rpgView .pf-legend-portrait{
+  position:relative;flex:0 0 112px;width:112px;height:128px;display:grid;place-items:center;overflow:hidden;
+  border:1px solid rgba(255,222,157,.65);border-radius:16px;background:radial-gradient(ellipse at 50% 42%,rgba(171,151,224,.35),rgba(13,25,41,.94) 72%);
+  box-shadow:0 0 25px rgba(226,189,120,.13),inset 0 0 18px rgba(255,255,255,.05)
+}
+#rpgView .pf-legend-portrait svg{width:100%;height:100%;max-width:112px;max-height:128px;display:block}
+#rpgView .pf-legend-info{flex:1;min-width:0}
+#rpgView .pf-legend-kicker{color:#f3d99f;font-size:9px;font-weight:900;letter-spacing:2px}
+#rpgView .pf-legend-info h3{margin:6px 0 5px;color:#fff2d8;font:600 clamp(21px,3vw,29px) Georgia,serif;overflow-wrap:anywhere}
+#rpgView .pf-legend-meta{color:#c4d8dc;font-size:11px;line-height:1.55}
+#rpgView .pf-legend-title{margin:5px 0 6px}
+#rpgView .pf-legend-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#rpgView .pf-legend-actions button{min-height:34px}
+#rpgView .pf-legend-side{align-self:stretch;display:flex;flex-direction:column;justify-content:center;min-width:0;padding:15px;border:1px solid rgba(183,215,218,.2);border-radius:12px;background:rgba(7,20,33,.36)}
+#rpgView .pf-legend-side small{color:#c4d8dc;font-size:9px;font-weight:800;letter-spacing:1px}
+#rpgView .pf-level-numbers{display:flex;justify-content:space-between;gap:8px;margin:8px 0 7px;color:#e8e1ce;font-size:10px}
+#rpgView .pf-level-numbers strong{color:#ffe0a0}
+#rpgView .pf-level-track{height:9px;overflow:hidden;border:1px solid rgba(200,222,223,.22);border-radius:12px;background:#091724}
+#rpgView .pf-level-track i{display:block;height:100%;border-radius:12px;background:linear-gradient(90deg,#69d9bd,#83c8f4 55%,#c6a5ef);box-shadow:0 0 12px rgba(132,209,218,.26)}
+#rpgView .pf-next-level{margin-top:8px;color:#bed2d8;font-size:10px;line-height:1.45}
+#rpgView .pf-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 20px}
+#rpgView .pf-stat-card{min-width:0;padding:14px;border:1px solid rgba(137,191,188,.22);border-radius:12px;background:linear-gradient(145deg,rgba(27,59,69,.92),rgba(19,37,55,.96))}
+#rpgView .pf-stat-card>span{display:block;margin-bottom:7px;font-size:20px}
+#rpgView .pf-stat-card small{display:block;color:#a9c6c9;font-size:9px;font-weight:800;letter-spacing:.9px;text-transform:uppercase}
+#rpgView .pf-stat-card strong{display:block;margin-top:4px;color:#fff0d3;font:600 21px Georgia,serif;overflow-wrap:anywhere}
+#rpgView .pf-overview-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:14px}
+#rpgView .pf-overview-panel{min-width:0;padding:17px;border:1px solid rgba(139,190,188,.22);border-radius:13px;background:linear-gradient(145deg,rgba(27,54,67,.92),rgba(17,32,49,.97))}
+#rpgView .pf-overview-panel h4{margin:0 0 12px;color:#ffedcc;font:600 17px Georgia,serif}
+#rpgView .pf-overview-list{display:grid;gap:8px}
+#rpgView .pf-overview-row{display:flex;align-items:center;gap:10px;min-width:0;padding:9px;border:1px solid rgba(156,194,190,.13);border-radius:9px;background:rgba(6,18,29,.25)}
+#rpgView .pf-overview-row>span:first-child{flex:none;font-size:18px}
+#rpgView .pf-overview-row>div{flex:1;min-width:0}
+#rpgView .pf-overview-row b{display:block;color:#f2e7d2;font-size:11px}
+#rpgView .pf-overview-row small{display:block;margin-top:3px;color:#a9c5c9;font-size:9px;line-height:1.45}
+#rpgView .pf-overview-empty{padding:16px 10px;color:#b5cbd0;font-size:11px;line-height:1.6;text-align:center}
+#rpgView .pf-legend .arc-title-plate{max-width:100%}
+#rpgView .pf-stat-card .coin-symbol{font-size:18px}
+#rpgView .pf-legend .bar{margin:0}
+#rpgView .pf-tabs{margin:20px 0 13px}
+#rpgView .pf-achievement-count{color:#ffe0a0}
+#rpgView .adv-mission-board-hero{
+  position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;
+  margin:0 0 18px;padding:22px;border:1px solid rgba(224,192,125,.4);border-radius:15px;
+  background:radial-gradient(circle at 90% 20%,rgba(214,184,125,.16),transparent 33%),linear-gradient(120deg,#203a49,#18263b 65%,#2b263b)
+}
+#rpgView .adv-mission-board-hero h3{margin:5px 0 6px;color:#fff0d4;font:600 25px Georgia,serif}
+#rpgView .adv-mission-board-hero p{max-width:650px;margin:0;color:#c4d9db;font-size:11px;line-height:1.6}
+#rpgView .adv-mission-board-seal{width:60px;height:60px;display:grid;place-items:center;border:1px solid rgba(241,211,151,.52);border-radius:50%;background:rgba(8,19,31,.38);color:#ffe0a0;font-size:28px;box-shadow:0 0 25px rgba(230,194,125,.12)}
+#rpgView .adv-mission-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 20px}
+#rpgView .adv-mission-summary article{padding:13px;border:1px solid rgba(130,189,184,.2);border-radius:11px;background:linear-gradient(145deg,rgba(25,58,67,.9),rgba(17,34,51,.96))}
+#rpgView .adv-mission-summary small{display:block;color:#a9c7c8;font-size:9px;font-weight:850;letter-spacing:1px;text-transform:uppercase}
+#rpgView .adv-mission-summary strong{display:block;margin-top:5px;color:#fff0d3;font:600 22px Georgia,serif}
+#rpgView .adv-mission-summary article:nth-child(2) strong{color:#ffe0a0}
+#rpgView .adv-mission-summary article:nth-child(3) strong{color:#9fe0c3}
+#rpgView .adv-mission.ready-for-claim{border-color:rgba(230,193,119,.72);box-shadow:0 10px 26px rgba(13,20,29,.24),0 0 18px rgba(224,186,108,.1)}
+#rpgView .adv-mission.is-claimed{opacity:.76}
+#rpgView .adv-mission .adv-progress{height:9px}
+#rpgView .adv-mission .adv-reward-line{margin-top:auto;padding-top:12px}
+#rpgView .adv-mission .adv-card-symbol{width:34px;height:34px;display:grid;place-items:center;border:1px solid rgba(227,197,137,.35);border-radius:10px;background:rgba(215,183,119,.08)}
+@media(max-width:720px){
+  .epic-notice-stack{top:10px;right:10px;width:calc(100vw - 20px)}
+  #rpgView .pf-legend{grid-template-columns:1fr}
+  #rpgView .pf-legend-side{padding:12px}
+  #rpgView .pf-overview-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  #rpgView .pf-legend{padding:16px}
+  #rpgView .pf-legend-main{align-items:flex-start;gap:12px}
+  #rpgView .pf-legend-portrait{flex-basis:82px;width:82px;height:100px}
+  #rpgView .pf-legend-portrait svg{max-width:82px;max-height:100px}
+  #rpgView .pf-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  #rpgView .pf-stat-card{padding:11px}
+  #rpgView .pf-stat-card strong{font-size:18px}
+  #rpgView .adv-mission-board-hero{padding:17px}
+  #rpgView .adv-mission-board-hero h3{font-size:21px}
+  #rpgView .adv-mission-summary{gap:7px}
+  #rpgView .adv-mission-summary article{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .epic-notice,.epic-notice.is-leaving{animation:none}
+  .epic-notice-progress{display:none}
+}

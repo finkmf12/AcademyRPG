@@ -19,6 +19,7 @@
   };
   const S={page:null,userKey:null,teacher:false,data:null,period:'all',teacherTab:'overview',guildTab:'directory',guildQuery:'',friendQuery:'',friendResults:[],studentQuery:'',missionDraft:null,bossDraft:null,battle:null,storyBattle:null,storyState:null,flagDraft:null,busy:false};
   const toast=m=>C()?.toast?.(m);
+  const epic=(type,title,message,icon)=>window.AcademiaNotifications?.notify({type,title,message,icon});
   async function rpc(name,args={}){const c=C();if(!c?.supabase||!c.user||c.guest)throw Error('Entre com sua conta Google para usar este recurso.');const {data,error}=await c.supabase.rpc(name,args);if(error)throw error;return data;}
   const wait=m=>`<div class="adv-panel"><div class="adv-loading"><span class="adv-spinner"></span>${esc(m||'Consultando os registros da Academia...')}</div></div>`;
   const fail=m=>`<div class="adv-panel"><div class="adv-empty"><b>Não foi possível carregar esta área.</b>${esc(m)}<br><button class="adv-btn adv-btn-soft" data-adv="retry">Tentar novamente</button></div></div>`;
@@ -143,19 +144,30 @@
 
   async function missions(){
     const items=await rpc('get_weekly_missions');
-    const cards=(items||[]).map(m=>{
-      const done=Number(m.progress)>=Number(m.target),pct=m.target?Math.min(100,Math.round(m.progress/m.target*100)):0;
-      const action=m.claimed?'<button class="adv-btn adv-btn-done" disabled>Recompensa resgatada</button>':
-        done?`<button class="adv-btn" data-adv="claim" data-id="${esc(m.id)}">Resgatar recompensa</button>`:
+    const list=items||[];
+    const isDone=m=>Number(m.progress||0)>=Number(m.target||0);
+    const claimed=list.filter(m=>m.claimed).length;
+    const ready=list.filter(m=>!m.claimed&&isDone(m)).length;
+    const active=Math.max(0,list.length-claimed-ready);
+    const pendingXp=list.filter(m=>!m.claimed).reduce((sum,m)=>sum+Number(m.xp_reward||0),0);
+    const pendingCoins=list.filter(m=>!m.claimed).reduce((sum,m)=>sum+Number(m.coin_reward||0),0);
+    const cards=list.map(m=>{
+      const done=isDone(m),progress=Number(m.progress||0),goal=Number(m.target||0);
+      const pct=goal?Math.max(0,Math.min(100,Math.round(progress/goal*100))):0;
+      const action=m.claimed?'<button class="adv-btn adv-btn-done" disabled>✓ Recompensa resgatada</button>':
+        done?'<button class="adv-btn" data-adv="claim" data-id="'+esc(m.id)+'">✧ Resgatar recompensa</button>':
         '<button class="adv-btn adv-btn-disabled" disabled>Em andamento</button>';
-      return `<article class="adv-mission"><div class="adv-card-top"><span class="adv-card-symbol">✦</span>${badge(m.claimed?'Concluída':done?'Pronta para resgate':'Em andamento',m.claimed?'good':done?'ready':'')}</div>
-        <h4>${esc(m.title)}</h4><p>${esc(m.description)}</p><div class="adv-progress-label"><span>${n(m.progress)} / ${n(m.target)} · ${esc(kind(m.kind))}</span><b>${pct}%</b></div>
-        ${bar(m.progress,m.target)}<div class="adv-reward-line"><span>✧ ${n(m.xp_reward)} XP</span><span><span class="coin-symbol" aria-hidden="true"></span> ${n(m.coin_reward)} Coins</span></div>${action}</article>`;
+      const status=m.claimed?'Concluída':done?'Pronta para resgate':'Em andamento';
+      const kindIcon=({quiz_count:'📚',correct_answers:'🎯',xp_earned:'⚡',boss_wins:'🐉'})[m.kind]||'✦';
+      return '<article class="adv-mission '+(m.claimed?'is-claimed':done?'ready-for-claim':'')+'"><div class="adv-card-top"><span class="adv-card-symbol">'+kindIcon+'</span>'+badge(status,m.claimed?'good':done?'ready':'')+'</div>'+
+        '<h4>'+esc(m.title)+'</h4><p>'+esc(m.description)+'</p><div class="adv-progress-label"><span>'+n(progress)+' / '+n(goal)+' · '+esc(kind(m.kind))+'</span><b>'+pct+'%</b></div>'+
+        bar(progress,goal)+'<div class="adv-reward-line"><span>✧ '+n(m.xp_reward)+' XP</span><span><span class="coin-symbol" aria-hidden="true"></span> '+n(m.coin_reward)+' Coins</span></div>'+action+'</article>';
     }).join('');
-    $('rpgView').innerHTML=`<section class="adv-hero"><div><div class="adv-kicker">CAPÍTULO DA SEMANA</div><h3>Pequenos feitos. Grandes lendas.</h3><p>As missões acompanham suas atividades reais. A conclusão e o resgate são conferidos pelo servidor e só podem ser feitos uma vez por semana.</p></div><div class="adv-hero-mark">✦</div></section>
-      <div class="adv-section-head"><div><h3>Contratos disponíveis</h3><small>O quadro se renova toda segunda-feira.</small></div><button class="adv-btn adv-btn-soft" data-adv="retry">Atualizar</button></div>
-      <div class="adv-grid">${cards||'<div class="adv-panel adv-empty">Nenhuma missão ativa neste momento.</div>'}</div>
-      <p class="adv-footnote">As recompensas de XP respeitam o limite diário da Academia. Coins entram na carteira do Mercado Arcano.</p>`;
+    $('rpgView').innerHTML='<section class="adv-mission-board-hero"><div><div class="adv-kicker">CONTRATOS DA ACADEMIA · CICLO SEMANAL</div><h3>Pequenos feitos. Grandes lendas.</h3><p>Suas atividades reais alimentam cada contrato. A conclusão e o resgate são conferidos pelo servidor, e cada recompensa só pode ser recebida uma vez por semana.</p></div><div class="adv-mission-board-seal" aria-hidden="true">📜</div></section>'+
+      '<div class="adv-mission-summary"><article><small>Em andamento</small><strong>'+n(active)+'</strong></article><article><small>Prontas para resgate</small><strong>'+n(ready)+'</strong></article><article><small>Concluídas</small><strong>'+n(claimed)+' / '+n(list.length)+'</strong></article></div>'+
+      '<div class="adv-section-head"><div><h3>Contratos disponíveis</h3><small>O quadro se renova toda segunda-feira.</small></div><button class="adv-btn adv-btn-soft" data-adv="retry">Atualizar</button></div>'+
+      '<div class="adv-grid">'+(cards||'<div class="adv-panel adv-empty">Nenhuma missão ativa neste momento.</div>')+'</div>'+
+      '<p class="adv-footnote">Recompensas ainda não resgatadas no quadro: '+n(pendingXp)+' XP e '+n(pendingCoins)+' Coins. O XP respeita os limites diários da Academia; as Coins são adicionadas à carteira do Mercado Arcano.</p>';
   }
   async function ranking(){
     const r=await rpc('get_leaderboard',{p_period:S.period}),rows=r.entries||[];
@@ -231,8 +243,9 @@
       ]);
       b.result=result;
       $('rpgView').innerHTML=storyResult(result);
-      if(result.won)toast('Vitória! +'+n(result.xp_awarded)+' XP e +'+n(result.coins_awarded)+' Coins.');
-      else toast('A criatura resistiu. Você pode tentar novamente!');
+      if(result.won){
+        epic('victory',result.campaign_complete?'Campanha concluída!':'Vitória na jornada','+'+n(result.xp_awarded)+' XP · +'+n(result.coins_awarded)+' Coins. '+(result.campaign_complete?'Você concluiu a campanha da Academia!':'A próxima etapa da jornada foi liberada.'),'🏆');
+      }else toast('A criatura resistiu. Você pode tentar novamente!');
     }catch(e){
       $('rpgView').innerHTML='<section class="adv-panel adv-empty"><b>Não foi possível concluir a avaliação.</b><p>'+esc(e.message||'Falha ao registrar o resultado.')+'</p><button class="adv-btn" data-adv="finish-story">Tentar registrar novamente</button><button class="adv-btn adv-btn-soft" data-adv="story-map">Voltar ao mapa</button></section>';
     }finally{clearTimeout(timeoutId);S.busy=false;}
@@ -284,7 +297,7 @@
   async function finishBoss(){
     const b=S.battle;if(!b||S.busy)return;S.busy=true;$('rpgView').innerHTML=wait('Registrando resultado e calculando recompensas...');
     try{await rpc('finish_quiz',{p_session:b.id});b.result=await rpc('finish_boss_battle',{p_session:b.id});fight();
-      const r=b.result;if(r.rewarded)toast(`Vitória! +${n(r.xp_awarded)} XP e +${n(r.coins_awarded)} Coins.`);
+      const r=b.result;if(r.rewarded)epic('victory','Chefe derrotado!','+'+n(r.xp_awarded)+' XP · +'+n(r.coins_awarded)+' Coins. O guardião foi vencido e a recompensa entrou na sua conta.','🐉');
       else if(r.won)toast('Vitória registrada. A recompensa deste chefe já foi resgatada hoje.');else toast('O chefe resistiu. Treine e tente novamente!');
     }catch(e){$('rpgView').innerHTML=`<div class="adv-panel adv-empty"><b>Não foi possível registrar o final da batalha.</b>${esc(e.message||'')}<button class="adv-btn" data-adv="finish-boss">Tentar registrar novamente</button></div>`;}
     finally{S.busy=false;}
@@ -384,7 +397,7 @@
     return `<section class="adv-panel"><div class="adv-section-head"><div><h3>Moderação de guildas</h3><small>Suspender oculta a guilda do recrutamento e impede novos convites.</small></div></div><div class="adv-admin-list">${rows||'<div class="adv-empty">Nenhuma guilda foi criada.</div>'}</div></section>`;
   }
 
-  async function claim(id){const r=await rpc('claim_weekly_mission',{p_mission_id:id});if(!r.ok)toast(r.reason==='claimed'?'Esta missão já foi resgatada nesta semana.':`Missão incompleta: ${n(r.progress)} de ${n(r.target)}.`);else toast(`Recompensa recebida: +${n(r.xp_awarded)} XP e +${n(r.coins_awarded)} Coins.`);return missions();}
+  async function claim(id){const r=await rpc('claim_weekly_mission',{p_mission_id:id});if(!r.ok)toast(r.reason==='claimed'?'Esta missão já foi resgatada nesta semana.':`Missão incompleta: ${n(r.progress)} de ${n(r.target)}.`);else epic('reward','Contrato concluído!','+'+n(r.xp_awarded)+' XP · +'+n(r.coins_awarded)+' Coins. Sua recompensa foi registrada com sucesso.','📜');return missions();}
   async function createGuild(e){e.preventDefault();const r=await rpc('create_guild',{p_name:$('advGuildName').value.trim(),p_tag:$('advGuildTag').value.trim().toUpperCase(),p_description:$('advGuildDescription').value.trim()});toast(`Guilda ${r.tag} fundada! Código de convite: ${r.invite_code}.`);return guilds();}
   async function joinGuild(e){e.preventDefault();const r=await rpc('join_guild',{p_invite_code:$('advGuildCode').value.trim().toUpperCase()});toast(`Você entrou na guilda [${r.guild_tag}] ${r.guild_name}.`);return guilds();}
   async function saveGuildFlag(e){e.preventDefault();await rpc('save_guild_flag',{p_primary:$('advFlagPrimary').value,p_secondary:$('advFlagSecondary').value,p_pattern:$('advFlagPattern').value,p_symbol:$('advFlagSymbol').value,p_motto:$('advFlagMotto').value.trim(),p_crest:$('advFlagCrest').value,p_shield:$('advFlagShield').value,p_crest_item:$('advFlagCrestItem').value||null,p_shield_item:$('advFlagShieldItem').value||null,p_effect_item:$('advFlagEffectItem').value||null});toast('Heráldica salva. Todos os membros já podem vê-la.');return guilds();}

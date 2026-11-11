@@ -2,6 +2,7 @@
 // Arquivo novo: usa o Supabase e o login já existentes via window.AcademiaCtx. Todo XP é gravado por funções do banco (supabase-xp.sql).
 const $ = id => document.getElementById(id), C = () => window.AcademiaCtx;
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = value => Number(value || 0).toLocaleString('pt-BR');
 const sh = a => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(p => p[1]);
 const need = L => 50 * L * (L - 1);                       // XP acumulado para chegar ao nível L (nível 2 = 100, 3 = 300, 4 = 600...)
 const levelOf = xp => { let L = 1; while (xp >= need(L + 1)) L++; return L; };
@@ -88,10 +89,11 @@ const MARKET_CATEGORIES = [
   ['Todos','Todos'],['titles','Títulos'],['nick','Efeitos de Nick'],['frames','Molduras'],['backgrounds','Fundos'],['badges','Insígnias'],['guild','Guildas']
 ];
 let M = null, marketCategory = 'Todos', marketQuery = '';
-let S = null, quiz = null, resultHtml = null, view = 'sala', tab = 'conquistas', err = null, lastKey = null, isOpen = false, editing = false, pickClass = null;
+let S = null, quiz = null, resultHtml = null, view = 'sala', tab = 'visao', err = null, lastKey = null, isOpen = false, editing = false, pickClass = null;
 
 const info = () => { const xp = S.p.total_xp, L = levelOf(xp), a = need(L), b = need(L + 1); return { xp, L, a, b, pct: Math.round((xp - a) / (b - a) * 100) }; };
 const box = t => `<div class="panel"><div class="empty">${t}</div></div>`;
+const epic = (type, title, message, icon) => window.AcademiaNotifications?.notify({ type, title, message, icon });
 
 function mini() {
   const el = $('xpMini'); if (!S) { el.innerHTML = ''; return; }
@@ -107,11 +109,12 @@ async function fetchAll() {
     sb.from('xp_events').select('*').order('created_at', { ascending: false }).limit(50),
     sb.from('quiz_attempts').select('*').order('created_at', { ascending: false }).limit(200),
     sb.from('user_achievements').select('achievement_id'),
-    sb.from('xp_events').select('id', { count: 'exact', head: true }).eq('source', 'daily')
+    sb.from('xp_events').select('id', { count: 'exact', head: true }).eq('source', 'daily'),
+    sb.from('coin_wallets').select('balance').maybeSingle()
   ]);
   const bad = r.find(x => x.error); if (bad) throw bad.error;
   if (!r[0].data) throw new Error('Perfil não encontrado.');
-  S = { p: r[0].data, events: r[1].data, attempts: r[2].data, unlocked: new Set(r[3].data.map(x => x.achievement_id)), days: r[4].count || 0 };
+  S = { p: r[0].data, events: r[1].data, attempts: r[2].data, unlocked: new Set(r[3].data.map(x => x.achievement_id)), days: r[4].count || 0, wallet: Number(r[5].data?.balance || 0) };
 }
 
 async function checkAch() { return []; }
@@ -124,16 +127,19 @@ async function init() {
     let r = await sb.rpc('ensure_profile', { p_name: u.user_metadata?.full_name || u.email }); if (r.error) throw r.error;
     r = await sb.rpc('claim_daily'); if (r.error) throw r.error;
     await fetchAll();
-    const n = await checkAch(), msgs = [];
-    if (r.data > 0) msgs.push(`+${r.data} XP · primeiro acesso do dia!`);
-    n.forEach(id => msgs.push(`🏅 Conquista: ${ACH[id][1]}`));
-    if (msgs.length) c.toast(msgs.join('  ·  '));
+    const n = await checkAch();
+    if (r.data > 0) {
+      if (window.AcademiaNotifications) epic('reward', 'Presente diário recebido', `Você ganhou ${r.data} XP por entrar na Academia hoje.`, '🎁');
+      else c.toast(`+${r.data} XP · primeiro acesso do dia!`);
+    }
+    n.forEach(id => { if (ACH[id]) epic('achievement', 'Nova conquista', ACH[id][1], ACH[id][0]); });
   } catch (e) { err = e.message || String(e); S = null; }
   mini(); if (isOpen) render();
 }
 
 function openRpg(v) {
   view = v; isOpen = true;
+  if (v === 'perfil') tab = 'visao';
   $('home').style.display = 'none'; $('library').style.display = 'none'; $('rpgView').style.display = 'block';
   document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.rpgnav button').forEach(b => b.classList.toggle('active', b.dataset.rpg === v));
@@ -369,6 +375,9 @@ async function finish() {
       if (coinTotal > 0) xpHtml += `<p class="mk-earned"><span class="coin-symbol" aria-hidden="true"></span> +${coinTotal} Coins adicionadas à sua carteira.</p>`;
       if (after > before) xpHtml += `<p><b>Você subiu para o nível ${after}!</b></p>`;
       (data.achievements || []).forEach(id => { if (ACH[id]) xpHtml += `<p>🏅 Nova conquista: <b>${ACH[id][1]}</b> · +40 Coins</p>`; });
+      if (total > 0 || coinTotal > 0) epic('reward', 'Recompensa do treinamento', (total > 0 ? '+' + fmt(total) + ' XP' : '') + (total > 0 && coinTotal > 0 ? ' · ' : '') + (coinTotal > 0 ? '+' + fmt(coinTotal) + ' Coins' : '') + ' adicionados à sua jornada.', '🎁');
+      if (after > before) epic('level', 'Novo nível alcançado!', 'Você evoluiu para o nível ' + after + '. Continue avançando, aventureiro.', '⬆');
+      (data.achievements || []).forEach(id => { if (ACH[id]) epic('achievement', 'Conquista desbloqueada', ACH[id][1], ACH[id][0]); });
     } else {
       xpHtml = '<div class="rpg-note">Resultado validado. Entre com Google para salvar XP e conquistas no seu perfil.</div>';
     }
@@ -386,18 +395,86 @@ async function finish() {
 function renderPerfil() {
   const el = $('rpgView');
   if (C().guest) { el.innerHTML = box('<b>Perfil disponível com conta Google.</b>Entre com o Google para ter perfil, XP e conquistas salvos na nuvem.'); return; }
-  if (err) { el.innerHTML = box(`<b>O sistema de XP ainda não está ativo no Supabase.</b>Execute o arquivo supabase-xp.sql no SQL Editor.<br><small>${esc(err)}</small>`); return; }
+  if (err) { el.innerHTML = box('<b>O sistema de XP ainda não está ativo no Supabase.</b>Execute o arquivo supabase-xp.sql no SQL Editor.<br><small>' + esc(err) + '</small>'); return; }
   if (!S) { el.innerHTML = box('Carregando seu perfil...'); return; }
-  const i = info(), at = S.attempts, tot = at.reduce((s, a) => s + a.total, 0), ok = at.reduce((s, a) => s + a.correct, 0), best = at.reduce((m, a) => Math.max(m, a.best_streak), 0);
-  const stats = [['Nível', i.L], ['XP total', i.xp], ['Quizzes feitos', at.length], ['Precisão', tot ? Math.round(ok / tot * 100) + '%' : '—'], ['Melhor sequência', best]]
-    .map(([k, v]) => `<div class="stat"><small>${k}</small><strong>${v}</strong></div>`).join('');
-  const body = tab === 'conquistas'
-    ? `<div class="ach-grid">${Object.entries(ACH).map(([id, a]) => `<div class="ach ${S.unlocked.has(id) ? '' : 'lock'}"><span>${a[0]}</span><div><b>${a[1]}</b><small>${a[2]}</small></div></div>`).join('')}</div>`
-    : `<div class="file-list">${S.events.length ? S.events.map(ev => `<div class="file-row"><div class="file-icon">✨</div><div class="file-info"><strong>${esc(ev.description || ev.source)}</strong><small>${new Date(ev.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}</small></div><span class="xp-plus">+${ev.xp} XP</span></div>`).join('') : '<div class="empty"><b>Nenhum XP ganho ainda.</b>Complete um quiz na Sala de Treinamento para começar.</div>'}</div>`;
-  el.innerHTML = `${S.p.adventurer_name && !editing ? '' : charForm()}<div class="panel pf"><div class="pf-av">${window.AcademiaAvatar ? window.AcademiaAvatar.render(S.p.appearance || {}, 'profile', S.p.class) : esc(S.p.avatar)}</div><div class="pf-info"><h3>${window.AcademiaAvatar?.nameMarkup(S.p.adventurer_name||'Aventureiro sem nome',S.p.appearance||{})||esc(S.p.adventurer_name||'Aventureiro sem nome')}</h3>${window.AcademiaAvatar?.titleMarkup(S.p.appearance || {},'profile') || ''}<div class="sub">${CLASSES[S.p.class] ? CLASSES[S.p.class].icon + ' ' + CLASSES[S.p.class].name + ' · ' : ''}Nível ${i.L} · ${i.xp} XP</div><div class="arc-profile-actions"><button class="secondary" data-act="atelier">Personalizar visual</button>${S.p.adventurer_name && !editing ? '<button class="secondary" data-act="editchar">Editar nome e classe</button>' : ''}</div>
-  <div class="bar big"><i style="width:${i.pct}%"></i></div><small class="sub">${i.xp - i.a} de ${i.b - i.a} XP neste nível · faltam ${i.b - i.xp} para o nível ${i.L + 1}</small></div></div>
-  <div class="rpg-stats">${stats}</div>
-  <div class="rpg-tabs"><button data-tab="conquistas" class="${tab === 'conquistas' ? 'on' : ''}">Conquistas (${S.unlocked.size}/${Object.keys(ACH).length})</button><button data-tab="historico" class="${tab === 'historico' ? 'on' : ''}">Histórico de XP</button></div>${body}`;
+
+  const i = info(), at = S.attempts || [];
+  const tot = at.reduce((sum, a) => sum + Number(a.total || 0), 0);
+  const ok = at.reduce((sum, a) => sum + Number(a.correct || 0), 0);
+  const best = at.reduce((max, a) => Math.max(max, Number(a.best_streak || 0)), 0);
+  const totalAchievements = Object.keys(ACH).length;
+  const unlocked = Object.entries(ACH).filter(([id]) => S.unlocked.has(id));
+  const precision = tot ? Math.round(ok / tot * 100) + '%' : '—';
+  const displayName = S.p.adventurer_name || 'Aventureiro sem nome';
+  const classInfo = CLASSES[S.p.class] || { name: 'Aventureiro', icon: '✦' };
+  const appearance = S.p.appearance || {};
+  const avatar = window.AcademiaAvatar
+    ? window.AcademiaAvatar.render(appearance, 'profile', S.p.class)
+    : esc(S.p.avatar || '⚔');
+  const nameMarkup = window.AcademiaAvatar?.nameMarkup(displayName, appearance) || esc(displayName);
+  const titleMarkup = window.AcademiaAvatar?.titleMarkup(appearance, 'profile') || '';
+  const recentEvents = S.events.slice(0, 5).map(ev => {
+    const when = new Date(ev.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+    return '<div class="pf-overview-row"><span>⚡</span><div><b>' + esc(ev.description || ev.source || 'Atividade concluída') + '</b><small>' + esc(when) + '</small></div><strong class="xp-plus">+' + fmt(ev.xp) + ' XP</strong></div>';
+  }).join('');
+  const achievementRows = unlocked.slice(0, 5).map(([id, a]) =>
+    '<div class="pf-overview-row"><span>' + a[0] + '</span><div><b>' + esc(a[1]) + '</b><small>' + esc(a[2]) + '</small></div></div>'
+  ).join('');
+  const statData = [
+    ['✦', 'Nível atual', fmt(i.L)],
+    ['⚡', 'Experiência total', fmt(i.xp) + ' XP'],
+    ['coin', 'Carteira de Coins', fmt(S.wallet)],
+    ['🏅', 'Conquistas', unlocked.length + ' / ' + totalAchievements],
+    ['🎯', 'Precisão', precision],
+    ['🔥', 'Melhor sequência', fmt(best) + ' acertos']
+  ];
+  const stats = statData.map(([icon, label, value]) =>
+    '<article class="pf-stat-card"><span>' + (icon === 'coin' ? '<span class="coin-symbol coin-symbol-wallet" aria-hidden="true"></span>' : icon) +
+    '</span><small>' + label + '</small><strong>' + value + '</strong></article>'
+  ).join('');
+
+  let body = '';
+  if (tab === 'conquistas') {
+    body = '<div class="ach-grid">' + Object.entries(ACH).map(([id, a]) =>
+      '<div class="ach ' + (S.unlocked.has(id) ? '' : 'lock') + '"><span>' + a[0] + '</span><div><b>' + esc(a[1]) + '</b><small>' + esc(a[2]) + '</small></div></div>'
+    ).join('') + '</div>';
+  } else if (tab === 'historico') {
+    body = '<div class="file-list">' + (S.events.length
+      ? S.events.map(ev => '<div class="file-row"><div class="file-icon">✨</div><div class="file-info"><strong>' + esc(ev.description || ev.source) +
+        '</strong><small>' + esc(new Date(ev.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })) +
+        '</small></div><span class="xp-plus">+' + fmt(ev.xp) + ' XP</span></div>').join('')
+      : '<div class="empty"><b>Nenhum XP ganho ainda.</b>Complete um quiz na Sala de Treinamento para começar.</div>') + '</div>';
+  } else {
+    body = '<div class="pf-overview-grid"><section class="pf-overview-panel"><h4>Atividades recentes</h4><div class="pf-overview-list">' +
+      (recentEvents || '<div class="pf-overview-empty">Suas primeiras atividades e recompensas aparecerão aqui.</div>') +
+      '</div></section><section class="pf-overview-panel"><h4>Conquistas desbloqueadas <span class="pf-achievement-count">(' + unlocked.length + ')</span></h4><div class="pf-overview-list">' +
+      (achievementRows || '<div class="pf-overview-empty">Complete missões e treinamentos para registrar suas primeiras conquistas.</div>') +
+      '</div></section></div>';
+  }
+
+  const editForm = S.p.adventurer_name && !editing ? '' : charForm();
+  const editButton = S.p.adventurer_name && !editing
+    ? '<button class="secondary" data-act="editchar">Editar nome e classe</button>'
+    : '';
+  el.innerHTML = editForm +
+    '<section class="pf-legend">' +
+      '<div class="pf-legend-main"><div class="pf-legend-portrait">' + avatar + '</div>' +
+        '<div class="pf-legend-info"><small class="pf-legend-kicker">FICHA LENDÁRIA DO AVENTUREIRO</small>' +
+          '<h3>' + nameMarkup + '</h3><div class="pf-legend-title">' + titleMarkup + '</div>' +
+          '<div class="pf-legend-meta">' + classInfo.icon + ' ' + esc(classInfo.name) + ' · Nível ' + fmt(i.L) +
+          '<br>' + fmt(i.xp) + ' XP acumulados · ' + fmt(S.wallet) + ' Coins</div>' +
+          '<div class="pf-legend-actions"><button class="secondary" data-act="atelier">Personalizar visual</button>' + editButton + '</div>' +
+        '</div></div>' +
+      '<aside class="pf-legend-side"><small>PROGRESSO PARA O PRÓXIMO NÍVEL</small>' +
+        '<div class="pf-level-numbers"><span>Nível ' + fmt(i.L) + '</span><strong>' + i.pct + '%</strong><span>Nível ' + fmt(i.L + 1) + '</span></div>' +
+        '<div class="pf-level-track" role="progressbar" aria-label="Progresso de experiência" aria-valuenow="' + i.pct + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + i.pct + '%"></i></div>' +
+        '<div class="pf-next-level">' + fmt(i.xp - i.a) + ' / ' + fmt(i.b - i.a) + ' XP neste nível. Faltam ' + fmt(i.b - i.xp) + ' XP para evoluir.</div>' +
+      '</aside>' +
+    '</section>' +
+    '<div class="pf-stat-grid">' + stats + '</div>' +
+    '<div class="rpg-tabs pf-tabs"><button data-tab="visao" class="' + (tab === 'visao' ? 'on' : '') + '">Visão geral</button>' +
+      '<button data-tab="conquistas" class="' + (tab === 'conquistas' ? 'on' : '') + '">Conquistas (' + unlocked.length + '/' + totalAchievements + ')</button>' +
+      '<button data-tab="historico" class="' + (tab === 'historico' ? 'on' : '') + '">Histórico de XP</button></div>' + body;
 }
 
 function charForm() {
