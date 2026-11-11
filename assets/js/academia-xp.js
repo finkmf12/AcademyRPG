@@ -93,6 +93,14 @@ const MARKET_DEMO_ITEMS = [
   {id:'bg-abyss',name:'Abismo Oceânico',category:'backgrounds',price:750,rarity:'Lendário',icon:'🌊',description:'Ruínas submersas em águas profundas e misteriosas.'},
   {id:'bg-cherry',name:'Jardim das Cerejeiras',category:'backgrounds',price:450,rarity:'Épico',icon:'🌸',description:'Um refúgio sereno entre pétalas e luz rosada.'},
   {id:'bg-desert',name:'Templo do Deserto',category:'backgrounds',price:350,rarity:'Raro',icon:'🏜️',description:'Dunas ancestrais guardam os segredos de um reino perdido.'},
+  {id:'bg-moonlit-ruins',name:'Ruínas do Eclipse',category:'backgrounds',price:1250,rarity:'Épico',icon:'🌘',description:'Templo antigo sob um eclipse violeta, com runas que pulsam e estrelas cadentes.'},
+  {id:'bg-dragon-peaks',name:'Trono dos Dragões',category:'backgrounds',price:1800,rarity:'Épico',icon:'🐉',description:'Picos vulcânicos, brasas ascendentes e a silhueta de um dragão ancestral.'},
+  {id:'bg-aurora-falls',name:'Cataratas da Aurora',category:'backgrounds',price:2100,rarity:'Épico',icon:'🌌',description:'Cachoeiras luminosas sob cortinas de aurora verde e azul em movimento.'},
+  {id:'bg-crystal-cavern',name:'Catedral de Cristal',category:'backgrounds',price:2600,rarity:'Lendário',icon:'💎',description:'Uma caverna monumental de cristais facetados, reflexos cianos e partículas brilhantes.'},
+  {id:'bg-storm-citadel',name:'Fortaleza da Tempestade',category:'backgrounds',price:2900,rarity:'Lendário',icon:'⚡',description:'Uma fortaleza suspensa entre nuvens negras, relâmpagos e energia elétrica.'},
+  {id:'bg-astral-garden',name:'Jardim Astral',category:'backgrounds',price:3200,rarity:'Lendário',icon:'✨',description:'Jardins celestes com flores de luz, pequenas órbitas e poeira estelar.'},
+  {id:'bg-shadow-realm',name:'Domínio das Sombras',category:'backgrounds',price:3900,rarity:'Lendário',icon:'🌑',description:'Um reino sombrio com portal espectral, névoa violeta e fragmentos flutuantes.'},
+  {id:'bg-solar-sanctum',name:'Santuário do Sol Eterno',category:'backgrounds',price:4800,rarity:'Lendário',icon:'☀️',description:'Um santuário dourado banhado por luz solar, sigilos radiantes e partículas de ouro.'},
   {id:'badge-scholar',name:'Selo do Conhecimento',category:'badges',price:50,rarity:'Comum',icon:'🏅',description:'Celebre sua dedicação aos estudos.'}
 ];
 const MARKET_CATEGORIES = [
