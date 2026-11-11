@@ -419,5 +419,5 @@
   document.addEventListener('click',e=>{const b=e.target.closest('[data-adventure]');if(b)open(b.dataset.adventure);});
   function accountChanged(){mount();sync().catch(e=>console.warn('Conta da Academia:',e.message));}
   const app=$('app');if(app){new MutationObserver(accountChanged).observe(app,{attributes:true,attributeFilter:['style']});if(app.style.display==='block')accountChanged();}
-  window.addEventListener('load',accountChanged,{once:true});setTimeout(accountChanged,900);mount();
+  window.addEventListener('load',accountChanged,{once:true});window.addEventListener('focus',accountChanged);setTimeout(accountChanged,900);mount();
 })();
