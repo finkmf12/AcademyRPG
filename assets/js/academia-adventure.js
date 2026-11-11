@@ -29,7 +29,7 @@
     const files={'guardiao-dados':'boss-guardiao-dados.svg','sentinela-codigo':'boss-sentinela-codigo.svg','oraculo-uml':'boss-oraculo-uml.svg'};
     const key=String(boss?.id||'');
     const file=files[key]||files[({'banco':'guardiao-dados','programacao':'sentinela-codigo','modelagem':'oraculo-uml'})[boss?.category]]||files['guardiao-dados'];
-    return '<img class="adv-boss-portrait'+(large?' large':'')+'" src="../'+file+'" alt="Retrato de '+esc(boss?.name||'chefe da Academia')+'" loading="eager">';
+    return '<img class="adv-boss-portrait'+(large?' large':'')+'" src="./assets/'+file+'" alt="Retrato de '+esc(boss?.name||'chefe da Academia')+'" loading="eager">';
   };
   const FLAG_COLOR_OPTIONS=[['#9f3e40','Carmesim'],['#3b638a','Azul real'],['#34465d','Azul ardósia'],['#426c56','Verde bosque'],['#936533','Bronze'],['#71538c','Violeta'],['#d0b36b','Ouro antigo'],['#303b4d','Aço escuro'],['#d9d6cd','Marfim'],['#263d32','Verde esmeralda'],['#5b315f','Ametista'],['#8b542e','Cobre'],['#a7b6c9','Prata lunar'],['#20202d','Ônix'],['#b84e35','Vermelho rubi'],['#477b83','Turquesa'],['#d6a84f','Dourado solar'],['#6d789e','Azul místico']];
   const FLAG_PATTERNS=[['solid','Liso'],['horizontal','Faixas horizontais'],['vertical','Faixas verticais'],['diagonal','Diagonal'],['cross','Cruz'],['chevron','Chevrons'],['quartered','Partido'],['waves','Ondas'],['diamond','Losangos'],['stripes','Listras triplas'],['sunburst','Raio solar']];
