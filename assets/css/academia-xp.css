@@ -303,3 +303,15 @@
 .coin-symbol-nav{width:1.25em;height:1.25em;margin:0;border-width:1px;font-size:14px;vertical-align:middle;}
 .coin-symbol-mini{width:1.08em;height:1.08em;margin:0 .24em 0 0;font-size:.82em;vertical-align:-.12em;}
 .mk-earned .coin-symbol{margin-right:.2em;}
+
+
+/* Prévia do personagem com fundo cosmético ativo */
+.mk-avatar{position:relative;flex:0 0 65px;overflow:hidden;isolation:isolate}
+.mk-avatar .arc-market-background{inset:0;z-index:0}
+.mk-avatar-character{position:relative;z-index:2;width:100%;height:100%;display:grid;place-items:center}
+.mk-avatar-character svg{display:block;width:100%;height:100%;max-width:100%;max-height:100%}
+.mk-avatar.has-background{background:#101b2b}
+.mk-art-background{isolation:isolate;background:#101b2b}
+.mk-art-background .arc-card-background{inset:0;z-index:0}
+.mk-art-background .mk-rarity{position:absolute;top:9px;left:9px;z-index:3}
+.mk-item-background .mk-itemtitle strong{color:#f0d59c}
