@@ -128,7 +128,7 @@
       const cloakFinishes={'cloak-forest':['#456c59','#b5d9a0'],'cloak-night':['#51416f','#c6a5ff'],'cloak-veteran':['#783b48','#e8bd7a'],'cloak-phoenix':['#8f302f','#ffbd62'],'cloak-obsidian':['#252b42','#9d8ad0'],'cloak-stars':['#283a66','#f4e1a5'],'cloak-frostfall':['#356d91','#c8f7ff'],'cloak-royal-crimson':['#842d42','#ffd17b'],'cloak-nebula':['#38275f','#e1b4ff'],'cloak-voidflame':['#241c38','#d28aff'],'cloak-storm':['#244f7c','#8cecff'],'cloak-emerald':['#225b48','#9bffcb'],'cloak-solar':['#87602b','#fff0a0'],'cloak-bloodmoon':['#702d4c','#ff9ec2']};
       const cloakFinish=cloakFinishes[cloak]||['#334c72','#d6bd85'];
       const cloakColor=cloakFinish[0];
-      back+='<path d="M74 116 Q100 103 126 116 L158 205 Q100 230 42 205Z" fill="'+cloakColor+'" stroke="'+cloakFinish[1]+'" stroke-width="4" stroke-linejoin="round"/><path d="M85 122 L100 212 L115 122" fill="none" stroke="'+cloakFinish[1]+'" stroke-opacity=".55" stroke-width="4"/>');
+      back+='<path d="M74 116 Q100 103 126 116 L158 205 Q100 230 42 205Z" fill="'+cloakColor+'" stroke="'+cloakFinish[1]+'" stroke-width="4" stroke-linejoin="round"/><path d="M85 122 L100 212 L115 122" fill="none" stroke="'+cloakFinish[1]+'" stroke-opacity=".55" stroke-width="4"/>';
       if(cloak==='cloak-phoenix')
         back+='<path d="M55 173 Q72 145 89 170 Q100 183 111 165 Q130 144 145 174" fill="none" stroke="#ffcb70" stroke-width="4"/><path d="M71 190 Q84 174 100 191 Q116 174 129 190" fill="none" stroke="#ff7c48" stroke-width="3"/>';
       if(cloak==='cloak-obsidian')
