@@ -432,7 +432,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     const key=String(id||'');
     if(!Object.prototype.hasOwnProperty.call(BACKGROUND_ART,key))return '';
     const mode=['stage','profile','card','market'].includes(variant)?variant:'stage';
-    return '<div class="arc-bg-scene arc-'+mode+'-background arc-'+key+'" aria-hidden="true"><svg viewBox="0 0 800 320" preserveAspectRatio="xMidYMid slice" focusable="false">'+BACKGROUND_ART[key]+'</svg><span class="arc-bg-vignette"></span></div>';
+    return '<div class="arc-bg-scene arc-'+mode+'-background arc-scene-'+key+'" aria-hidden="true"><svg viewBox="0 0 800 320" preserveAspectRatio="xMidYMid slice" focusable="false">'+BACKGROUND_ART[key]+'</svg><span class="arc-bg-vignette"></span></div>';
   }
     function toast(message){const c=C();if(c?.toast)c.toast(message);}
   function notifyAppearance(){
