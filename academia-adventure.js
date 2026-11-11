@@ -103,10 +103,15 @@
   async function sync(){
     const c=C();if(!c)return;const key=c.guest?'guest':(c.user?.id||null),admin=$('advTeacherNav');
     if(!key){S.userKey=null;S.teacher=false;S.data=null;S.battle=null;S.storyBattle=null;S.storyState=null;if(admin)admin.hidden=true;return;}
-    if(key===S.userKey)return;S.userKey=key;S.teacher=false;S.data=null;S.battle=null;S.storyBattle=null;S.storyState=null;
-    if(c.guest){if(admin)admin.hidden=true;return;}
-    try{S.teacher=!!(await rpc('is_academy_teacher'));}catch(e){console.warn('Perfil docente:',e.message);}
-    if(admin)admin.hidden=!S.teacher;if(S.page==='teacher'&&!S.teacher)open('missions');
+    const changed=key!==S.userKey;
+    if(changed){S.userKey=key;S.teacher=false;S.data=null;S.battle=null;S.storyBattle=null;S.storyState=null;}
+    if(c.guest){S.teacher=false;if(admin)admin.hidden=true;return;}
+    // Revalida a permissão no servidor mesmo quando a conta continua a mesma.
+    // Isso reconhece concessões feitas enquanto o usuário já estava conectado.
+    try{S.teacher=!!(await rpc('is_academy_teacher'));}
+    catch(e){S.teacher=false;console.warn('Perfil docente:',e.message);}
+    if(admin)admin.hidden=!S.teacher;
+    if(S.page==='teacher'&&!S.teacher)open('missions');
   }
   function open(page){
     const c=C();if(!HEAD[page])return;
