@@ -521,7 +521,27 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
   <main class="main">
     <header class="topbar"><div><div class="kicker" id="pageKicker">CENTRO DE COMANDO</div><h2 id="pageTitle">Sua jornada de estudos</h2><div class="sub" id="pageSub">Organize seus materiais e continue evoluindo.</div></div><div class="user-pill"><span id="userEmail">Conta conectada</span><button id="logoutBtn" style="margin-left:10px;border:0;border-left:1px solid var(--line);padding-left:12px;background:none;color:var(--gold2);font-weight:700">Sair</button></div></header>
     <div id="home">
-      <section class="hero"><h3>Bem-vindo à sua biblioteca, aventureiro.</h3><p>Guarde seus materiais de aula em um só lugar. Escolha uma disciplina para acessar seus arquivos ou envie novos documentos para sua biblioteca.</p></section>
+      <section class="realm-hero">
+        <div class="realm-hero-content"><span class="realm-eyebrow">✦ O REINO DO CONHECIMENTO ✦</span><h3>Sua próxima conquista começa aqui.</h3><p>Explore a Academia, aprimore suas habilidades e construa sua própria lenda.</p><div class="realm-hero-actions"><button type="button" data-rpg="story">Continuar aventura <span>→</span></button><span class="realm-online"><i></i> Portal da Academia aberto</span></div></div>
+        <div class="realm-hero-rune" aria-hidden="true">✧</div>
+      </section>
+      <section class="home-player-grid">
+        <article class="home-player-card" id="homePlayerCard"><div class="home-player-avatar">⚔</div><div class="home-player-info"><small>AVENTUREIRO</small><h3 id="homePlayerName">Carregando perfil...</h3><p id="homePlayerLevel">Sua jornada está esperando.</p><div class="home-xp-track"><i id="homeXpBar"></i></div><div class="home-player-meta"><span id="homeXpText">XP: —</span><span id="homeCoinText">◉ — Coins</span></div></div></article>
+        <article class="home-daily-card"><span class="home-daily-icon">📜</span><div><small>CONSELHO DO MESTRE</small><h3>Um passo de cada vez.</h3><p>Complete atividades, enfrente desafios e conquiste recompensas para evoluir seu personagem.</p><button type="button" data-rpg="missions">Ver missões semanais →</button></div></article>
+      </section>
+      <div class="section-head home-section-head"><h3>Escolha seu próximo destino</h3><span>ATALHOS DA AVENTURA</span></div>
+      <section class="home-quick-grid">
+        <button class="home-quick-card quick-story" type="button" data-rpg="story"><span>⚔️</span><b>Modo História</b><small>Explore o reino e enfrente inimigos</small><i>Entrar na jornada →</i></button>
+        <button class="home-quick-card quick-training" type="button" data-rpg="sala"><span>📚</span><b>Treinamento</b><small>Teste seus conhecimentos e ganhe XP</small><i>Treinar agora →</i></button>
+        <button class="home-quick-card quick-boss" type="button" data-rpg="bosses"><span>🐉</span><b>Arena dos Chefes</b><small>Desafie guardiões e prove seu valor</small><i>Entrar na arena →</i></button>
+        <button class="home-quick-card quick-guild" type="button" data-rpg="guilds"><span>🛡️</span><b>Guildas</b><small>Reúna aliados e fortaleça sua equipe</small><i>Visitar guildas →</i></button>
+        <button class="home-quick-card quick-market" type="button" data-rpg="market"><span>🪙</span><b>Mercado Arcano</b><small>Use Coins para personalizar seu herói</small><i>Ver tesouros →</i></button>
+        <button class="home-quick-card quick-atelier" type="button" data-rpg="atelier"><span>✨</span><b>Ateliê Arcano</b><small>Monte seu visual e equipe relíquias</small><i>Personalizar →</i></button>
+      </section>
+      <section class="home-news">
+        <div class="home-news-heading"><div><small>NOTÍCIAS DO REINO</small><h3>Mural da Academia</h3></div><span class="home-news-seal">✦</span></div>
+        <div class="home-news-grid"><article><span>📯</span><div><b>Novas jornadas aguardam</b><p>Visite o Modo História para continuar sua campanha e descobrir os desafios seguintes.</p></div><em>AVENTURA</em></article><article><span>🏆</span><div><b>Treine para subir no ranking</b><p>Responda aos quizzes, acumule experiência e conquiste seu lugar entre os campeões.</p></div><em>TREINAMENTO</em></article><article><span>🤝</span><div><b>Fortaleça sua guilda</b><p>Convide seus amigos, compartilhe estratégias e evoluam juntos.</p></div><em>COMUNIDADE</em></article></div>
+      </section>
       <div class="stats">
         <div class="stat"><small>Arquivos armazenados</small><strong id="totalFiles">0</strong></div>
         <div class="stat"><small>Disciplinas</small><strong>03</strong></div>
