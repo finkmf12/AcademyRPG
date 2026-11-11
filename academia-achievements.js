@@ -97,6 +97,9 @@
   function errorView(){
     const el=$('rpgView');if(el)el.innerHTML='<div class="ab-error"><span>📖</span><h3>Não foi possível abrir o livro</h3><p>'+esc(state.error||'Ocorreu um erro ao consultar suas conquistas.')+'</p><button type="button" data-ach-action="refresh">Tentar novamente</button></div>';
   }
+  function isBookActive(){
+    return document.querySelector('.rpgnav button.active')?.dataset.rpg==='conquistas';
+  }
   async function open(){
     const c=C();state.data=null;state.error=null;
     if(c?.guest||!c?.user){const el=$('rpgView');if(el)el.innerHTML='<div class="ab-guest"><span>🏅</span><h3>Suas conquistas começam aqui</h3><p>Entre com sua conta Google para registrar seu progresso, desbloquear recompensas e manter seu livro salvo na nuvem.</p></div>';return;}
@@ -104,10 +107,12 @@
     try{
       const {data,error}=await c.supabase.rpc('get_achievement_book');if(error)throw error;
       if(!data||!data.stats||!Array.isArray(data.unlocked))throw new Error('A resposta do Livro de Conquistas está incompleta.');
-      state.data=data;state.loading=false;renderBoard();
+      state.data=data;state.loading=false;
+      if(!isBookActive())return;
+      renderBoard();
       const fresh=Array.isArray(data.newly_unlocked)?data.newly_unlocked:[];
-      if(fresh.length)c.toast('🏅 '+fresh.length+' nova(s) conquista(s)! Você recebeu '+num(fresh.length*40)+' Coins.');
-    }catch(e){state.error=e?.message||String(e);state.loading=false;errorView();}
+      if(fresh.length)c.toast('🏅 '+fresh.length+' conquista(s) nova(s)! Você recebeu '+num(fresh.length*40)+' Coins.');
+    }catch(e){state.error=e?.message||String(e);state.loading=false;if(isBookActive())errorView();}
   }
   function refresh(){if(!state.loading)open();}
   document.addEventListener('click',e=>{
