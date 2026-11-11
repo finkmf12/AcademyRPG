@@ -122,3 +122,78 @@
   .epic-notice,.epic-notice.is-leaving{animation:none}
   .epic-notice-progress{display:none}
 }
+
+/* Central de notificações: sino, contador e histórico sincronizado */
+.topbar { position:relative; z-index:30; }
+.topbar-actions { display:flex; align-items:center; justify-content:flex-end; gap:12px; min-width:0; }
+.notifications-control { position:relative; flex:0 0 auto; }
+.notifications-bell {
+  position:relative; width:44px; height:44px; display:grid; place-items:center;
+  border:1px solid rgba(210,180,119,.38); border-radius:13px;
+  background:linear-gradient(145deg,#1d3042,#111d30); color:#ead29e;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 6px 16px rgba(0,0,0,.18);
+  cursor:pointer; transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.notifications-bell:hover,.notifications-bell[aria-expanded="true"] {
+  transform:translateY(-1px); border-color:rgba(242,207,139,.82);
+  box-shadow:0 0 22px rgba(217,181,112,.14),inset 0 1px rgba(255,255,255,.1);
+}
+.notifications-bell svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.notifications-bell.has-unread svg { animation:notificationBellPulse 2.4s ease-in-out infinite; }
+@keyframes notificationBellPulse { 0%,100%{transform:rotate(0)} 8%,24%{transform:rotate(11deg)} 16%,32%{transform:rotate(-10deg)} 40%{transform:rotate(0)} }
+.notifications-badge {
+  position:absolute; top:-6px; right:-6px; min-width:19px; height:19px; padding:0 5px;
+  display:grid; place-items:center; border:2px solid #101b2b; border-radius:20px;
+  background:linear-gradient(135deg,#f3d38d,#bb843f); color:#21170c;
+  font-size:9px; font-weight:900; line-height:1;
+}
+.notifications-badge[hidden] { display:none; }
+.notifications-panel {
+  position:absolute; z-index:13000; top:calc(100% + 12px); right:0;
+  width:min(410px,calc(100vw - 32px)); max-height:min(590px,calc(100vh - 110px));
+  display:flex; flex-direction:column; overflow:hidden;
+  border:1px solid rgba(219,187,126,.48); border-radius:17px;
+  background:radial-gradient(circle at 100% 0,rgba(183,145,87,.14),transparent 37%),linear-gradient(155deg,#1a2b3e,#101b2b 72%);
+  box-shadow:0 22px 65px rgba(0,0,0,.52),inset 0 1px rgba(255,255,255,.07);
+  color:#e9edf0;
+}
+.notifications-panel[hidden] { display:none; }
+.notifications-panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding:19px 18px 14px; border-bottom:1px solid rgba(190,203,210,.12); }
+.notifications-panel-head small { color:#d6b77d; font-size:8px; font-weight:900; letter-spacing:1.9px; }
+.notifications-panel-head h3 { margin:5px 0 4px; color:#fff0d0; font:600 21px Georgia,serif; }
+.notifications-panel-head p { margin:0; color:#aebfca; font-size:10px; line-height:1.45; }
+.notifications-panel-close { width:28px; height:28px; flex:0 0 auto; border:1px solid rgba(219,229,231,.14); border-radius:8px; background:rgba(255,255,255,.04); color:#dce5e7; font-size:20px; cursor:pointer; }
+.notifications-panel-actions { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 16px 8px; }
+.notifications-panel-actions button { border:0; background:transparent; color:#d6bc83; font-size:10px; font-weight:750; cursor:pointer; }
+.notifications-panel-actions button:last-child { color:#aab9c4; }
+.notifications-panel-actions button:disabled { opacity:.35; cursor:default; }
+.notifications-filters { display:flex; gap:6px; padding:0 16px 10px; border-bottom:1px solid rgba(190,203,210,.1); }
+.notifications-filters button { padding:7px 12px; border:1px solid transparent; border-radius:20px; background:rgba(255,255,255,.035); color:#aebfca; font-size:10px; cursor:pointer; }
+.notifications-filters button.active { border-color:rgba(217,184,120,.42); background:rgba(217,184,120,.12); color:#f4d99c; }
+.notifications-list { min-height:120px; overflow-y:auto; overscroll-behavior:contain; padding:8px; }
+.notifications-entry { width:100%; display:grid; grid-template-columns:38px minmax(0,1fr) auto; align-items:center; gap:10px; padding:11px 10px; border:1px solid transparent; border-radius:11px; background:transparent; color:inherit; text-align:left; cursor:pointer; }
+.notifications-entry + .notifications-entry { margin-top:4px; }
+.notifications-entry:hover { border-color:rgba(184,207,211,.15); background:rgba(255,255,255,.045); }
+.notifications-entry.is-unread { border-color:rgba(220,187,124,.17); background:linear-gradient(100deg,rgba(207,170,105,.09),rgba(255,255,255,.025)); }
+.notifications-entry-icon { width:36px; height:36px; display:grid; place-items:center; border:1px solid rgba(212,183,127,.25); border-radius:10px; background:rgba(5,14,25,.36); font-size:19px; }
+.notifications-entry-body { min-width:0; display:grid; gap:3px; }
+.notifications-entry-body strong { color:#f7e9cd; font-size:11px; line-height:1.35; }
+.notifications-entry-body>span { color:#b9c8d0; font-size:10px; line-height:1.45; overflow-wrap:anywhere; }
+.notifications-entry-body small { color:#8299a8; font-size:9px; }
+.notifications-entry-status { color:#d9bd82; font-size:7px; font-weight:900; letter-spacing:.7px; }
+.notifications-entry:not(.is-unread) .notifications-entry-status { color:#82939f; }
+.notifications-empty { min-height:135px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:24px 20px; color:#9eb1be; font-size:10px; line-height:1.5; text-align:center; }
+.notifications-empty>span:first-child { font-size:24px; }
+.notifications-empty strong { color:#f1dfba; font:600 15px Georgia,serif; }
+.notifications-empty>span:last-child { max-width:260px; }
+.notifications-panel-foot { display:flex; justify-content:space-between; gap:10px; padding:10px 15px; border-top:1px solid rgba(190,203,210,.1); color:#748b9a; font-size:8px; }
+@media(max-width:650px) {
+  .topbar { align-items:flex-start; }
+  .topbar-actions { gap:8px; }
+  .notifications-bell { width:42px; height:42px; }
+  .notifications-panel { position:fixed; top:78px; right:12px; max-height:calc(100vh - 98px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .notifications-bell.has-unread svg { animation:none; }
+  .notifications-bell { transition:none; }
+}
