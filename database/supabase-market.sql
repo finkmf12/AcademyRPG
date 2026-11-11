@@ -21,6 +21,15 @@ insert into public.market_items (id,name,category,price,rarity,icon,description)
 ('frame-silver','Moldura Prateada','frames',100,'Incomum','🛡️','Um acabamento elegante para seu avatar.'),
 ('frame-royal','Brasão Real','frames',800,'Lendário','👑','Uma moldura digna de uma lenda.'),
 ('bg-forest','Floresta Encantada','backgrounds',200,'Raro','🌲','Uma paisagem envolta em mistério.'),
+('bg-celestial','Observatório Celeste','backgrounds',550,'Épico','🌌','Um céu profundo, constelações e a luz de um astro distante.'),
+('bg-library','Biblioteca Arcana','backgrounds',350,'Raro','📚','Arcos antigos, estantes encantadas e relíquias de conhecimento.'),
+('bg-frost','Cidadela Glacial','backgrounds',600,'Épico','❄️','Montanhas de cristal sob o brilho da aurora boreal.'),
+('bg-volcano','Forja Vulcânica','backgrounds',500,'Épico','🌋','Rios de lava iluminam uma terra forjada pelo fogo.'),
+('bg-emerald','Ruínas Esmeralda','backgrounds',400,'Raro','🌿','Um templo esquecido tomado pela floresta e pela magia.'),
+('bg-royal','Castelo Imperial','backgrounds',850,'Lendário','🏰','Uma fortaleza majestosa iluminada por ouro e tradição.'),
+('bg-abyss','Abismo Oceânico','backgrounds',750,'Lendário','🌊','Ruínas submersas em águas profundas e misteriosas.'),
+('bg-cherry','Jardim das Cerejeiras','backgrounds',450,'Épico','🌸','Um refúgio sereno entre pétalas e luz rosada.'),
+('bg-desert','Templo do Deserto','backgrounds',350,'Raro','🏜️','Dunas ancestrais guardam os segredos de um reino perdido.'),
 ('badge-scholar','Selo do Conhecimento','badges',50,'Comum','🏅','Celebre sua dedicação aos estudos.')
 on conflict (id) do update set
   name=excluded.name, category=excluded.category, price=excluded.price,
