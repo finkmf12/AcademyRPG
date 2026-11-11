@@ -74,6 +74,8 @@
       }
       updatePrivateCounter();
     } catch (error) {
+      const picker = $('tvnPrivateImageInput');
+      if (picker) picker.value = '';
       toast(error.message || 'Não foi possível selecionar esta imagem.');
     }
   }
