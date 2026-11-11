@@ -5,9 +5,9 @@
   const need=l=>50*l*(l-1);
   async function update(){
     const c=C(); if(!c||$('app')?.style.display!=='block')return;
-    const name=$('homePlayerName'),level=$('homePlayerLevel'),xpText=$('homeXpText'),coinText=$('homeCoinText'),bar=$('homeXpBar'),avatar=$('homePlayerCard')?.querySelector('.home-player-avatar');
+    const name=$('homePlayerName'),level=$('homePlayerLevel'),xpText=$('homeXpText'),coinText=$('homeCoinText'),coinValue=$('homeCoinValue')||coinText,bar=$('homeXpBar'),avatar=$('homePlayerCard')?.querySelector('.home-player-avatar');
     if(!name||!level)return;
-    if(c.guest){name.textContent='Aventureiro convidado';level.textContent='Modo convidado · entre com Google para salvar sua evolução';xpText.textContent='XP: —';coinText.textContent='◉ Coins: —';bar.style.width='0%';avatar.textContent='🧙';return;}
+    if(c.guest){name.textContent='Aventureiro convidado';level.textContent='Modo convidado · entre com Google para salvar sua evolução';xpText.textContent='XP: —';coinValue.textContent='— Coins';bar.style.width='0%';avatar.textContent='🧙';return;}
     if(!c.user||!c.supabase)return;
     name.textContent=c.user.user_metadata?.full_name||c.user.email?.split('@')[0]||'Aventureiro';
     level.textContent='Consultando sua jornada...';
@@ -23,10 +23,10 @@
       name.textContent=profile.adventurer_name||name.textContent;
       level.textContent='Nível '+lv+' · '+(profile.class?({guerreiro:'Guerreiro',mago:'Mago',arqueiro:'Arqueiro',assassino:'Assassino'}[profile.class]||'Aventureiro'):'Aventureiro');
       xpText.textContent=xp.toLocaleString('pt-BR')+' XP';
-      coinText.textContent='◉ '+coins.toLocaleString('pt-BR')+' Coins';
+      coinValue.textContent=coins.toLocaleString('pt-BR')+' Coins';
       bar.style.width=pct+'%';
       if(avatar)avatar.textContent=profile.avatar||'⚔️';
-    }catch(e){level.textContent='Seu perfil está pronto para novas conquistas.';xpText.textContent='XP: consulte seu perfil';coinText.textContent='◉ Coins no Mercado';}
+    }catch(e){level.textContent='Seu perfil está pronto para novas conquistas.';xpText.textContent='XP: consulte seu perfil';coinValue.textContent='Coins no Mercado';}
   }
   const observer=new MutationObserver(()=>{if($('app')?.style.display==='block')update();});
   const start=()=>{const app=$('app');if(app)observer.observe(app,{attributes:true,attributeFilter:['style']});update();};
