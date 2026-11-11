@@ -69,6 +69,7 @@ const ACH = {
 const HEAD = {
   sala: ['TREINAMENTO', 'Sala de Treinamento', 'Teste seus conhecimentos, ganhe XP e evolua de nível.'],
   perfil: ['JOGADOR', 'Perfil do Jogador', 'Acompanhe seu nível, suas conquistas e o histórico de XP.'],
+  conquistas: ['LIVRO DO AVENTUREIRO', 'Livro de Conquistas', 'Registre suas vitórias, acompanhe metas e desbloqueie recompensas.'],
   market: ['TESOUROS', 'Mercado Arcano', 'Conquiste Coins, personalize seu personagem e equipe suas relíquias.'],
   atelier: ['PERSONAGEM', 'Ateliê Arcano', 'Monte seu visual, experimente equipamentos e equipe suas recompensas.']
 };
@@ -148,6 +149,11 @@ function openRpg(v) {
     else $('rpgView').innerHTML = '<div class="panel"><div class="empty">O Ateliê Arcano não foi carregado. Atualize a página.</div></div>';
     return;
   }
+  if (v === 'conquistas') {
+    if (window.AcademiaAchievements) window.AcademiaAchievements.open();
+    else $('rpgView').innerHTML = '<div class="panel"><div class="empty">O Livro de Conquistas ainda não foi carregado. Atualize a página.</div></div>';
+    return;
+  }
   render();
 }
 function closeRpg() {
@@ -159,6 +165,7 @@ function render() {
   if (view === 'market') renderMarket();
   else if (view === 'atelier') window.AcademiaAvatar?.renderAtelier();
   else if (view === 'perfil') renderPerfil();
+  else if (view === 'conquistas') window.AcademiaAchievements?.render();
   else if (quiz) renderQuiz();
   else if (resultHtml) $('rpgView').innerHTML = resultHtml;
   else renderSala();
