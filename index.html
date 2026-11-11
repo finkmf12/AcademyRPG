@@ -100,7 +100,8 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 <link rel="stylesheet" href="./academia-adventure.css?v=20261111-news-center">
 <link rel="stylesheet" href="./academia-home-redesign.css?v=20261111-home-redesign">
 <link rel="stylesheet" href="./academia-home-stage2.css?v=20261111-stage2">
-<link rel="stylesheet" href="./academia-visual-refresh.css?v=20261111-vibrant-realm">
+<link rel="stylesheet" href="./academia-visual-refresh.css?v=20261111-vibrant-realm
+<link rel="stylesheet" href="./academia-home-world.css?v=20261111-legendary-dashboard">">
 
 <style id="login-layout-fix">
 /* Ajuste definitivo do alinhamento da tela inicial */
@@ -531,7 +532,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
         <div class="realm-hero-rune" aria-hidden="true">✧</div>
       </section>
       <section class="home-player-grid">
-        <article class="home-player-card" id="homePlayerCard"><div class="home-player-avatar">⚔</div><div class="home-player-info"><small>AVENTUREIRO</small><h3 id="homePlayerName">Carregando perfil...</h3><p id="homePlayerLevel">Sua jornada está esperando.</p><div class="home-xp-track"><i id="homeXpBar"></i></div><div class="home-player-meta"><span id="homeXpText">XP: —</span><span id="homeCoinText"><span class="coin-symbol coin-symbol-mini" aria-hidden="true"></span><span id="homeCoinValue">— Coins</span></span></div></div></article>
+        <article class="home-player-card home-player-card-legend" id="homePlayerCard"><div class="home-player-portrait"><div class="home-player-avatar" id="homeAvatarRender" aria-label="Visual do aventureiro">⚔</div><span class="home-player-class-mark" id="homeClassMark">✦</span></div><div class="home-player-info"><small>REGISTRO DO AVENTUREIRO</small><h3 id="homePlayerName">Carregando perfil...</h3><div id="homePlayerTitle" class="home-player-title" hidden></div><p id="homePlayerLevel">Sua jornada está esperando.</p><div class="home-xp-track"><i id="homeXpBar"></i></div><div class="home-player-meta"><span id="homeXpText">XP: —</span><span id="homeCoinText"><span class="coin-symbol coin-symbol-mini" aria-hidden="true"></span><span id="homeCoinValue">— Coins</span></span></div><button type="button" class="home-profile-link" data-rpg="perfil">Abrir ficha completa <span>→</span></button></div><span class="home-player-seal" aria-hidden="true">⚜</span></article>
         <article class="home-daily-card"><span class="home-daily-icon">📜</span><div><small>CONSELHO DO MESTRE</small><h3>Um passo de cada vez.</h3><p>Complete atividades, enfrente desafios e conquiste recompensas para evoluir seu personagem.</p><button type="button" data-rpg="missions">Ver missões semanais →</button></div></article>
       </section>
       <div class="section-head home-section-head"><h3>Escolha seu próximo destino</h3><span>ATALHOS DA AVENTURA</span></div>
@@ -544,6 +545,29 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
         <button class="home-quick-card quick-atelier" type="button" data-rpg="atelier"><span>✨</span><b>Ateliê Arcano</b><small>Monte seu visual e equipe relíquias</small><i>Personalizar →</i></button>
       </section>
 
+      <section class="home-world-grid" aria-label="Painéis do reino">
+        <article class="home-world-panel home-ranking-panel">
+          <div class="home-world-heading"><div><small>HALL DA FAMA</small><h3>Heróis em destaque</h3></div><button type="button" data-adventure="ranking">Ver ranking →</button></div>
+          <div id="homeRankingPreview" class="home-ranking-preview"><div class="home-world-loading">Consultando os campeões...</div></div>
+        </article>
+        <article class="home-world-panel home-missions-panel">
+          <div class="home-world-heading"><div><small>CONTRATOS ATIVOS</small><h3>Missões da semana</h3></div><button type="button" data-adventure="missions">Ver missões →</button></div>
+          <div id="homeMissionPreview" class="home-mission-preview"><div class="home-world-loading">Preparando seus contratos...</div></div>
+        </article>
+      </section>
+      <section class="realm-map-panel" aria-label="Mapa do Reino">
+        <div class="realm-map-heading"><div><small>EXPLORE O MUNDO</small><h3>Mapa do Reino</h3><p>Escolha uma região e continue sua jornada.</p></div><span class="realm-map-compass">✥<small>N</small></span></div>
+        <div class="realm-map">
+          <div class="realm-map-path" aria-hidden="true"></div>
+          <button type="button" class="realm-location realm-location-library" data-page="inicio"><span>⌂</span><b>Biblioteca Real</b><small>Conhecimento e estudos</small></button>
+          <button type="button" class="realm-location realm-location-story" data-adventure="story"><span>⚔</span><b>Terras da Jornada</b><small>Campanha e exploração</small></button>
+          <button type="button" class="realm-location realm-location-arena" data-adventure="bosses"><span>🐉</span><b>Fortaleza dos Chefes</b><small>Desafios lendários</small></button>
+          <button type="button" class="realm-location realm-location-guild" data-adventure="guilds"><span>⚑</span><b>Vila das Guildas</b><small>Aliados e companheiros</small></button>
+          <button type="button" class="realm-location realm-location-market" data-rpg="market"><span>✧</span><b>Mercado Arcano</b><small>Tesouros e equipamentos</small></button>
+          <button type="button" class="realm-location realm-location-atelier" data-rpg="atelier"><span>✦</span><b>Ateliê Arcano</b><small>Forje seu visual</small></button>
+        </div>
+        <div class="realm-map-legend"><span><i></i> Região disponível</span><span>✦ Portais conectados à sua jornada</span></div>
+      </section>
       <div class="stats">
         <div class="stat"><small>Arquivos armazenados</small><strong id="totalFiles">0</strong></div>
         <div class="stat"><small>Disciplinas</small><strong>03</strong></div>
@@ -738,5 +762,5 @@ initialize().catch(error=>{console.error(error);toast('Falha ao iniciar. Confira
 <script type="module" src="./academia-xp.js?v=20261111-coin-fix"></script>
 <script type="module" src="./academia-adventure.js?v=20261111-news-center"></script>
 <script type="module" src="./academia-feedback.js?v=20261111-feedback"></script>
-<script type="module" src="./academia-home.js?v=20261111-coin-fix"></script>
+<script type="module" src="./academia-home.js?v=20261111-legendary-dashboard"></script>
 </body></html>
