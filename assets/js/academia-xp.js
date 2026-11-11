@@ -84,6 +84,15 @@ const MARKET_DEMO_ITEMS = [
   {id:'frame-silver',name:'Moldura Prateada',category:'frames',price:100,rarity:'Incomum',icon:'🛡️',description:'Um acabamento elegante para seu avatar.'},
   {id:'frame-royal',name:'Brasão Real',category:'frames',price:800,rarity:'Lendário',icon:'👑',description:'Uma moldura digna de uma lenda.'},
   {id:'bg-forest',name:'Floresta Encantada',category:'backgrounds',price:200,rarity:'Raro',icon:'🌲',description:'Uma paisagem envolta em mistério.'},
+  {id:'bg-celestial',name:'Observatório Celeste',category:'backgrounds',price:550,rarity:'Épico',icon:'🌌',description:'Um céu profundo, constelações e a luz de um astro distante.'},
+  {id:'bg-library',name:'Biblioteca Arcana',category:'backgrounds',price:350,rarity:'Raro',icon:'📚',description:'Arcos antigos, estantes encantadas e relíquias de conhecimento.'},
+  {id:'bg-frost',name:'Cidadela Glacial',category:'backgrounds',price:600,rarity:'Épico',icon:'❄️',description:'Montanhas de cristal sob o brilho da aurora boreal.'},
+  {id:'bg-volcano',name:'Forja Vulcânica',category:'backgrounds',price:500,rarity:'Épico',icon:'🌋',description:'Rios de lava iluminam uma terra forjada pelo fogo.'},
+  {id:'bg-emerald',name:'Ruínas Esmeralda',category:'backgrounds',price:400,rarity:'Raro',icon:'🌿',description:'Um templo esquecido tomado pela floresta e pela magia.'},
+  {id:'bg-royal',name:'Castelo Imperial',category:'backgrounds',price:850,rarity:'Lendário',icon:'🏰',description:'Uma fortaleza majestosa iluminada por ouro e tradição.'},
+  {id:'bg-abyss',name:'Abismo Oceânico',category:'backgrounds',price:750,rarity:'Lendário',icon:'🌊',description:'Ruínas submersas em águas profundas e misteriosas.'},
+  {id:'bg-cherry',name:'Jardim das Cerejeiras',category:'backgrounds',price:450,rarity:'Épico',icon:'🌸',description:'Um refúgio sereno entre pétalas e luz rosada.'},
+  {id:'bg-desert',name:'Templo do Deserto',category:'backgrounds',price:350,rarity:'Raro',icon:'🏜️',description:'Dunas ancestrais guardam os segredos de um reino perdido.'},
   {id:'badge-scholar',name:'Selo do Conhecimento',category:'badges',price:50,rarity:'Comum',icon:'🏅',description:'Celebre sua dedicação aos estudos.'}
 ];
 const MARKET_CATEGORIES = [
@@ -111,11 +120,12 @@ async function fetchAll() {
     sb.from('quiz_attempts').select('*').order('created_at', { ascending: false }).limit(200),
     sb.from('user_achievements').select('achievement_id'),
     sb.from('xp_events').select('id', { count: 'exact', head: true }).eq('source', 'daily'),
-    sb.from('coin_wallets').select('balance').maybeSingle()
+    sb.from('coin_wallets').select('balance').maybeSingle(),
+    sb.from('user_cosmetics').select('item_id').eq('equipped',true).like('item_id','bg-%').limit(1)
   ]);
   const bad = r.find(x => x.error); if (bad) throw bad.error;
   if (!r[0].data) throw new Error('Perfil não encontrado.');
-  S = { p: r[0].data, events: r[1].data, attempts: r[2].data, unlocked: new Set(r[3].data.map(x => x.achievement_id)), days: r[4].count || 0, wallet: Number(r[5].data?.balance || 0) };
+  S = { p: r[0].data, events: r[1].data, attempts: r[2].data, unlocked: new Set(r[3].data.map(x => x.achievement_id)), days: r[4].count || 0, wallet: Number(r[5].data?.balance || 0), background: r[6].data?.[0]?.item_id || null };
 }
 
 async function checkAch() { return []; }
@@ -202,8 +212,9 @@ function marketItemCard(item) {
   const owned=(M.inventory||[]).some(x=>x.item_id===item.id);
   const cat=MARKET_CATEGORIES.find(x=>x[0]===item.category)?.[1]||'Relíquia';
   const notice=M.notice?.id===item.id?'<div class="mk-buy-alert" role="alert"><b>Coins insuficientes</b><span>Este item custa '+item.price+' Coins. Você tem '+M.balance+' Coins e precisa de mais '+Math.max(0,item.price-M.balance)+'.</span></div>':'';
-  return `<article class="mk-item ${item.category==='guild'?'mk-item-guild':''}">
-    <div class="mk-art"><span class="mk-rarity">${esc(item.rarity)}</span><span class="mk-icon">${esc(item.icon)}</span></div>
+  const art=item.category==='backgrounds'?(window.AcademiaAvatar?.backgroundMarkup(item.id,'card')||'<span class="mk-icon">'+esc(item.icon)+'</span>'):'<span class="mk-icon">'+esc(item.icon)+'</span>';
+  return `<article class="mk-item ${item.category==='guild'?'mk-item-guild':''} ${item.category==='backgrounds'?'mk-item-background':''}">
+    <div class="mk-art ${item.category==='backgrounds'?'mk-art-background':''}">${art}<span class="mk-rarity">${esc(item.rarity)}</span></div>
     <div class="mk-itembody"><div class="mk-itemtitle"><div><h4>${esc(item.name)}</h4><small>${esc(cat)}</small></div><strong>${item.price} C</strong></div>
     <p>${esc(item.description)}</p>
     ${notice}
@@ -224,11 +235,14 @@ function renderMarket() {
   const title=inv.find(x=>x.equipped&&x.item.category==='titles')?.item;
   const nick=inv.find(x=>x.equipped&&x.item.category==='nick')?.item;
   const frame=inv.find(x=>x.equipped&&x.item.category==='frames')?.item;
-  const avatar=S?.p?.avatar||'🧙', name=S?.p?.adventurer_name||'Aventureiro';
+  const background=inv.find(x=>x.equipped&&x.item.category==='backgrounds')?.item;
+  const avatar=window.AcademiaAvatar?window.AcademiaAvatar.render(S?.p?.appearance||{},'profile',S?.p?.class||'mago'):esc(S?.p?.avatar||'🧙');
+  const backgroundMarkup=window.AcademiaAvatar?.backgroundMarkup(background?.id,'market')||'';
+  const name=S?.p?.adventurer_name||'Aventureiro';
   const catButtons=MARKET_CATEGORIES.map(([key,label])=>`<button class="mk-filter ${marketCategory===key?'active':''}" data-market-cat="${key}">${label}</button>`).join('');
   const inventoryHtml=inv.length?inv.map(x=>x.item.category==='guild'
     ? `<div class="mk-inv mk-inv-guild"><span>${esc(x.item.icon)}</span><div class="mk-inv-info"><b>${esc(x.item.name)}</b><small>Comprado · disponível na aba Guildas para o líder aplicar</small></div></div>`
-    : `<div class="mk-inv"><span>${esc(x.item.icon)}</span><div class="mk-inv-info"><b>${esc(x.item.name)}</b><small>${x.equipped?'Equipado':'Disponível'}</small></div><button data-market-act="equip" data-id="${esc(x.item.id)}" data-equipped="${x.equipped}">${x.equipped?'Desequipar':'Equipar'}</button></div>`).join(''):'<div class="mk-empty">Seu inventário ainda está vazio. Escolha um tesouro no catálogo.</div>';
+    : `<div class="mk-inv"><span>${esc(x.item.icon)}</span><div class="mk-inv-info"><b>${esc(x.item.name)}</b><small>${x.item.category==='backgrounds'?(x.equipped?'Aplicado à ficha do aventureiro':'Pronto para decorar sua ficha'):x.equipped?'Equipado':'Disponível'}</small></div><button data-market-act="equip" data-id="${esc(x.item.id)}" data-equipped="${x.equipped}">${x.equipped?'Desequipar':'Equipar'}</button></div>`).join(''):'<div class="mk-empty">Seu inventário ainda está vazio. Escolha um tesouro no catálogo.</div>';
   const history=M.transactions.length?M.transactions.slice(0,12).map(t=>`<div class="mk-history-row"><span>${esc(t.description)}</span><b class="${t.amount>0?'plus':'minus'}">${t.amount>0?'+':''}${t.amount} Coins</b></div>`).join(''):'<div class="mk-empty">Suas movimentações aparecerão aqui.</div>';
   el.innerHTML=`
     ${g?'<div class="rpg-note">Modo convidado: você pode conhecer os tesouros, mas precisa entrar com Google para ganhar, comprar e salvar Coins no seu perfil.</div>':''}
@@ -238,7 +252,7 @@ function renderMarket() {
     <div class="mk-toolbar"><h3>Catálogo de tesouros</h3><input class="search" id="marketSearch" value="${esc(marketQuery)}" placeholder="Buscar item..." aria-label="Buscar item"></div>
     <div class="mk-filters">${catButtons}</div><div class="mk-grid" id="marketCatalog">${filtered.map(marketItemCard).join('')||'<div class="mk-empty">Nenhum tesouro encontrado.</div>'}</div>
     <section class="panel mk-panel" id="marketInventory"><h3>Seu inventário</h3><div class="mk-inventory">${g?'<div class="mk-empty">Entre com Google para visualizar seu inventário pessoal.</div>':inventoryHtml}</div><small class="mk-note">Itens comprados ficam disponíveis para equipar e desequipar sem custo adicional.</small></section>
-    <section class="panel mk-panel"><h3>Prévia do perfil</h3><div class="mk-profile"><div class="mk-avatar ${frame?'has-frame':''}">${esc(avatar)}</div><div><h4>${esc(name)} ${nick?'<span class="mk-nick">✦ '+esc(nick.name)+'</span>':''}</h4><p>${esc(title?.name||'Aventureiro')} · Nível ${S?levelOf(S.p.total_xp):'—'}</p><small>Os cosméticos equipados serão exibidos no perfil do jogador.</small></div></div></section>
+    <section class="panel mk-panel"><h3>Prévia do perfil</h3><div class="mk-profile"><div class="mk-avatar ${frame?'has-frame':''} ${background?'has-background':''}">${backgroundMarkup}<div class="mk-avatar-character">${avatar}</div></div><div><h4>${esc(name)} ${nick?'<span class="mk-nick">✦ '+esc(nick.name)+'</span>':''}</h4><p>${esc(title?.name||'Aventureiro')} · Nível ${S?levelOf(S.p.total_xp):'—'}</p><small>Os cosméticos equipados serão exibidos no perfil do jogador.</small></div></div></section>
     <section class="panel mk-panel"><h3>Histórico de Coins</h3><div class="mk-history">${g?'<div class="mk-empty">O histórico fica salvo na conta Google.</div>':history}</div></section>
     <p class="mk-note">Coins são pontos virtuais do jogo. Não podem ser transferidas entre contas e não envolvem compras com dinheiro real. Chefes podem render até 2.000 Coins por vitória; a campanha também entrega grandes recompensas na primeira conclusão.</p>`;
 }
@@ -281,6 +295,10 @@ async function marketAction(button) {
     const notice=M?.notice||null;
     await loadMarket();
     M.notice=notice;
+    if(action==='equip'){
+      await fetchAll();
+      document.dispatchEvent(new CustomEvent('academia-background-changed',{detail:{background:S?.background||null}}));
+    }
     renderMarket();
   }catch(e){C().toast('Não foi possível concluir a ação: '+(e.message||e));button.disabled=false;}
 }
@@ -414,6 +432,7 @@ function renderPerfil() {
     : esc(S.p.avatar || '⚔');
   const nameMarkup = window.AcademiaAvatar?.nameMarkup(displayName, appearance) || esc(displayName);
   const titleMarkup = window.AcademiaAvatar?.titleMarkup(appearance, 'profile') || '';
+  const backgroundMarkup = window.AcademiaAvatar?.backgroundMarkup(S.background, 'profile') || '';
   const recentEvents = S.events.slice(0, 5).map(ev => {
     const when = new Date(ev.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
     return '<div class="pf-overview-row"><span>⚡</span><div><b>' + esc(ev.description || ev.source || 'Atividade concluída') + '</b><small>' + esc(when) + '</small></div><strong class="xp-plus">+' + fmt(ev.xp) + ' XP</strong></div>';
@@ -458,7 +477,7 @@ function renderPerfil() {
     ? '<button class="secondary" data-act="editchar">Editar nome e classe</button>'
     : '';
   el.innerHTML = editForm +
-    '<section class="pf-legend">' +
+    '<section class="pf-legend'+(S.background?' pf-legend-has-bg':'')+'">' + backgroundMarkup +
       '<div class="pf-legend-main"><div class="pf-legend-portrait">' + avatar + '</div>' +
         '<div class="pf-legend-info"><small class="pf-legend-kicker">FICHA LENDÁRIA DO AVENTUREIRO</small>' +
           '<h3>' + nameMarkup + '</h3><div class="pf-legend-title">' + titleMarkup + '</div>' +
