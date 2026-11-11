@@ -297,14 +297,9 @@
     // A máscara é a camada frontal da face e fica presa às bochechas, mesmo com elmo equipado.
     head+=maskArt;
 
-    if(accessory==='accessory-astral-core')
       front+='<circle cx="168" cy="152" r="22" fill="#55dfff" opacity=".26"/><path d="M168 129 L184 151 L168 175 L152 151Z" fill="#70eaff" stroke="#e1fdff" stroke-width="4"/><path d="M168 135 L168 169 M157 151 L179 151" stroke="#ffffff" stroke-width="2.5" opacity=".9"/><circle cx="168" cy="151" r="5" fill="#fff"/>';
 
 
-    if(accessory==='accessory-phoenix-core')front+='<circle cx="165" cy="150" r="25" fill="#ff743f" opacity=".22"/><path d="M165 124 L181 150 L165 177 L149 150Z" fill="#ff9b48" stroke="#ffe6a4" stroke-width="4"/><path d="M165 133 L165 168 M154 150 L176 150" stroke="#fff8d4" stroke-width="3"/><circle cx="165" cy="150" r="6" fill="#fff"><animate attributeName="opacity" values=".35;1;.35" dur="1s" repeatCount="indefinite"/></circle>';
-    if(accessory==='accessory-void-orb')front+='<circle cx="168" cy="151" r="23" fill="#9863e7" opacity=".22"/><circle cx="168" cy="151" r="15" fill="#59418b" stroke="#d5aaff" stroke-width="4"/><path d="M168 131 L178 151 L168 171 L158 151Z" fill="#b88aff"/><circle cx="163" cy="145" r="4" fill="#fff"/>';
-    if(accessory==='accessory-royal-sigil')front+='<path d="M100 150 L110 160 L100 180 L90 160Z" fill="#d9a943" stroke="#fff0b7" stroke-width="3"/><path d="M83 150 Q100 134 117 150 L113 164 L87 164Z" fill="#8c3b52" stroke="#f3ce7b" stroke-width="3"/><circle cx="100" cy="151" r="5" fill="#fff3b0"/>';
-    if(accessory==='accessory-thunder-circlet')front+='<ellipse cx="165" cy="153" rx="24" ry="17" fill="none" stroke="#55dfff" stroke-width="5" transform="rotate(-24 165 153)"><animate attributeName="opacity" values=".55;1;.55" dur="1.1s" repeatCount="indefinite"/></ellipse><path d="M165 130 L172 146 L184 151 L170 158 L166 175 L158 159 L146 153 L160 146Z" fill="#93efff" stroke="#fff" stroke-width="3"/>';
 
     // Acessórios de mão, relíquias e joias: peças separadas com acabamento próprio.
     const accessoryArtMap={
