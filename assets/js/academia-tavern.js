@@ -4,6 +4,9 @@
 
   const PAGE_SIZE = 45;
   const MAX_LENGTH = 400;
+  const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+  const ATTACHMENTS_BUCKET = 'chat-attachments';
+  const ALLOWED_IMAGE_TYPES = ['image/jpeg','image/png','image/webp'];
   // Selo visual reservado à conta proprietária do Academia RPG (Visage).
   const OWNER_USER_ID = '766d178a-ac9b-41ad-9806-e1cc7630635a';
   const $ = id => document.getElementById(id);
@@ -22,6 +25,8 @@
     presenceKey: null,
     online: [],
     sending: false,
+    selectedImage: null,
+    previewUrl: null,
     loading: false,
     loadingOlder: false,
     loadToken: 0,
@@ -156,7 +161,8 @@
             '<div class="tvn-feed-wrap"><div class="tvn-feed" id="tvnFeed" role="log" aria-live="polite" aria-relevant="additions text"><div class="tvn-feed-loading"><span class="tvn-spinner"></span><b>Acendendo as lanternas...</b><small>Preparando as conversas</small></div></div><button type="button" class="tvn-jump-bottom" id="tvnJumpBottom" hidden>↓ Novas mensagens</button></div>' +
             '<form class="tvn-composer" id="tvnComposer">' +
               '<div class="tvn-composer-top"><div class="tvn-emoji-row" aria-label="Emojis rápidos"><button type="button" data-tvn-emoji="✨" title="Adicionar ✨">✨</button><button type="button" data-tvn-emoji="⚔️" title="Adicionar ⚔️">⚔️</button><button type="button" data-tvn-emoji="😂" title="Adicionar 😂">😂</button><button type="button" data-tvn-emoji="❤️" title="Adicionar ❤️">❤️</button><button type="button" data-tvn-emoji="👀" title="Adicionar 👀">👀</button></div><span id="tvnCounter">0 / ' + MAX_LENGTH + '</span></div>' +
-              '<div class="tvn-compose-row"><textarea id="tvnMessageInput" maxlength="' + MAX_LENGTH + '" rows="1" placeholder="Escreva sua mensagem..." aria-label="Mensagem para a Taverna"></textarea><button type="submit" class="tvn-send" id="tvnSendButton"><span>Enviar</span><b>➤</b></button></div>' +
+              '<div class="tvn-compose-row"><button type="button" class="tvn-attach" data-tvn-attach aria-label="Anexar imagem" title="Anexar imagem">▧</button><textarea id="tvnMessageInput" maxlength="' + MAX_LENGTH + '" rows="1" placeholder="Escreva sua mensagem..." aria-label="Mensagem para a Taverna"></textarea><button type="submit" class="tvn-send" id="tvnSendButton"><span>Enviar</span><b>➤</b></button></div>' +
+              '<input type="file" id="tvnImageInput" accept="image/jpeg,image/png,image/webp" hidden><div class="tvn-image-preview" id="tvnImagePreview" hidden></div>' +
               '<div class="tvn-composer-hint"><span>Enter para enviar · Shift + Enter para pular linha</span><span>Seja respeitoso com os demais aventureiros.</span></div>' +
             '</form>' +
           '</section>' +
@@ -268,6 +274,92 @@
       .replace(/\n/g, '<br>');
   }
 
+
+  function imageExtension(file) {
+    return file.type === 'image/jpeg' ? '.jpg' : file.type === 'image/png' ? '.png' : file.type === 'image/webp' ? '.webp' : '';
+  }
+
+  async function validateImageFile(file) {
+    if (!file) throw new Error('Selecione uma imagem.');
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) throw new Error('Formato não permitido. Use JPG, PNG ou WEBP.');
+    if (file.size > MAX_IMAGE_BYTES) throw new Error('A imagem deve ter no máximo 5 MB.');
+    const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+    const jpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+    const png = bytes.length >= 8 && [137,80,78,71,13,10,26,10].every((value,index) => bytes[index] === value);
+    const webp = bytes.length >= 12 && String.fromCharCode(...bytes.slice(0,4)) === 'RIFF' && String.fromCharCode(...bytes.slice(8,12)) === 'WEBP';
+    if (!(file.type === 'image/jpeg' && jpeg || file.type === 'image/png' && png || file.type === 'image/webp' && webp)) {
+      throw new Error('O arquivo não corresponde a uma imagem JPG, PNG ou WEBP válida.');
+    }
+    return imageExtension(file);
+  }
+
+  function formatImageSize(bytes) {
+    return bytes >= 1024 * 1024 ? (bytes / (1024 * 1024)).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
+  }
+
+  function releaseSelectedImage() {
+    if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+    state.previewUrl = null;
+    state.selectedImage = null;
+    const input = $('tvnImageInput');
+    if (input) input.value = '';
+    const preview = $('tvnImagePreview');
+    if (preview) { preview.hidden = true; preview.innerHTML = ''; }
+    updateComposer();
+  }
+
+  async function chooseImage(file) {
+    if (!file) return;
+    try {
+      await validateImageFile(file);
+      releaseSelectedImage();
+      state.selectedImage = file;
+      state.previewUrl = URL.createObjectURL(file);
+      const preview = $('tvnImagePreview');
+      if (preview) {
+        preview.innerHTML = '<img src="' + state.previewUrl + '" alt="Pré-visualização da imagem"><span><b>' + escapeHtml(file.name) + '</b><small>' + formatImageSize(file.size) + ' · até 5 MB</small></span><button type="button" data-tvn-image-remove aria-label="Remover imagem anexada" title="Remover imagem">×</button>';
+        preview.hidden = false;
+      }
+      updateComposer();
+    } catch (error) {
+      toast(error.message || 'Não foi possível selecionar esta imagem.');
+    }
+  }
+
+  async function uploadChatImage(file, directory) {
+    const extension = await validateImageFile(file);
+    const path = directory + '/' + crypto.randomUUID() + extension;
+    const { error } = await state.client.storage.from(ATTACHMENTS_BUCKET).upload(path, file, {
+      cacheControl: '86400',
+      contentType: file.type,
+      upsert: false
+    });
+    if (error) throw error;
+    return path;
+  }
+
+  async function resolveMessageImages(messages) {
+    await Promise.all((messages || []).map(async message => {
+      if (!message.attachment_path || message.attachment_url || message.attachment_error) return;
+      try {
+        const { data, error } = await state.client.storage.from(ATTACHMENTS_BUCKET).createSignedUrl(message.attachment_path, 86400);
+        if (error || !data?.signedUrl) throw error || new Error('URL temporária indisponível.');
+        message.attachment_url = data.signedUrl;
+      } catch (error) {
+        message.attachment_error = true;
+        console.warn('Taverna · imagem anexada:', error.message);
+      }
+    }));
+  }
+
+  function imageMarkup(message) {
+    if (!message.attachment_path) return '';
+    if (message.attachment_url) {
+      return '<a class="tvn-message-image-link" href="' + escapeHtml(message.attachment_url) + '" target="_blank" rel="noopener noreferrer" aria-label="Abrir imagem em tamanho completo"><img class="tvn-message-image" src="' + escapeHtml(message.attachment_url) + '" alt="Imagem enviada por ' + escapeHtml(message.sender_name || 'Aventureiro') + '" loading="lazy" decoding="async"></a>';
+    }
+    return '<div class="tvn-message-image-status">' + (message.attachment_error ? 'Imagem indisponível para esta conta.' : 'Carregando imagem anexada...') + '</div>';
+  }
+
   function renderMessage(message) {
     const own = !!(state.user && message.user_id === state.user.id);
     const canDelete = own || state.teacher;
@@ -282,7 +374,7 @@
       '<div class="tvn-message-avatar">' + escapeHtml(message.sender_avatar || '🧙') + '</div>' +
       '<div class="tvn-message-main"><div class="tvn-message-meta"><b>' + name + '</b>' + ownerBadge + classLabel + '<time>' + formatTime(message.created_at) + '</time>' +
       (canDelete ? '<button type="button" class="tvn-message-delete" data-tvn-delete="' + escapeHtml(message.id) + '" title="Excluir mensagem" aria-label="Excluir mensagem">×</button>' : '') +
-      '</div><div class="tvn-message-bubble">' + formatMessage(message.content || '') + '</div></div></article>';
+      '</div>' + (message.content ? '<div class="tvn-message-bubble">' + formatMessage(message.content) + '</div>' : '') + imageMarkup(message) + '</div></article>';
   }
 
   function renderMessages(options) {
@@ -352,6 +444,9 @@
       state.hasMore = (data || []).length === PAGE_SIZE;
       state.unseen = 0;
       renderMessages({ toBottom: !!reset });
+      resolveMessageImages(state.messages.slice()).then(() => {
+        if (requestToken === state.loadToken && requestedChannel === currentChannelKey()) renderMessages();
+      });
     } catch (error) {
       if (requestToken !== state.loadToken || requestedChannel !== currentChannelKey()) return;
       console.error('Taverna · carregar mensagens:', error);
@@ -414,6 +509,10 @@
     state.messages.push(message);
     state.messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     renderMessages({ toBottom: nearBottom || message.user_id === (state.user && state.user.id) });
+    const channelAtReceive = currentChannelKey();
+    resolveMessageImages([message]).then(() => {
+      if (state.pageOpen && channelAtReceive === currentChannelKey() && state.messages.some(item => String(item.id) === String(message.id))) renderMessages();
+    });
     if (!nearBottom && message.user_id !== (state.user && state.user.id)) {
       state.unseen += 1;
       const jump = $('tvnJumpBottom');
@@ -443,7 +542,8 @@
     }
     const input = $('tvnMessageInput');
     const content = input ? input.value.trim() : '';
-    if (!content) return;
+    const file = state.selectedImage;
+    if (!content && !file) return;
     if (content.length > MAX_LENGTH) {
       toast('Sua mensagem passou do limite de ' + MAX_LENGTH + ' caracteres.');
       return;
@@ -451,11 +551,19 @@
 
     state.sending = true;
     updateComposer();
+    let uploadedPath = null;
     try {
+      if (file) {
+        const directory = state.active === 'global'
+          ? state.user.id + '/global/all'
+          : state.user.id + '/guild/' + state.guild.guild.id;
+        uploadedPath = await uploadChatImage(file, directory);
+      }
       const args = {
         p_channel_type: state.active,
         p_content: content,
-        p_guild_id: state.active === 'guild' ? state.guild.guild.id : null
+        p_guild_id: state.active === 'guild' ? state.guild.guild.id : null,
+        p_attachment_path: uploadedPath
       };
       const { data, error } = await state.client.rpc('send_tavern_message', args);
       if (error) throw error;
@@ -463,11 +571,18 @@
         state.messages.push(data);
         state.messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
         renderMessages({ toBottom: true });
+        resolveMessageImages([data]).then(() => {
+          if (state.pageOpen && state.messages.some(item => String(item.id) === String(data.id))) renderMessages();
+        });
       }
       input.value = '';
+      releaseSelectedImage();
       updateComposer();
       input.focus();
     } catch (error) {
+      if (uploadedPath) {
+        try { await state.client.storage.from(ATTACHMENTS_BUCKET).remove([uploadedPath]); } catch (_) {}
+      }
       toast(error.message || 'Não foi possível enviar sua mensagem.');
     } finally {
       state.sending = false;
@@ -502,7 +617,7 @@
     const counter = $('tvnCounter');
     const button = $('tvnSendButton');
     if (counter) counter.textContent = (input ? input.value.length : 0) + ' / ' + MAX_LENGTH;
-    if (button) button.disabled = state.sending || !input || !input.value.trim();
+    if (button) button.disabled = state.sending || !input || (!input.value.trim() && !state.selectedImage);
   }
 
   function insertEmoji(emoji) {
@@ -552,6 +667,7 @@
 
   function switchChannel(channel) {
     if (channel !== 'global' && channel !== 'guild') return;
+    if (channel !== state.active) releaseSelectedImage();
     state.active = channel;
     if (channel === 'guild' && !(state.guild && state.guild.guild)) {
       state.loadToken += 1;
@@ -594,6 +710,9 @@
     state.messages = [];
     state.hasMore = false;
     state.sending = false;
+    if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+    state.previewUrl = null;
+    state.selectedImage = null;
   }
 
   async function acceptUser(user) {
@@ -633,6 +752,17 @@
         switchChannel(tab.dataset.tvnTab);
         return;
       }
+      const attach = event.target.closest('[data-tvn-attach]');
+      if (attach) {
+        const picker = $('tvnImageInput');
+        if (picker) picker.click();
+        return;
+      }
+      const removeImage = event.target.closest('[data-tvn-image-remove]');
+      if (removeImage) {
+        releaseSelectedImage();
+        return;
+      }
       const emoji = event.target.closest('[data-tvn-emoji]');
       if (emoji) {
         insertEmoji(emoji.dataset.tvnEmoji);
@@ -668,6 +798,13 @@
 
     root.addEventListener('input', event => {
       if (event.target.id === 'tvnMessageInput') updateComposer();
+    });
+
+    root.addEventListener('change', event => {
+      if (event.target.id === 'tvnImageInput') {
+        const file = event.target.files && event.target.files[0];
+        chooseImage(file);
+      }
     });
 
     root.addEventListener('keydown', event => {
