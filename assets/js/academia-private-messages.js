@@ -437,7 +437,28 @@
     });
     document.addEventListener('change',event => {
       if (event.target?.id === 'tvnPrivateImageInput') chooseImage(event.target.files?.[0]);
-    });
+    },true);
+    document.addEventListener('dragover',event => {
+      if (!event.target.closest('#rpgView .tvn-private-chat-card') || !event.dataTransfer?.types?.includes('Files')) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      event.dataTransfer.dropEffect = 'copy';
+      $('tvnPrivateComposer')?.classList.add('is-dragging-image');
+    },true);
+    document.addEventListener('dragleave',event => {
+      const card = event.target.closest('#rpgView .tvn-private-chat-card');
+      if (!card) return;
+      if (!event.relatedTarget || !card.contains(event.relatedTarget)) $('tvnPrivateComposer')?.classList.remove('is-dragging-image');
+    },true);
+    document.addEventListener('drop',event => {
+      if (!event.target.closest('#rpgView .tvn-private-chat-card') || !event.dataTransfer?.files?.length) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      $('tvnPrivateComposer')?.classList.remove('is-dragging-image');
+      chooseImage(event.dataTransfer.files[0]);
+    },true);
   }
 
   function handleAuth(user) {
