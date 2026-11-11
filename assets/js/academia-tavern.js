@@ -17,6 +17,7 @@
     hasMore: false,
     messageChannel: null,
     presenceChannel: null,
+    presenceKey: null,
     online: [],
     sending: false,
     loading: false,
@@ -194,8 +195,9 @@
 
   function startPresence() {
     if (!state.client || !state.user || state.presenceChannel) return;
+    state.presenceKey = state.presenceKey || crypto.randomUUID();
     const channel = state.client.channel('tavern-presence', {
-      config: { presence: { key: state.user.id } }
+      config: { presence: { key: state.presenceKey } }
     });
     state.presenceChannel = channel;
     channel.on('presence', { event: 'sync' }, renderOnline);
@@ -203,8 +205,8 @@
       if (status === 'SUBSCRIBED') {
         try {
           await channel.track({
-            user_id: state.user.id,
             name: displayName(),
+            is_self: true,
             avatar: avatar(),
             online_at: new Date().toISOString()
           });
@@ -226,13 +228,13 @@
     const unique = new Map();
     Object.keys(presence).forEach(key => {
       (presence[key] || []).forEach(meta => {
-        const id = meta.user_id || key;
+        const id = key + ':' + String(meta.online_at || '');
         if (!unique.has(id)) unique.set(id, meta);
       });
     });
     state.online = Array.from(unique.values()).sort((a, b) => {
-      if (a.user_id === (state.user && state.user.id)) return -1;
-      if (b.user_id === (state.user && state.user.id)) return 1;
+      if (a.is_self) return -1;
+      if (b.is_self) return 1;
       return String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR');
     });
 
@@ -574,6 +576,7 @@
     if (state.client && state.presenceChannel) state.client.removeChannel(state.presenceChannel);
     state.messageChannel = null;
     state.presenceChannel = null;
+    state.presenceKey = null;
     state.user = null;
     state.profile = null;
     state.guild = null;
@@ -676,7 +679,11 @@
 
   document.addEventListener('click', event => {
     const button = event.target.closest('[data-tavern-open]');
-    if (button) openTavern();
+    if (button) {
+      openTavern();
+      return;
+    }
+    if (event.target.closest('.rpgnav button, .nav button')) state.pageOpen = false;
   });
 
   initialize();
