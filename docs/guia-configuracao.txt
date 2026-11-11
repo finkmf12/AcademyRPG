@@ -4,7 +4,7 @@ O pacote está preparado, mas precisa das credenciais do seu projeto Supabase e 
 
 1) SUPABASE
 - Crie um projeto em https://supabase.com/
-- Abra SQL Editor > New query. Cole todo o arquivo setup.sql e clique Run. Isso cria a tabela de arquivos, o bucket privado e as regras de acesso por usuário.
+- Abra SQL Editor > New query. Cole todo o arquivo database/setup.sql e clique Run. Isso cria a tabela de arquivos, o bucket privado e as regras de acesso por usuário.
 - Em Project Settings > API Keys (ou Settings > API), copie Project URL e Publishable key (ou a chave anon/public antiga).
 - Abra index.html num editor de texto. No começo do script, substitua COLE_AQUI_A_PROJECT_URL e COLE_AQUI_A_PUBLISHABLE_KEY pelos valores do seu projeto. Salve.
 - Use somente a Publishable/anon key no HTML. Nunca coloque service_role/secret key ou senha do banco no site.

@@ -57,7 +57,7 @@
 .login{
   isolation:isolate;
   background-color:#081322;
-  background-image:url('./biblioteca.jpg');
+  background-image:url('../../biblioteca.jpg');
   background-size:cover;
   background-position:center;
 }

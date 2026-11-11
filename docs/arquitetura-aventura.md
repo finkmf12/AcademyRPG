@@ -31,8 +31,8 @@ As tabelas internas possuem RLS habilitado e não concedem escrita direta ao cli
 
 ## Arquivos
 
-- `academia-adventure.js`: navegação, renderização e interação dos módulos.
-- `academia-adventure.css`: estilos da expansão.
+- `assets/js/academia-adventure.js`: navegação, renderização e interação dos módulos.
+- `assets/css/academia-adventure.css`: estilos da expansão.
 - `index.html`: inclusão do CSS e do módulo JS.
 - Banco Supabase: migrações `academy_adventure_suite` e `academy_adventure_query_and_index_fixes`, aplicadas em 10/11/2026.
 
