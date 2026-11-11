@@ -94,6 +94,18 @@ O projeto utiliza políticas de segurança no banco de dados e operações auten
 
 ## 🗺️ Estrutura do projeto
 
+```text
+AcademyRPG/
+├── index.html                 # Entrada principal (mantida na raiz para a Vercel)
+├── README.md                  # Apresentação do projeto
+├── assets/
+│   ├── css/                   # Folhas de estilo
+│   ├── js/                    # Módulos JavaScript
+│   └── ...                    # Imagens e recursos visuais
+├── database/                  # Scripts SQL do Supabase
+└── docs/                      # Guias e documentação técnica
+```
+
 - `index.html` — página principal da aplicação.
 - `academia-adventure.js` e `academia-adventure.css` — módulos e estilos da experiência de aventura.
 - `academia-xp.js` e `academia-xp.css` — sistema de experiência e progressão.
