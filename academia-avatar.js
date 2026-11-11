@@ -56,7 +56,8 @@
     let gearGlowColor='';
     if(hat==='helm-eclipse-crown'||outfit==='armor-solar-sovereign'||shoulders==='shoulders-celestial-titan')gearGlowColor='#ffd36b';
     if(hat==='helm-astral-dragon'||accessory==='accessory-astral-core')gearGlowColor='#73e5ff';
-    if(weapon==='weapon-red-plasma-saber')gearGlowColor='#ff293d';
+    const weaponGlowColors={'weapon-red-plasma-saber':'#ff293d','weapon-arcane-staff':'#8deaff','weapon-elderwood-staff':'#79e6a3','weapon-frost-wand':'#8feaff','weapon-phoenix-wand':'#ff754b','weapon-rune-sword':'#76eaff','weapon-ember-greatsword':'#ff9345','weapon-dragon-katana':'#ff6571','weapon-crystal-saber':'#78eaff','weapon-shadow-dagger':'#bd8aff','weapon-storm-spear':'#70dfff','weapon-celestial-hammer':'#ffe29b','weapon-void-scythe':'#b77aff'};
+    if(weaponGlowColors[weapon])gearGlowColor=weaponGlowColors[weapon];
     if(shoulders.startsWith('shoulders-')&&['shoulders-celestial-regent','shoulders-void-colossus','shoulders-sunforge'].includes(shoulders))gearGlowColor='#ffd45c';
     if(outfit==='armor-crystal-knight')gearGlowColor='#83eaff';
     if(outfit==='armor-storm-paladin')gearGlowColor='#a9d7ff';
@@ -355,7 +356,7 @@
       if(slot==='mask')head+='<path d="M78 101 L93 105 M107 105 L122 101" stroke="'+accent+'" stroke-width="3" stroke-linecap="round" opacity=".95"/>';
       if(slot==='shoulders')body+='<g fill="'+accent+'"><circle cx="31" cy="136" r="4"><animate attributeName="r" values="2;5;2" dur="1.5s" repeatCount="indefinite"/></circle><circle cx="169" cy="136" r="4"><animate attributeName="r" values="5;2;5" dur="1.5s" repeatCount="indefinite"/></circle></g>';
       if(slot==='cloak')back+='<path d="M100 132 L100 210" stroke="'+accent+'" stroke-width="2.5" stroke-dasharray="4 5" opacity=".8"/>';
-      if(slot==='accessory'&&!selectedId.startsWith('wings-'))front+='<circle cx="166" cy="142" r="8" fill="'+accent+'" stroke="#fff" stroke-opacity=".8" stroke-width="2"><animate attributeName="r" values="6;9;6" dur="1.8s" repeatCount="indefinite"/></circle>';
+      if(slot==='accessory'&&!selectedId.startsWith('wings-')&&!accessoryArtMap[selectedId])front+='<circle cx="166" cy="142" r="8" fill="'+accent+'" stroke="#fff" stroke-opacity=".8" stroke-width="2"><animate attributeName="r" values="6;9;6" dur="1.8s" repeatCount="indefinite"/></circle>';
     }
     const filterDefs=glowColor
       ? '<filter id="'+auraFilterId+'" x="-55%" y="-45%" width="210%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="8" result="softAlpha"/><feFlood flood-color="'+glowColor+'" flood-opacity=".96" result="auraTint"/><feComposite in="auraTint" in2="softAlpha" operator="in" result="coloredGlow"/><feGaussianBlur in="coloredGlow" stdDeviation="4" result="wideGlow"/><feMerge><feMergeNode in="wideGlow"/><feMergeNode in="coloredGlow"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
