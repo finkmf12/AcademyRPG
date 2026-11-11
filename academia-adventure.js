@@ -134,7 +134,7 @@
         '<button class="adv-btn adv-btn-disabled" disabled>Em andamento</button>';
       return `<article class="adv-mission"><div class="adv-card-top"><span class="adv-card-symbol">✦</span>${badge(m.claimed?'Concluída':done?'Pronta para resgate':'Em andamento',m.claimed?'good':done?'ready':'')}</div>
         <h4>${esc(m.title)}</h4><p>${esc(m.description)}</p><div class="adv-progress-label"><span>${n(m.progress)} / ${n(m.target)} · ${esc(kind(m.kind))}</span><b>${pct}%</b></div>
-        ${bar(m.progress,m.target)}<div class="adv-reward-line"><span>✧ ${n(m.xp_reward)} XP</span><span>🪙 ${n(m.coin_reward)} Coins</span></div>${action}</article>`;
+        ${bar(m.progress,m.target)}<div class="adv-reward-line"><span>✧ ${n(m.xp_reward)} XP</span><span><span class="coin-symbol" aria-hidden="true"></span> ${n(m.coin_reward)} Coins</span></div>${action}</article>`;
     }).join('');
     $('rpgView').innerHTML=`<section class="adv-hero"><div><div class="adv-kicker">CAPÍTULO DA SEMANA</div><h3>Pequenos feitos. Grandes lendas.</h3><p>As missões acompanham suas atividades reais. A conclusão e o resgate são conferidos pelo servidor e só podem ser feitos uma vez por semana.</p></div><div class="adv-hero-mark">✦</div></section>
       <div class="adv-section-head"><div><h3>Contratos disponíveis</h3><small>O quadro se renova toda segunda-feira.</small></div><button class="adv-btn adv-btn-soft" data-adv="retry">Atualizar</button></div>
@@ -169,7 +169,7 @@
         const tag=status==='cleared'?badge('Derrotado','good'):status==='available'?badge('Sua próxima batalha','ready'):badge('Bloqueado');
         const difficulty=['','Iniciante','Intermediário','Avançado','Lendário'][Number(e.difficulty)]||'';
         const btn=status==='available'?'<button class="adv-btn" data-adv="start-story" data-id="'+esc(e.id)+'">⚔ Enfrentar</button>':status==='cleared'?'<button class="adv-btn adv-btn-done" disabled>✓ Concluído</button>':'<button class="adv-btn adv-btn-disabled" disabled>🔒 Bloqueado</button>';
-        return '<article class="adv-story-node '+klass+(e.is_boss?' is-boss':'')+'">'+tag+storyArt(e)+'<div class="adv-story-node-copy"><small>ETAPA '+e.stage_order+(e.is_boss?' · CHEFE':' · MONSTRO')+'</small><h4>'+esc(e.name)+'</h4><p>'+esc(e.description)+'</p><div class="adv-story-meta"><span>'+difficulty+'</span><span>'+e.question_count+' questões</span><span>'+e.required_correct+' acertos para vencer</span></div><div class="adv-reward-line"><span>✧ '+n(e.xp_reward)+' XP</span><span>🪙 '+n(e.coin_reward)+' Coins</span></div>'+btn+'</div></article>';
+        return '<article class="adv-story-node '+klass+(e.is_boss?' is-boss':'')+'">'+tag+storyArt(e)+'<div class="adv-story-node-copy"><small>ETAPA '+e.stage_order+(e.is_boss?' · CHEFE':' · MONSTRO')+'</small><h4>'+esc(e.name)+'</h4><p>'+esc(e.description)+'</p><div class="adv-story-meta"><span>'+difficulty+'</span><span>'+e.question_count+' questões</span><span>'+e.required_correct+' acertos para vencer</span></div><div class="adv-reward-line"><span>✧ '+n(e.xp_reward)+' XP</span><span><span class="coin-symbol" aria-hidden="true"></span> '+n(e.coin_reward)+' Coins</span></div>'+btn+'</div></article>';
       }).join('');
       return '<section class="adv-story-chapter"><div class="adv-story-chapter-head"><div><small>REGIÃO '+chapter+'</small><h3>'+esc(name)+'</h3></div><span>'+rows.filter(x=>x.status==='cleared').length+' / '+rows.length+'</span></div><div class="adv-story-nodes">'+nodes+'</div></section>';
     }).join('');
@@ -223,7 +223,7 @@
   }
   function storyResult(r){
     const b=S.storyBattle,e=b.encounter;
-    if(r.won)return '<section class="adv-story-result victory"><div class="adv-story-result-mark">🏆</div><div class="adv-kicker">'+(r.campaign_complete?'FIM DA CAMPANHA':'VITÓRIA NA JORNADA')+'</div><h3>'+(r.campaign_complete?'O Dragão Primordial foi derrotado!':'Você derrotou '+esc(e.name)+'!')+'</h3><p>Você acertou '+n(r.correct)+' de '+n(r.total)+' questões e abriu o tesouro da batalha.</p><div class="adv-result-rewards"><b>✧ +'+n(r.xp_awarded)+' XP</b><b>🪙 +'+n(r.coins_awarded)+' Coins</b></div><button class="adv-btn" data-adv="story-continue">'+(r.campaign_complete?'Ver campanha concluída':'Avançar para a próxima etapa')+'</button></section>';
+    if(r.won)return '<section class="adv-story-result victory"><div class="adv-story-result-mark">🏆</div><div class="adv-kicker">'+(r.campaign_complete?'FIM DA CAMPANHA':'VITÓRIA NA JORNADA')+'</div><h3>'+(r.campaign_complete?'O Dragão Primordial foi derrotado!':'Você derrotou '+esc(e.name)+'!')+'</h3><p>Você acertou '+n(r.correct)+' de '+n(r.total)+' questões e abriu o tesouro da batalha.</p><div class="adv-result-rewards"><b>✧ +'+n(r.xp_awarded)+' XP</b><b><span class="coin-symbol" aria-hidden="true"></span> +'+n(r.coins_awarded)+' Coins</b></div><button class="adv-btn" data-adv="story-continue">'+(r.campaign_complete?'Ver campanha concluída':'Avançar para a próxima etapa')+'</button></section>';
     return '<section class="adv-story-result defeat"><div class="adv-story-result-mark">🛡️</div><div class="adv-kicker">FIM DO COMBATE</div><h3>'+esc(e.name)+' venceu desta vez.</h3><p>Você acertou '+n(r.correct)+' de '+n(r.total)+' questões. São necessários '+n(r.required)+' acertos para vencer.</p><p class="adv-muted">Revise o conteúdo e tente novamente. Seu progresso anterior permanece salvo.</p><button class="adv-btn" data-adv="story-retry">Tentar novamente</button><button class="adv-btn adv-btn-soft" data-adv="story-map">Voltar ao mapa</button></section>';
   }
 
@@ -234,7 +234,7 @@
       const icon={programacao:'⌘',banco:'▤',modelagem:'◇',geral:'✦'}[b.category]||'🐉';
       return `<article class="adv-boss-card ${b.defeated?'defeated':''}"><div class="adv-boss-art">${bossImage(b)}<small>${esc(cat(b.category))}</small></div>
         <div class="adv-boss-content">${badge(b.defeated?'Concluído hoje':'Desafio diário disponível',b.defeated?'good':'danger')}<h4>${esc(b.name)}</h4><p>${esc(b.description)}</p>
-        <div class="adv-boss-requirement">Vitória: <b>${n(b.min_correct)} acertos de 10</b></div><div class="adv-reward-line"><span>✧ ${n(b.xp_reward)} XP</span><span>🪙 ${n(b.coin_reward)} Coins</span></div>
+        <div class="adv-boss-requirement">Vitória: <b>${n(b.min_correct)} acertos de 10</b></div><div class="adv-reward-line"><span>✧ ${n(b.xp_reward)} XP</span><span><span class="coin-symbol" aria-hidden="true"></span> ${n(b.coin_reward)} Coins</span></div>
         <small class="adv-muted">${b.best_correct?`Melhor tentativa hoje: ${n(b.best_correct)}/10`:'Nenhuma tentativa hoje'}</small>
         <button class="adv-btn ${b.defeated?'adv-btn-disabled':''}" data-adv="start-boss" data-id="${esc(b.id)}" ${b.defeated?'disabled':''}>${b.defeated?'Vitória registrada':'Entrar na batalha'}</button></div></article>`;
     }).join('');
@@ -275,7 +275,7 @@
   }
   function bossResult(r){
     if(r.won)return `<div class="adv-battle-result victory"><div class="adv-result-icon">⚔</div><div class="adv-kicker">VITÓRIA NA ARENA</div><h3>O guardião foi derrotado!</h3><p>Você acertou ${n(r.correct)} das ${n(r.total)} questões e abriu o baú da batalha.</p>
-      ${r.rewarded?`<div class="adv-result-rewards"><b>✧ +${n(r.xp_awarded)} XP</b><b>🪙 +${n(r.coins_awarded)} Coins</b></div>`:'<p class="adv-muted">Você já resgatou a recompensa deste chefe hoje.</p>'}<button class="adv-btn" data-adv="back-bosses">Voltar à arena</button></div>`;
+      ${r.rewarded?`<div class="adv-result-rewards"><b>✧ +${n(r.xp_awarded)} XP</b><b><span class="coin-symbol" aria-hidden="true"></span> +${n(r.coins_awarded)} Coins</b></div>`:'<p class="adv-muted">Você já resgatou a recompensa deste chefe hoje.</p>'}<button class="adv-btn" data-adv="back-bosses">Voltar à arena</button></div>`;
     return `<div class="adv-battle-result defeat"><div class="adv-result-icon">🛡</div><div class="adv-kicker">FIM DA BATALHA</div><h3>O chefe ainda está de pé.</h3><p>Você acertou ${n(r.correct)} de ${n(r.total)} questões. São necessários ${n(r.required||S.battle?.boss?.min_correct||4)} acertos para vencer.</p><p class="adv-muted">Revise os conteúdos e volte mais forte. Nenhuma recompensa de chefe foi concedida nesta tentativa.</p><button class="adv-btn" data-adv="back-bosses">Voltar à arena</button></div>`;
   }
 
