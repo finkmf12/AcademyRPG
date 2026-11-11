@@ -343,15 +343,19 @@
     if(!c||c.guest||!c.user){S.guest=true;S.catalog=[];S.owned=[];return;}
     S.guest=false;S.error=null;
     const sb=c.supabase;
-    const synced=await sb.rpc('avatar_sync_achievement_rewards');
-    if(synced.error)throw synced.error;
+    // A sincronização de recompensas é complementar: se falhar, a loja e o inventário ainda devem abrir.
+    try{
+      const synced=await sb.rpc('avatar_sync_achievement_rewards');
+      if(synced.error)console.warn('Ateliê: sincronização de recompensas adiada:',synced.error.message);
+    }catch(syncError){console.warn('Ateliê: sincronização de recompensas indisponível:',syncError?.message||syncError);}
     const [catalog,owned,profile,wallet]=await Promise.all([
       sb.from('avatar_items').select('id,name,slot,rarity,icon,description,asset_key,unlock_type,price,achievement_id').eq('active',true).order('price'),
       sb.from('user_avatar_items').select('item_id,unlock_source,unlocked_at').order('unlocked_at',{ascending:false}),
       sb.from('player_profiles').select('appearance,class').maybeSingle(),
       sb.from('coin_wallets').select('balance').maybeSingle()
     ]);
-    const bad=[catalog,owned,profile,wallet].find(x=>x.error);if(bad)throw bad.error;
+    const failed=[['catálogo',catalog],['inventário',owned],['perfil',profile],['carteira',wallet]].find(([,x])=>x.error);
+    if(failed)throw new Error('Falha ao carregar '+failed[0]+': '+failed[1].error.message);
     const slotOrder=SLOTS.reduce((map,row,index)=>{map[row[0]]=index;return map;},{});
     S.catalog=(catalog.data||[]).sort((a,b)=>
       (slotOrder[a.slot]??99)-(slotOrder[b.slot]??99) ||
