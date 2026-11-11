@@ -293,3 +293,13 @@
 .arc-name-color-preview b{font:700 clamp(20px,3vw,30px) Georgia,serif}
 .arc-name-color-preview small{color:#aab8ca;font-size:9px;letter-spacing:1.2px}
 .xm-top b.arc-name-neon-cyan,.pf-info h3 .arc-name-neon-cyan,.adv-rank-name .arc-name-neon-cyan{color:#67f5ff}
+
+
+/* Símbolo universal de Coins: moeda em CSS, sem depender de fontes de emoji. */
+.coin-symbol{display:inline-grid;place-items:center;flex:0 0 auto;width:1.18em;height:1.18em;vertical-align:-.18em;margin:0 .16em 0 0;border:1.35px solid #ffe6a0;border-radius:50%;background:radial-gradient(circle at 34% 27%,#fff2bd 0%,#e5bd67 55%,#9c682e 100%);box-shadow:0 0 .42em rgba(235,190,96,.42),inset 0 1px 2px rgba(255,255,255,.72);color:#50340f;font-family:Georgia,serif;font-size:.84em;font-weight:900;line-height:1;}
+.coin-symbol:before{content:"C";font-size:.82em;line-height:1;transform:translateY(-.025em);}
+.coin-symbol-wallet{width:42px;height:42px;margin:0 auto 7px;border-width:2px;font-size:28px;}
+.arc-wallet>.coin-symbol-wallet-inline{width:30px;height:30px;margin:0;flex:0 0 30px;font-size:20px;}
+.coin-symbol-nav{width:1.25em;height:1.25em;margin:0;border-width:1px;font-size:14px;vertical-align:middle;}
+.coin-symbol-mini{width:1.08em;height:1.08em;margin:0 .24em 0 0;font-size:.82em;vertical-align:-.12em;}
+.mk-earned .coin-symbol{margin-right:.2em;}
