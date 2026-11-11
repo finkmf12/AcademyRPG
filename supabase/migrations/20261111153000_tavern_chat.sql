@@ -26,6 +26,9 @@ create index if not exists tavern_messages_guild_created_idx
   on public.tavern_messages (guild_id, created_at desc)
   where channel_type = 'guild';
 
+create index if not exists tavern_messages_user_created_idx
+  on public.tavern_messages (user_id, created_at desc);
+
 alter table public.guild_members enable row level security;
 drop policy if exists tavern_read_own_guild_membership on public.guild_members;
 create policy tavern_read_own_guild_membership
