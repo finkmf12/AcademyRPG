@@ -938,3 +938,30 @@
 .arc-pet-item-card .arc-item-visual{background:radial-gradient(ellipse at 70% 62%,rgba(121,205,255,.28),transparent 58%),linear-gradient(145deg,#26364a,#101827 82%)}
 .arc-pet-companion{filter:drop-shadow(0 0 5px rgba(160,220,255,.45));transform-origin:165px 190px}
 .arc-pet-item-card .arc-avatar{filter:drop-shadow(0 0 12px rgba(121,205,255,.32)) drop-shadow(0 10px 12px rgba(0,0,0,.55))}
+
+
+/* Cenários colecionáveis do Mercado Arcano */
+.arc-bg-scene{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;isolation:isolate;background:#101b2b}
+.arc-bg-scene svg{position:absolute;inset:-1%;width:102%;height:102%;display:block;opacity:.96;transform-origin:50% 62%;animation:arcBackgroundDrift 22s ease-in-out infinite alternate}
+.arc-bg-vignette{position:absolute;inset:0;display:block;background:linear-gradient(180deg,rgba(6,12,23,.08),transparent 38%,rgba(5,12,22,.62)),linear-gradient(90deg,rgba(5,12,22,.24),transparent 24%,transparent 76%,rgba(5,12,22,.24));box-shadow:inset 0 0 42px rgba(4,9,18,.34)}
+.arc-bg-scene:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,transparent 20%,rgba(4,10,19,.23) 100%);opacity:.8}
+.arc-scene-bg-forest{background:linear-gradient(180deg,#142b3b 0%,#174b53 52%,#071e27 100%)}
+.arc-scene-bg-celestial{background:linear-gradient(155deg,#090f2d 0%,#30245c 54%,#11172e 100%)}
+.arc-scene-bg-library{background:linear-gradient(145deg,#20152b 0%,#57364c 56%,#1b1a2c 100%)}
+.arc-scene-bg-frost{background:linear-gradient(155deg,#102e50 0%,#5b9dbc 54%,#163451 100%)}
+.arc-scene-bg-volcano{background:linear-gradient(155deg,#221626 0%,#71352e 54%,#1b1926 100%)}
+.arc-scene-bg-emerald{background:linear-gradient(155deg,#102f31 0%,#28765b 54%,#102a28 100%)}
+.arc-scene-bg-royal{background:linear-gradient(145deg,#21172a 0%,#674151 54%,#251b2b 100%)}
+.arc-scene-bg-abyss{background:linear-gradient(180deg,#071b36 0%,#0e5371 52%,#061b35 100%)}
+.arc-scene-bg-cherry{background:linear-gradient(145deg,#382342 0%,#a85f88 52%,#302239 100%)}
+.arc-scene-bg-desert{background:linear-gradient(155deg,#503346 0%,#d18a61 53%,#553340 100%)}
+.arc-stage{isolation:isolate}
+.arc-stage>.arc-bg-scene{z-index:0}
+.arc-stage-glow{z-index:1}
+.arc-stage>.arc-avatar{z-index:2}
+.arc-stage>.arc-title-plate,.arc-stage-caption{position:relative;z-index:3}
+.arc-stage:before{z-index:1}
+.arc-card-background{border-radius:0}
+.arc-card-background .arc-bg-vignette{background:linear-gradient(180deg,rgba(7,12,22,.16),rgba(5,10,18,.12) 45%,rgba(5,10,18,.48))}
+@keyframes arcBackgroundDrift{from{transform:scale(1) translateY(0)}to{transform:scale(1.045) translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){.arc-bg-scene svg{animation:none}}
