@@ -233,27 +233,27 @@
     const cards=(list||[]).map(b=>{
       const icon={programacao:'⌘',banco:'▤',modelagem:'◇',geral:'✦'}[b.category]||'🐉';
       return `<article class="adv-boss-card ${b.defeated?'defeated':''}"><div class="adv-boss-art">${bossImage(b)}<small>${esc(cat(b.category))}</small></div>
-        <div class="adv-boss-content">${badge(b.defeated?'Derrotado nesta semana':'Chefe disponível',b.defeated?'good':'danger')}<h4>${esc(b.name)}</h4><p>${esc(b.description)}</p>
-        <div class="adv-boss-requirement">Vitória: <b>${n(b.min_correct)} acertos de 6</b></div><div class="adv-reward-line"><span>✧ ${n(b.xp_reward)} XP</span><span>🪙 ${n(b.coin_reward)} Coins</span></div>
-        <small class="adv-muted">${b.best_correct?`Melhor tentativa: ${n(b.best_correct)}/6`:'Nenhuma tentativa nesta semana'}</small>
+        <div class="adv-boss-content">${badge(b.defeated?'Concluído hoje':'Desafio diário disponível',b.defeated?'good':'danger')}<h4>${esc(b.name)}</h4><p>${esc(b.description)}</p>
+        <div class="adv-boss-requirement">Vitória: <b>${n(b.min_correct)} acertos de 10</b></div><div class="adv-reward-line"><span>✧ ${n(b.xp_reward)} XP</span><span>🪙 ${n(b.coin_reward)} Coins</span></div>
+        <small class="adv-muted">${b.best_correct?`Melhor tentativa hoje: ${n(b.best_correct)}/10`:'Nenhuma tentativa hoje'}</small>
         <button class="adv-btn ${b.defeated?'adv-btn-disabled':''}" data-adv="start-boss" data-id="${esc(b.id)}" ${b.defeated?'disabled':''}>${b.defeated?'Vitória registrada':'Entrar na batalha'}</button></div></article>`;
     }).join('');
-    $('rpgView').innerHTML=`<section class="adv-hero adv-boss-hero"><div><div class="adv-kicker">PORTAIS DE COMBATE</div><h3>Seu conhecimento será posto à prova.</h3><p>Cada batalha usa seis questões sorteadas do banco seguro da Academia. Acerte o suficiente para vencer e receber o tesouro.</p></div><div class="adv-hero-mark">🐉</div></section>
+    $('rpgView').innerHTML=`<section class="adv-hero adv-boss-hero"><div><div class="adv-kicker">PORTAIS DE COMBATE</div><h3>Seu conhecimento será posto à prova.</h3><p>Cada desafio diário reúne dez questões avançadas da área do chefe. Você precisa acertar pelo menos oito para vencer. Cada chefe pode ser derrotado uma vez por dia.</p></div><div class="adv-hero-mark">🐉</div></section>
       <div class="adv-grid adv-boss-grid">${cards||'<div class="adv-panel adv-empty">Nenhum chefe ativo. O professor pode convocar novos desafios.</div>'}</div>
-      <p class="adv-footnote">Cada chefe concede recompensa uma vez por aventureiro a cada semana. Tentativas incompletas não dão prêmio.</p>`;
+      <p class="adv-footnote">Cada chefe concede recompensa uma vez por aventureiro por dia. As questões são sorteadas novamente a cada tentativa; somente a vitória libera o prêmio.</p>`;
   }
   async function startBoss(id){
-    if(S.busy)return;S.busy=true;$('rpgView').innerHTML=wait('Invocando o chefe e preparando seis questões...');
+    if(S.busy)return;S.busy=true;$('rpgView').innerHTML=wait('Invocando o chefe e preparando dez questões avançadas...');
     try{const d=await rpc('start_boss_battle',{p_boss_id:id});S.battle={id:d.session_id,boss:d.boss,questions:d.questions||[],index:0,correct:0,wrong:0,answered:false,result:null};await fight();}
     catch(e){$('rpgView').innerHTML=fail(e.message||'Não foi possível iniciar a batalha.');}
     finally{S.busy=false;}
   }
   function fight(){
     const b=S.battle;if(!b)return bosses();const boss=b.boss,done=!!b.result,q=b.questions[b.index];
-    const bossHp=Math.max(0,boss.min_correct-b.correct),heroHp=Math.max(0,3-b.wrong);
+    const bossHp=Math.max(0,boss.min_correct-b.correct),heroHp=Math.max(0,4-b.wrong);
     $('rpgView').innerHTML=`<section class="adv-fight-banner"><div class="adv-fight-title"><div class="adv-kicker">ARENA DE COMBATE</div><h3>${esc(boss.name)}</h3><p>${esc(boss.description)}</p></div><div class="adv-fight-portrait">${bossImage(boss,true)}</div></section>
       <section class="adv-fight-hud"><div class="adv-hp-card boss-hp"><div class="adv-hp-top"><b>🐉 Energia do chefe</b><strong>${n(bossHp)} / ${n(boss.min_correct)}</strong></div>${bar(boss.min_correct-bossHp,boss.min_correct)}<small>Cada acerto enfraquece o guardião.</small></div>
-      <div class="adv-hp-card hero-hp"><div class="adv-hp-top"><b>🛡 Sua resistência</b><strong>${n(heroHp)} / 3</strong></div>${bar(heroHp,3)}<small>Erros reduzem sua energia de combate.</small></div></section>
+      <div class="adv-hp-card hero-hp"><div class="adv-hp-top"><b>🛡 Sua resistência</b><strong>${n(heroHp)} / 4</strong></div>${bar(heroHp,4)}<small>Erros reduzem sua energia de combate.</small></div></section>
       ${done?bossResult(b.result):`<section class="adv-panel adv-question-panel"><div class="adv-question-top"><span>${esc(cat(boss.category))} · Enigma ${b.index+1} de ${b.questions.length}</span><button class="adv-link-btn" data-adv="leave-boss">Retornar à arena</button></div>
         ${bar(b.index,b.questions.length)}<h3>${esc(q.prompt)}</h3><div class="adv-answer-list">${q.options.map((o,i)=>`<button class="adv-answer ${b.answered&&b.selected===i?(b.lastCorrect?'correct':'incorrect'):''}" data-adv="answer-boss" data-index="${i}" ${b.answered?'disabled':''}><b>${'ABCD'[i]}</b><span>${esc(o)}</span></button>`).join('')}</div>
         <div id="advBattleFeedback">${b.answered?`<div class="adv-feedback ${b.lastCorrect?'correct':'incorrect'}">${b.lastCorrect?'Acerto confirmado!':'O chefe resistiu a este golpe.'} ${esc(b.explanation||'')}<button class="adv-btn" data-adv="next-boss">${b.index===b.questions.length-1?'Concluir batalha':'Próximo enigma'}</button></div>`:'<p class="adv-muted">Escolha uma alternativa. A resposta será conferida pelo servidor.</p>'}</div></section>`}`;
@@ -269,13 +269,13 @@
     const b=S.battle;if(!b||S.busy)return;S.busy=true;$('rpgView').innerHTML=wait('Registrando resultado e calculando recompensas...');
     try{await rpc('finish_quiz',{p_session:b.id});b.result=await rpc('finish_boss_battle',{p_session:b.id});fight();
       const r=b.result;if(r.rewarded)toast(`Vitória! +${n(r.xp_awarded)} XP e +${n(r.coins_awarded)} Coins.`);
-      else if(r.won)toast('Vitória registrada. A recompensa deste chefe já foi resgatada nesta semana.');else toast('O chefe resistiu. Treine e tente novamente!');
+      else if(r.won)toast('Vitória registrada. A recompensa deste chefe já foi resgatada hoje.');else toast('O chefe resistiu. Treine e tente novamente!');
     }catch(e){$('rpgView').innerHTML=`<div class="adv-panel adv-empty"><b>Não foi possível registrar o final da batalha.</b>${esc(e.message||'')}<button class="adv-btn" data-adv="finish-boss">Tentar registrar novamente</button></div>`;}
     finally{S.busy=false;}
   }
   function bossResult(r){
     if(r.won)return `<div class="adv-battle-result victory"><div class="adv-result-icon">⚔</div><div class="adv-kicker">VITÓRIA NA ARENA</div><h3>O guardião foi derrotado!</h3><p>Você acertou ${n(r.correct)} das ${n(r.total)} questões e abriu o baú da batalha.</p>
-      ${r.rewarded?`<div class="adv-result-rewards"><b>✧ +${n(r.xp_awarded)} XP</b><b>🪙 +${n(r.coins_awarded)} Coins</b></div>`:'<p class="adv-muted">Você já havia resgatado a recompensa deste chefe nesta semana.</p>'}<button class="adv-btn" data-adv="back-bosses">Voltar à arena</button></div>`;
+      ${r.rewarded?`<div class="adv-result-rewards"><b>✧ +${n(r.xp_awarded)} XP</b><b>🪙 +${n(r.coins_awarded)} Coins</b></div>`:'<p class="adv-muted">Você já resgatou a recompensa deste chefe hoje.</p>'}<button class="adv-btn" data-adv="back-bosses">Voltar à arena</button></div>`;
     return `<div class="adv-battle-result defeat"><div class="adv-result-icon">🛡</div><div class="adv-kicker">FIM DA BATALHA</div><h3>O chefe ainda está de pé.</h3><p>Você acertou ${n(r.correct)} de ${n(r.total)} questões. São necessários ${n(r.required||S.battle?.boss?.min_correct||4)} acertos para vencer.</p><p class="adv-muted">Revise os conteúdos e volte mais forte. Nenhuma recompensa de chefe foi concedida nesta tentativa.</p><button class="adv-btn" data-adv="back-bosses">Voltar à arena</button></div>`;
   }
 
