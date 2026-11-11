@@ -568,7 +568,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
         <div class="realm-map-heading"><div><small>EXPLORE O MUNDO</small><h3>Mapa do Reino</h3><p>Escolha uma região e continue sua jornada.</p></div><span class="realm-map-compass">✥<small>N</small></span></div>
         <div class="realm-map">
           <div class="realm-map-path" aria-hidden="true"></div>
-          <button type="button" class="realm-location realm-location-library" data-page="inicio"><span>⌂</span><b>Biblioteca Real</b><small>Conhecimento e estudos</small></button>
+          <button type="button" class="realm-location realm-location-library" data-page="programacao"><span>⌂</span><b>Biblioteca Real</b><small>Conhecimento e estudos</small></button>
           <button type="button" class="realm-location realm-location-story" data-adventure="story"><span>⚔</span><b>Terras da Jornada</b><small>Campanha e exploração</small></button>
           <button type="button" class="realm-location realm-location-arena" data-adventure="bosses"><span>🐉</span><b>Fortaleza dos Chefes</b><small>Desafios lendários</small></button>
           <button type="button" class="realm-location realm-location-guild" data-adventure="guilds"><span>⚑</span><b>Vila das Guildas</b><small>Aliados e companheiros</small></button>
@@ -755,6 +755,7 @@ $('googleLogin').addEventListener('click',async()=>{
 $('logoutBtn').addEventListener('click',async()=>{if(guestMode){guestMode=false;authUser=null;files=[];currentPage='inicio';showLogin();toast('Você saiu do modo convidado. Seus arquivos continuam salvos neste navegador.');return;}if(!supabase){showLogin();return;}const {error}=await supabase.auth.signOut();if(error)toast(`Erro ao sair: ${error.message}`);});
 $('chatgptLogin').addEventListener('click',()=>toast('O login com ChatGPT exige aprovação OAuth da OpenAI. Use o Google por enquanto.'));
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));
+ document.querySelector('.realm-map')?.addEventListener('click',e=>{const b=e.target.closest('.realm-location[data-page]');if(b)navigate(b.dataset.page);});
 document.querySelectorAll('[data-open]').forEach(c=>c.addEventListener('click',()=>navigate(c.dataset.open)));
 $('fileInput').addEventListener('change',e=>uploadFiles(e.target.files)); $('search').addEventListener('input',renderFiles);
 $('fileList').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.download)downloadFile(b.dataset.download);if(b.dataset.delete)deleteFile(b.dataset.delete);});
