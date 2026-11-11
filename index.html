@@ -103,6 +103,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 <link rel="stylesheet" href="./assets/css/academia-visual-refresh.css?v=20261111-vibrant-realm">
 <link rel="stylesheet" href="./assets/css/academia-achievements.css?v=20261111-book-v2">
 <link rel="stylesheet" href="./assets/css/academia-home-world.css?v=20261111-legendary-dashboard">
+<link rel="stylesheet" href="./assets/css/academia-epic-ui.css?v=20261111-profile-missions-notices">
 
 <style id="login-layout-fix">
 /* Ajuste definitivo do alinhamento da tela inicial */
@@ -593,6 +594,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
   </main>
 </div>
 <div class="toast" id="toast"></div>
+<div id="academiaNoticeStack" class="epic-notice-stack" aria-live="polite" aria-relevant="additions"></div>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 // Cole os dados do seu projeto Supabase nestas duas constantes.
@@ -761,6 +763,7 @@ initialize().catch(error=>{console.error(error);toast('Falha ao iniciar. Confira
 </script>
 <!-- O Ateliê deve ser registrado antes do módulo de XP, que consulta window.AcademiaAvatar. -->
 <script type="module" src="./assets/js/academia-avatar.js?v=20261111-aura-title-pet-v2"></script>
+<script type="module" src="./assets/js/academia-notifications.js?v=20261111-epic-notifications"></script>
 <script type="module" src="./assets/js/academia-xp.js?v=20261111-coin-fix"></script>
 <script type="module" src="./assets/js/academia-achievements.js?v=20261111-book-v2"></script>
 <script type="module" src="./assets/js/academia-adventure.js?v=20261111-news-center"></script>
