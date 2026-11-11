@@ -60,3 +60,7 @@
   #rpgView .tvn-private-chat-card .tvn-message-image-link{width:min(100%,300px)}
   #rpgView .tvn-private-chat-card .tvn-message-image{max-height:260px}
 }
+
+#rpgView .tvn-composer.is-dragging-image{
+  outline:2px dashed #d5b778;outline-offset:5px;background:rgba(206,172,109,.09);
+}
