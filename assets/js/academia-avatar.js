@@ -513,7 +513,14 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     {key:'freckles',label:'Sardas',opts:[['none','Nenhuma'],['light','Suaves'],['many','Marcadas']]},
     {key:'scar',label:'Cicatriz',opts:[['none','Nenhuma'],['leftCheek','Bochecha esquerda'],['rightCheek','Bochecha direita'],['eyebrow','Sobrancelha']]}
   ];
-  function normalizeCreator(source){const out=Object.assign({},CREATOR_DEFAULTS);Object.keys(out).forEach(k=>{if(typeof source?.[k]==='string')out[k]=source[k];});return out;}
+  function normalizeCreator(source){
+    const out=Object.assign({},CREATOR_DEFAULTS);
+    CREATOR_FIELDS.forEach(field=>{
+      const value=source?.[field.key];
+      if(field.opts.some(option=>option[0]===value))out[field.key]=value;
+    });
+    return out;
+  }
   function creatorField(field,draft){
     if(field.key==='beardColor'&&draft.facialHair==='none')return '';
     return '<div class="arc-creator-field"><b>'+esc(field.label)+'</b><div class="arc-creator-choices">'+field.opts.map(o=>'<button type="button" class="arc-creator-choice '+(draft[field.key]===o[0]?'active':'')+'" data-creator-field="'+field.key+'" data-creator-value="'+o[0]+'" aria-pressed="'+(draft[field.key]===o[0]?'true':'false')+'">'+(o[2]?'<i style="--swatch:'+o[2]+'"></i>':'')+esc(o[1])+'</button>').join('')+'</div></div>';
