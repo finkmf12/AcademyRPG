@@ -4,7 +4,7 @@
   'use strict';
   const C=()=>window.AcademiaCtx, $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const S={catalog:[],owned:[],appearance:{},background:null,balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
+  const S={catalog:[],owned:[],appearance:{},creatorDraft:null,background:null,balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
     ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
     ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],['weapon','Armas'],
@@ -48,6 +48,16 @@
     const id=slot=>a[slot]||'';
     const hair=id('hair'),hat=id('hat'),outfit=id('outfit'),shoulders=id('shoulders'),
       cloak=id('cloak'),mask=id('mask'),accessory=id('accessory'),weapon=id('weapon'),aura=id('aura'),pet=id('pet');
+    const gender=id('gender')||'masculine',skinTone=id('skinTone')||'light',faceShape=id('faceShape')||'oval',
+      hairstyle=id('hairstyle')||'short',hairChoice=id('hairColor')||'natural',
+      eyeColorKey=id('eyeColor')||'brown',eyeStyle=id('eyeStyle')||'natural',
+      facialHair=id('facialHair')||'none',beardChoice=id('beardColor')||'match',
+      eyebrowStyle=id('eyebrowStyle')||'natural',freckles=id('freckles')||'none',scar=id('scar')||'none';
+    const skinColor=({porcelain:'#f8e3d3',light:'#f0c69f',warm:'#dfa77f',tan:'#c88962',brown:'#a96f54',deep:'#70483e'})[skinTone]||'#f0c69f';
+    const hairColors={natural:({'hair-cocoa':'#55382f','hair-ember':'#b95f39','hair-silver':'#d5d8e1','hair-stargazer':'#536e9b'})[hair]||'#55382f',black:'#211d24',darkBrown:'#3d2926',brown:'#55382f',chestnut:'#8b4e35',blonde:'#e4c274',copper:'#b95f39',silver:'#d5d8e1',blue:'#536e9b',purple:'#8961b2',pink:'#c76f9c',white:'#f0eff8'};
+    const hairColor=hairColors[hairChoice]||hairColors.natural;
+    const hairStroke=({silver:'#737d91',white:'#8b8b9a',blue:'#2b4268',purple:'#4d356a',pink:'#733f61',blonde:'#936a35'})[hairChoice]||'#342b34';
+    const hairLight=({silver:'#fff',white:'#fff',blue:'#c6e4ff',purple:'#e1c8ff',pink:'#ffd0e7',blonde:'#fff0b9',copper:'#ffd08a'})[hairChoice]||'#9a7457';
     const auraColors={
       'aura-ember':'#ff873d','aura-celestial':'#8bdcff','aura-dedication':'#f5d98b',
       'aura-solar-ascendant':'#ffd04b','aura-void-emperor':'#bd78ff',
@@ -161,7 +171,7 @@
     // 2. Corpo e equipamento principal.
     // Pernas, botas e braços são a base anatômica; cada traje cria seu próprio peitoral.
     body+='<path d="M78 178 L75 207 Q87 220 99 211 L100 182 M122 178 L125 207 Q113 220 101 211 L100 182" fill="#34415a" stroke="#252c3c" stroke-width="4"/><path d="M69 204 Q84 199 99 207 L99 221 Q81 228 64 216Z M101 207 Q116 199 131 204 L136 216 Q119 228 101 221Z" fill="#493a35" stroke="#242332" stroke-width="4"/><path d="M72 215 L98 215 M102 215 L128 215" stroke="#d5b77b" stroke-width="3"/>';
-    body+='<path d="M70 125 Q48 132 39 169 L51 181 Q67 169 81 145 M130 125 Q152 132 161 169 L149 181 Q133 169 119 145" fill="none" stroke="'+p.dark+'" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><path d="M70 125 Q48 132 39 169 L51 181 Q67 169 81 145 M130 125 Q152 132 161 169 L149 181 Q133 169 119 145" fill="none" stroke="'+p.coat+'" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M43 166 Q53 160 62 168 L60 184 Q49 191 39 180Z M157 166 Q147 160 138 168 L140 184 Q151 191 161 180Z" fill="#efc69d" stroke="#30283a" stroke-width="3"/>';
+    body+='<path d="M70 125 Q48 132 39 169 L51 181 Q67 169 81 145 M130 125 Q152 132 161 169 L149 181 Q133 169 119 145" fill="none" stroke="'+p.dark+'" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><path d="M70 125 Q48 132 39 169 L51 181 Q67 169 81 145 M130 125 Q152 132 161 169 L149 181 Q133 169 119 145" fill="none" stroke="'+p.coat+'" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M43 166 Q53 160 62 168 L60 184 Q49 191 39 180Z M157 166 Q147 160 138 168 L140 184 Q151 191 161 180Z" fill="'+skinColor+'" stroke="#30283a" stroke-width="3"/>';
 
     const outfitArt={
       'outfit-scholar':'<path d="M73 124 Q100 112 127 124 L139 188 Q121 203 100 207 Q79 203 61 188Z" fill="#55718b" stroke="#293f57" stroke-width="5"/><path d="M73 127 L100 151 L127 127 L119 174 L100 194 L81 174Z" fill="#718ca4" stroke="#c5d6df" stroke-width="3"/><path d="M75 127 L88 139 L100 128 L112 139 L125 127" fill="none" stroke="#e6edf0" stroke-width="4"/><path d="M65 177 Q100 190 135 177 L137 190 Q100 207 63 190Z" fill="#344e66" stroke="#c5d6df" stroke-width="3"/><path d="M100 151 L100 181" stroke="#d8e4eb" stroke-width="3"/><circle cx="100" cy="166" r="6" fill="#d7bd7a" stroke="#f6e5b5" stroke-width="2"/>',
@@ -218,16 +228,60 @@
     };
     if(shoulderArt[shoulders])body+=shoulderArt[shoulders];
 
-// 3. Cabeça: cabelo por trás, rosto grande e depois franja/olhos.
-    head+='<path d="M62 77 Q48 56 60 39 Q73 17 100 20 Q128 17 140 39 Q152 57 138 79 L142 119 Q128 143 100 144 Q72 143 58 119Z" fill="#50372f" stroke="#342b34" stroke-width="4"/>';
-    head+='<ellipse cx="54" cy="86" rx="10" ry="14" fill="#efc59f" stroke="#473843" stroke-width="3"/><ellipse cx="146" cy="86" rx="10" ry="14" fill="#efc59f" stroke="#473843" stroke-width="3"/><ellipse cx="100" cy="82" rx="48" ry="56" fill="#f0c69f" stroke="#473843" stroke-width="4"/>';
-    let hairColor='#55382f',hairStroke='#342b34',hairLight='#9a7457';
-    if(hair==='hair-silver'){hairColor='#d5d8e1';hairStroke='#737d91';hairLight='#ffffff';}
-    if(hair==='hair-ember'){hairColor='#b95f39';hairStroke='#713b35';hairLight='#ffd08a';}
-    if(hair==='hair-stargazer'){hairColor='#536e9b';hairStroke='#2b4268';hairLight='#c6e4ff';}
-    head+='<path d="M53 83 Q46 25 100 22 Q154 25 147 83 L137 75 Q125 69 115 49 Q96 76 65 78Z" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="4"/><path d="M65 70 Q82 72 99 56 Q115 70 135 72" fill="none" stroke="'+hairLight+'" stroke-width="3.5" opacity=".72"/><path d="M61 82 Q55 105 65 118 M139 82 Q145 105 135 118" fill="none" stroke="'+hairColor+'" stroke-width="10" stroke-linecap="round"/>';
-    head+='<ellipse cx="81" cy="88" rx="6" ry="8" fill="#2a3044"/><ellipse cx="119" cy="88" rx="6" ry="8" fill="#2a3044"/><circle cx="83" cy="85" r="2" fill="#fff"/><circle cx="121" cy="85" r="2" fill="#fff"/><path d="M94 108 Q100 114 106 108" fill="none" stroke="#a75f5a" stroke-width="3" stroke-linecap="round"/><ellipse cx="70" cy="103" rx="8" ry="4" fill="#e9928b" opacity=".5"/><ellipse cx="130" cy="103" rx="8" ry="4" fill="#e9928b" opacity=".5"/>';
-    // Máscaras anatômicas: todas se prendem às têmporas e cobrem nariz/maçãs/queixo.
+// 3. Cabeça: anatomia em eixo fixo para manter elmos e máscaras perfeitamente encaixados.
+    const facePath=faceShape==='round'
+      ?'M100 27 C130 27 147 51 147 82 C147 116 128 140 100 142 C72 140 53 116 53 82 C53 51 70 27 100 27Z'
+      :faceShape==='angular'
+        ?'M100 27 C128 27 145 49 144 78 L138 111 Q132 133 100 143 Q68 133 62 111 L56 78 C55 49 72 27 100 27Z'
+        :gender==='feminine'
+          ?'M100 27 C125 27 143 49 143 80 C143 107 132 129 112 139 Q100 144 88 139 C68 129 57 107 57 80 C57 49 75 27 100 27Z'
+          :'M100 27 C128 27 145 49 145 79 C145 106 135 127 116 138 Q100 145 84 138 C65 127 55 106 55 79 C55 49 72 27 100 27Z';
+    head+='<path d="M62 77 Q48 56 60 39 Q73 17 100 20 Q128 17 140 39 Q152 57 138 79 L142 119 Q128 143 100 144 Q72 143 58 119Z" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="4"/>';
+    if(['long','wavy'].includes(hairstyle))head+='<path d="M58 62 Q43 87 52 130 Q56 151 70 142 L68 77 M142 62 Q157 87 148 130 Q144 151 130 142 L132 77" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="3"/>';
+    if(hairstyle==='bob')head+='<path d="M59 68 Q47 91 54 121 Q59 139 73 129 L69 78 M141 68 Q153 91 146 121 Q141 139 127 129 L131 78" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="4"/>';
+    if(hairstyle==='ponytail')head+='<path d="M136 44 Q166 38 166 74 Q166 109 147 128 Q138 122 145 100 Q153 75 133 63Z" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="4"/>';
+    if(hairstyle==='braid')head+='<path d="M140 55 Q157 72 151 102 Q147 121 153 138 Q148 151 137 144 Q130 136 139 119 Q143 100 132 82Z" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="3"/><path d="M141 92 L151 99 L141 107 L150 115 L140 123 L149 131 L140 139" fill="none" stroke="'+hairLight+'" stroke-width="3"/>';
+    head+='<ellipse cx="54" cy="86" rx="10" ry="14" fill="'+skinColor+'" stroke="#473843" stroke-width="3"/><ellipse cx="146" cy="86" rx="10" ry="14" fill="'+skinColor+'" stroke="#473843" stroke-width="3"/><path d="'+facePath+'" fill="'+skinColor+'" stroke="#473843" stroke-width="4" stroke-linejoin="round"/>';
+    if(hairstyle==='curly'){
+      head+='<g fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="2"><circle cx="59" cy="57" r="9"/><circle cx="68" cy="38" r="10"/><circle cx="84" cy="26" r="9"/><circle cx="101" cy="22" r="10"/><circle cx="119" cy="27" r="10"/><circle cx="135" cy="42" r="10"/><circle cx="143" cy="60" r="9"/></g>';
+    }else if(hairstyle==='shaved'){
+      head+='<path d="M56 78 Q55 31 100 27 Q145 31 144 78 L132 72 Q100 64 68 72Z" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="4"/>';
+      head+='<path d="M62 72 Q78 57 100 58 Q122 57 138 72" fill="none" stroke="'+hairLight+'" stroke-width="2" opacity=".65"/>';
+    }else{
+      const top=hairstyle==='wavy'
+        ?'M53 83 Q44 25 100 21 Q156 25 147 83 L138 77 Q126 67 116 49 Q98 74 65 79Z'
+        :'M53 83 Q46 25 100 22 Q154 25 147 83 L137 75 Q125 69 115 49 Q96 76 65 78Z';
+      head+='<path d="'+top+'" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="4"/>';
+    }
+    head+='<path d="M65 70 Q82 72 99 56 Q115 70 135 72" fill="none" stroke="'+hairLight+'" stroke-width="3.5" opacity=".72"/>';
+    if(hairstyle!=='shaved'&&hairstyle!=='curly')head+='<path d="M61 82 Q55 105 65 118 M139 82 Q145 105 135 118" fill="none" stroke="'+hairColor+'" stroke-width="10" stroke-linecap="round"/>';
+    const iris=({brown:'#2a3044',hazel:'#80613e',green:'#4c9a70',blue:'#4d83c4',gray:'#7d8799',violet:'#9465bd',amber:'#c58a38',red:'#a74350'})[eyeColorKey]||'#2a3044';
+    const eyes=eyeStyle==='almond'
+      ?'<path d="M73 88 Q81 78 89 88 Q81 97 73 88Z M111 88 Q119 78 127 88 Q119 97 111 88Z" fill="'+iris+'"/>'
+      :eyeStyle==='round'
+        ?'<ellipse cx="81" cy="88" rx="6.5" ry="8.5" fill="'+iris+'"/><ellipse cx="119" cy="88" rx="6.5" ry="8.5" fill="'+iris+'"/>'
+        :'<ellipse cx="81" cy="88" rx="6" ry="8" fill="'+iris+'"/><ellipse cx="119" cy="88" rx="6" ry="8" fill="'+iris+'"/>';
+    const brows=eyebrowStyle==='arched'
+      ?'<path d="M72 78 Q80 70 90 77 M110 77 Q120 70 128 78" fill="none" stroke="'+hairStroke+'" stroke-width="3.5" stroke-linecap="round"/>'
+      :eyebrowStyle==='straight'
+        ?'<path d="M73 77 L89 77 M111 77 L127 77" fill="none" stroke="'+hairStroke+'" stroke-width="3.2" stroke-linecap="round"/>'
+        :eyebrowStyle==='bold'
+          ?'<path d="M72 78 Q81 70 91 78 L89 82 Q80 77 73 82Z M109 78 Q119 70 128 78 L127 82 Q120 77 111 82Z" fill="'+hairStroke+'"/>'
+          :'<path d="M73 78 Q81 72 90 78 M110 78 Q119 72 127 78" fill="none" stroke="'+hairStroke+'" stroke-width="2.8" stroke-linecap="round"/>';
+    const beardColor=beardChoice==='match'?hairColor:(({black:'#241f22',darkBrown:'#382724',brown:'#55382f',chestnut:'#8b4e35',blonde:'#c69b55',copper:'#a94f31',silver:'#aeb6c4',blue:'#405e8c',purple:'#65477e',pink:'#a65379',white:'#d8dce7'})[beardChoice]||hairColor);
+    const beard={
+      none:'',
+      stubble:'<path d="M68 109 Q72 127 84 133 Q100 143 116 133 Q128 127 132 109" fill="none" stroke="'+beardColor+'" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 5" opacity=".7"/>',
+      mustache:'<path d="M88 105 Q94 99 100 104 Q106 99 112 105 Q108 110 100 108 Q92 110 88 105Z" fill="'+beardColor+'"/>',
+      goatee:'<path d="M88 105 Q94 99 100 104 Q106 99 112 105 Q108 110 100 108 Q92 110 88 105Z M91 118 Q100 122 109 118 L106 134 Q100 141 94 134Z" fill="'+beardColor+'"/>',
+      full:'<path d="M88 105 Q94 99 100 104 Q106 99 112 105 Q108 110 100 108 Q92 110 88 105Z M67 108 Q72 118 81 117 Q84 130 92 135 Q100 141 108 135 Q116 130 119 117 Q128 118 133 108 Q134 127 122 138 Q111 145 100 145 Q89 145 78 138 Q66 127 67 108Z" fill="'+beardColor+'" stroke="'+beardColor+'" stroke-width="2" stroke-linejoin="round"/>'
+    }[facialHair]||'';
+    head+=brows+eyes+'<circle cx="83" cy="85" r="2" fill="#fff"/><circle cx="121" cy="85" r="2" fill="#fff"/><path d="M94 108 Q100 114 106 108" fill="none" stroke="#a75f5a" stroke-width="3" stroke-linecap="round"/><ellipse cx="70" cy="103" rx="8" ry="4" fill="#e9928b" opacity=".5"/><ellipse cx="130" cy="103" rx="8" ry="4" fill="#e9928b" opacity=".5"/>'+beard;
+    if(freckles==='light'||freckles==='many')head+='<g fill="#8c5b45" opacity="'+(freckles==='many'?'.72':'.45')+'"><circle cx="72" cy="101" r="1.2"/><circle cx="78" cy="105" r="1.1"/><circle cx="85" cy="102" r="1"/><circle cx="115" cy="102" r="1"/><circle cx="122" cy="105" r="1.1"/><circle cx="128" cy="101" r="1.2"/></g>';
+    if(scar==='leftCheek')head+='<path d="M67 91 L76 105" stroke="#965b50" stroke-width="2.4" stroke-linecap="round"/>';
+    if(scar==='rightCheek')head+='<path d="M133 91 L124 105" stroke="#965b50" stroke-width="2.4" stroke-linecap="round"/>';
+    if(scar==='eyebrow')head+='<path d="M115 74 L123 82" stroke="#965b50" stroke-width="2.6" stroke-linecap="round"/>';
+        // Máscaras anatômicas: todas se prendem às têmporas e cobrem nariz/maçãs/queixo.
     // A linha dos olhos permanece livre; cada modelo possui recorte e volume próprios.
     const maskDesigns={
       'mask-flame':{base:'#8f382f',edge:'#ffd17a',detail:'<path d="M100 94 Q118 108 105 126 L100 132 L95 126 Q82 108 100 94Z" fill="#ffd17a" stroke="#fff0bd" stroke-width="2"/><path d="M78 108 Q88 101 95 110 M122 108 Q112 101 105 110" fill="none" stroke="#f6b46b" stroke-width="3"/>'},
@@ -441,6 +495,37 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       : '';
     return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+(auraColor?' has-luminous-aura':gearGlowColor?' has-premium-glow':'')+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 225" role="img" aria-label="Personagem medieval personalizado" style="'+svgStyle+'display:block;overflow:visible" focusable="false"><defs>'+filterDefs+'</defs><g class="arc-layer-back">'+back+'</g><g class="arc-character-glow"'+glowFilter+'><g class="arc-layer-body">'+body+'</g><g class="arc-layer-head">'+head+'</g><g class="arc-layer-front">'+front+'</g>'+vaderArt+'</g>'+petArt+weaponArt+'</svg>';
   }
+
+  const CREATOR_DEFAULTS={gender:'masculine',skinTone:'light',faceShape:'oval',hairstyle:'short',hairColor:'natural',eyeColor:'brown',eyeStyle:'natural',facialHair:'none',beardColor:'match',eyebrowStyle:'natural',freckles:'none',scar:'none'};
+  const CREATOR_FIELDS=[
+    {key:'gender',label:'Sexo',opts:[['masculine','Masculino'],['feminine','Feminino']]},
+    {key:'skinTone',label:'Tom de pele',opts:[['porcelain','Porcelana','#f8e3d3'],['light','Claro','#f0c69f'],['warm','Quente','#dfa77f'],['tan','Bronzeado','#c88962'],['brown','Castanho','#a96f54'],['deep','Retinto','#70483e']]},
+    {key:'faceShape',label:'Formato do rosto',opts:[['oval','Oval'],['round','Redondo'],['angular','Angular']]},
+    {key:'hairstyle',label:'Penteado',opts:[['short','Curto'],['long','Longo'],['bob','Chanel'],['curly','Cacheado'],['shaved','Raspado'],['ponytail','Rabo de cavalo'],['braid','Trança'],['wavy','Ondulado']]},
+    {key:'hairColor',label:'Cor do cabelo',opts:[['natural','Natural / equipamento','#8a654b'],['black','Preto','#211d24'],['darkBrown','Castanho escuro','#3d2926'],['brown','Castanho','#55382f'],['chestnut','Acaju','#8b4e35'],['blonde','Loiro','#e4c274'],['copper','Ruivo','#b95f39'],['silver','Prateado','#d5d8e1'],['blue','Azul','#536e9b'],['purple','Violeta','#8961b2'],['pink','Rosa','#c76f9c'],['white','Branco','#f0eff8']]},
+    {key:'eyeColor',label:'Cor dos olhos',opts:[['brown','Castanho','#2a3044'],['hazel','Mel','#80613e'],['green','Verde','#4c9a70'],['blue','Azul','#4d83c4'],['gray','Cinza','#7d8799'],['violet','Violeta','#9465bd'],['amber','Âmbar','#c58a38'],['red','Rubi','#a74350']]},
+    {key:'eyeStyle',label:'Formato dos olhos',opts:[['natural','Natural'],['almond','Amendoado'],['round','Arredondado']]},
+    {key:'eyebrowStyle',label:'Sobrancelhas',opts:[['natural','Naturais'],['arched','Arqueadas'],['straight','Retas'],['bold','Marcadas']]},
+    {key:'facialHair',label:'Barba e bigode',opts:[['none','Sem barba'],['stubble','Por fazer'],['mustache','Bigode'],['goatee','Cavanhaque'],['full','Barba cheia']]},
+    {key:'beardColor',label:'Cor da barba',opts:[['match','Combinar com cabelo','#8a654b'],['black','Preto','#241f22'],['darkBrown','Castanho escuro','#382724'],['brown','Castanho','#55382f'],['chestnut','Acaju','#8b4e35'],['blonde','Loiro','#c69b55'],['copper','Ruivo','#a94f31'],['silver','Prateado','#aeb6c4'],['blue','Azul','#405e8c'],['purple','Violeta','#65477e'],['pink','Rosa','#a65379'],['white','Branco','#d8dce7']]},
+    {key:'freckles',label:'Sardas',opts:[['none','Nenhuma'],['light','Suaves'],['many','Marcadas']]},
+    {key:'scar',label:'Cicatriz',opts:[['none','Nenhuma'],['leftCheek','Bochecha esquerda'],['rightCheek','Bochecha direita'],['eyebrow','Sobrancelha']]}
+  ];
+  function normalizeCreator(source){const out=Object.assign({},CREATOR_DEFAULTS);Object.keys(out).forEach(k=>{if(typeof source?.[k]==='string')out[k]=source[k];});return out;}
+  function creatorField(field,draft){
+    if(field.key==='beardColor'&&draft.facialHair==='none')return '';
+    return '<div class="arc-creator-field"><b>'+esc(field.label)+'</b><div class="arc-creator-choices">'+field.opts.map(o=>'<button type="button" class="arc-creator-choice '+(draft[field.key]===o[0]?'active':'')+'" data-creator-field="'+field.key+'" data-creator-value="'+o[0]+'" aria-pressed="'+(draft[field.key]===o[0]?'true':'false')+'">'+(o[2]?'<i style="--swatch:'+o[2]+'"></i>':'')+esc(o[1])+'</button>').join('')+'</div></div>';
+  }
+  function renderCreator(){
+    const root=$('rpgView');if(!root)return;
+    if(!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);
+    const current=Object.assign({},S.appearance||{},S.creatorDraft);
+    const fields=CREATOR_FIELDS.map(f=>creatorField(f,S.creatorDraft)).join('');
+    root.innerHTML='<section class="arc-creator-head"><div><span class="arc-eyebrow">PERSONALIZAÇÃO LIVRE</span><h3>Criador de Heróis</h3><p>Monte seu rosto do seu jeito. A prévia é imediata e seus equipamentos continuam intactos.</p></div><div class="arc-creator-actions"><button type="button" class="arc-button arc-button-soft" data-avatar-action="discard-appearance">Descartar</button><button type="button" class="arc-button" data-avatar-action="save-appearance" '+(S.busy?'disabled':'')+'>'+(S.busy?'Salvando...':'Salvar aparência')+'</button></div></section>'+
+    '<div class="arc-creator-layout"><aside class="arc-creator-preview"><div class="arc-creator-stage">'+backgroundMarkup(S.background,'stage')+'<div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'</div><b>Prévia do seu herói</b><small>As alterações aparecem aqui antes de salvar.</small><button type="button" class="arc-tab" data-avatar-tab="shop">← Voltar ao Ateliê Arcano</button></aside><div class="arc-creator-fields">'+fields+'</div></div>'+
+    '<p class="arc-footnote">Capacetes, elmos, armaduras, máscaras, asas, capas, armas, auras, pets e demais itens do Ateliê não são removidos nem alterados.</p>';
+  }
+
   const BACKGROUND_ART={
     'bg-forest':'<circle cx="610" cy="76" r="38" fill="#d9f3bf" opacity=".82"/><path d="M0 222 Q125 174 246 224 T500 218 T800 204 V320 H0Z" fill="#174b46"/><path d="M0 258 Q150 205 292 260 T565 246 T800 240 V320 H0Z" fill="#0d302f"/><g fill="#071d25"><path d="M0 320V190L44 118 88 190V320Z M64 320V166L112 84 160 166V320Z M132 320V204L174 130 216 204V320Z M578 320V190L622 105 666 190V320Z M646 320V164L696 78 746 164V320Z M720 320V206L760 142 800 206V320Z"/></g><g fill="#f4d98b"><circle cx="160" cy="112" r="3"/><circle cx="270" cy="154" r="2.5"/><circle cx="518" cy="130" r="3"/><circle cx="704" cy="204" r="2"/></g>',
     'bg-celestial':'<circle cx="610" cy="86" r="47" fill="#e8dcff" opacity=".82"/><circle cx="628" cy="72" r="47" fill="#302b5d"/><ellipse cx="610" cy="86" rx="106" ry="24" fill="none" stroke="#d4b7ff" stroke-width="4" opacity=".65" transform="rotate(-18 610 86)"/><g fill="#f5e9ff"><circle cx="92" cy="58" r="3"/><circle cx="188" cy="120" r="2"/><circle cx="310" cy="48" r="3"/><circle cx="438" cy="103" r="2.5"/><circle cx="720" cy="170" r="2.5"/><circle cx="550" cy="35" r="2"/></g><g stroke="#bba5ef" stroke-width="2" opacity=".55" fill="none"><path d="M92 58L188 120 310 48 438 103 550 35"/><path d="M0 250L120 180 236 248 370 180 500 246 660 174 800 235"/></g><path d="M0 286L110 236 205 274 320 220 430 272 558 224 680 270 800 226V320H0Z" fill="#211d48"/><path d="M0 305H800V320H0Z" fill="#10152f"/>',
@@ -529,6 +614,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     const root=$('rpgView');if(!root)return;
     if(S.guest){root.innerHTML='<section class="arc-hero"><div><div class="arc-eyebrow">ATELIÊ ARCANO</div><h3>Vista sua próxima aventura.</h3><p>Entre com sua conta Google para comprar itens, desbloquear recompensas e sincronizar seu personagem.</p></div>'+render({},'preview','mago')+'</section><div class="rpg-note">O modo convidado não acessa Coins nem inventário. Sua aparência será salva na conta conectada.</div>';return;}
     if(S.error){root.innerHTML='<div class="panel"><b>Não foi possível abrir o Ateliê Arcano.</b><p class="sub">'+esc(S.error)+'</p><button class="secondary" data-avatar-action="reload">Tentar novamente</button></div>';return;}
+    if(S.tab==='creator'){renderCreator();return;}
     if(!S.catalog.length){root.innerHTML='<div class="panel"><div class="empty">Carregando os visuais do Ateliê Arcano...</div></div>';return;}
     const current=getPreviewAppearance(),selected=item(S.previewId);
     const previewName=selected?'Prévia: '+selected.name:'Seu visual atual';
@@ -551,7 +637,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     const activeCategory=S.filter==='wings'?['wings','Asas']:SLOTS.find(x=>x[0]===S.filter);
     const categoryHeading=S.filter==='all'?'Todos os visuais':(activeCategory?.[1]||'Visuais');
     const categoryMeta=list.length+' '+(list.length===1?'item':'itens');
-    const tabs='<button class="arc-tab '+(S.tab==='shop'?'active':'')+'" data-avatar-tab="shop">Loja de visuais</button><button class="arc-tab '+(S.tab==='inventory'?'active':'')+'" data-avatar-tab="inventory">Meu inventário ('+S.owned.length+')</button>';
+    const tabs='<button class="arc-tab '+(S.tab==='shop'?'active':'')+'" data-avatar-tab="shop">Loja de visuais</button><button class="arc-tab '+(S.tab==='inventory'?'active':'')+'" data-avatar-tab="inventory">Meu inventário ('+S.owned.length+')</button><button class="arc-tab '+(S.tab==='creator'?'active':'')+'" data-avatar-tab="creator">Criador de Heróis</button>';
     const items=S.filter==='wings'?list.map(card).join(''):S.filter==='all'
       ? SLOTS.slice(1).map(([slot,label])=>{
           const group=slot==='wings'
@@ -570,7 +656,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
   async function open(){
     S.tab='shop';S.filter='all';S.previewId=null;S.error=null;
     renderAtelier();
-    try{await load();}catch(e){S.error=e.message||String(e);console.error('Ateliê Arcano:',e);}
+    try{await load();S.creatorDraft=normalizeCreator(S.appearance);}catch(e){S.error=e.message||String(e);console.error('Ateliê Arcano:',e);}
     if(document.querySelector('[data-rpg="atelier"].active'))renderAtelier();
   }
   async function action(button){
@@ -579,6 +665,20 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     if(act==='preview'){S.previewId=S.previewId===id?null:id;renderAtelier();return;}
     if(act==='cancel-preview'){S.previewId=null;renderAtelier();return;}
     if(act==='reload'){S.error=null;await open();return;}
+    if(act==='discard-appearance'){S.creatorDraft=normalizeCreator(S.appearance);renderCreator();return;}
+    if(act==='save-appearance'){
+      if(S.guest){toast('Entre com sua conta para salvar a aparência.');return;}
+      S.busy=true;renderCreator();
+      try{
+        const {data,error}=await C().supabase.rpc('save_player_appearance',{p_personalization:S.creatorDraft});
+        if(error)throw error;
+        if(!data||typeof data!=='object'||Array.isArray(data))throw new Error('O servidor não confirmou a aparência salva.');
+        S.appearance=data;S.creatorDraft=normalizeCreator(data);S.previewId=null;notifyAppearance();
+        toast('Aparência salva e sincronizada no seu perfil!');
+      }catch(e){toast('Não foi possível salvar: '+(e.message||e));}
+      finally{S.busy=false;renderCreator();}
+      return;
+    }
     if(act==='buy'||act==='equip'||act==='unequip'){
       if(S.guest){toast('Entre com Google para salvar seu personagem.');return;}
       S.busy=true;button.disabled=true;
@@ -604,9 +704,16 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
   const root=$('rpgView');
   if(root){
     root.addEventListener('click',e=>{
-      const b=e.target.closest('[data-avatar-action],[data-avatar-tab],[data-avatar-filter]');
+      const b=e.target.closest('[data-avatar-action],[data-avatar-tab],[data-avatar-filter],[data-creator-field]');
       if(!b)return;
-      if(b.dataset.avatarTab){S.tab=b.dataset.avatarTab;S.filter='all';S.previewId=null;renderAtelier();return;}
+      if(b.dataset.creatorField){
+        if(S.busy)return;
+        const field=CREATOR_FIELDS.find(x=>x.key===b.dataset.creatorField);
+        if(!field||!field.opts.some(x=>x[0]===b.dataset.creatorValue))return;
+        if(!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);
+        S.creatorDraft[field.key]=b.dataset.creatorValue;renderCreator();return;
+      }
+      if(b.dataset.avatarTab){S.tab=b.dataset.avatarTab;S.filter='all';S.previewId=null;if(S.tab==='creator'&&!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);renderAtelier();return;}
       if(b.dataset.avatarFilter){S.filter=b.dataset.avatarFilter;renderAtelier();return;}
       action(b).catch(e=>{console.error(e);toast('Não foi possível concluir esta ação.');});
     });
