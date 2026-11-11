@@ -213,6 +213,7 @@
   async function loadHistory() {
     if (!currentUserId || !client || loading) return;
     const userId = currentUserId;
+    const requestStartedAt = Date.now();
     loading = true;
     renderPanel();
     try {
@@ -223,13 +224,13 @@
       if (currentUserId !== userId) return;
       const merged = new Map();
       (data || []).forEach(item => merged.set(item.id, item));
-      records.filter(item => String(item.id).startsWith('local:')).forEach(item => merged.set(item.id, item));
+      records.filter(item => new Date(item.created_at).getTime() >= requestStartedAt - 250)
+        .forEach(item => merged.set(item.id, item));
       records = Array.from(merged.values());
       loadedUserId = userId;
       sortRecords();
     } catch (error) {
       console.warn('Não foi possível carregar as notificações:', error.message || error);
-      loadedUserId = userId;
     } finally {
       if (currentUserId === userId) {
         loading = false;
@@ -241,17 +242,29 @@
   async function persist(record) {
     if (!currentUserId || !client) return;
     const userId = currentUserId;
+    const storeClient = client;
     try {
-      const { data, error } = await client.from('user_notifications')
+      const { data, error } = await storeClient.from('user_notifications')
         .insert({
           type: record.type, title: record.title,
           message: record.message, icon: record.icon
         }).select(fields).single();
       if (error) throw error;
+      if (record.cancelled) {
+        await storeClient.from('user_notifications').delete().eq('id', data.id).eq('user_id', userId);
+        return;
+      }
+      let saved = data;
+      if (record.read_at && !data.read_at) {
+        const updated = await storeClient.from('user_notifications')
+          .update({ read_at: record.read_at }).eq('id', data.id).eq('user_id', userId)
+          .select(fields).single();
+        if (!updated.error && updated.data) saved = updated.data;
+      }
       if (currentUserId !== userId) return;
       const index = records.findIndex(item => item.id === record.id);
-      if (index >= 0) records[index] = data;
-      else if (!records.some(item => item.id === data.id)) records.unshift(data);
+      if (index >= 0) records[index] = saved;
+      else if (!records.some(item => item.id === saved.id)) records.unshift(saved);
       sortRecords();
       renderPanel();
     } catch (error) {
@@ -316,10 +329,13 @@
   async function clearHistory() {
     if (!records.length) return;
     if (!window.confirm('Deseja apagar todo o histórico de notificações desta conta?')) return;
+    records.forEach(item => { item.cancelled = true; });
     if (currentUserId && client) {
       const { error } = await client.from('user_notifications')
         .delete().eq('user_id', currentUserId);
       if (error) {
+        records.forEach(item => { item.cancelled = false; });
+        renderPanel();
         window.AcademiaCtx?.toast?.('Não foi possível limpar o histórico.');
         return;
       }
