@@ -965,3 +965,7 @@
 .arc-card-background .arc-bg-vignette{background:linear-gradient(180deg,rgba(7,12,22,.16),rgba(5,10,18,.12) 45%,rgba(5,10,18,.48))}
 @keyframes arcBackgroundDrift{from{transform:scale(1) translateY(0)}to{transform:scale(1.045) translateY(-2px)}}
 @media(prefers-reduced-motion:reduce){.arc-bg-scene svg{animation:none}}
+
+/* Suporte a usuários que preferem movimento reduzido nos equipamentos animados. */
+@media (prefers-reduced-motion: reduce){.arc-avatar animate,.arc-avatar animateTransform{display:none!important}}
+/* epic-armor-wings-v1 */
