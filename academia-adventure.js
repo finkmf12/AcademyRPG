@@ -199,10 +199,22 @@
     finally{S.busy=false;}
   }
   async function finishStory(){
-    const b=S.storyBattle;if(!b||S.busy)return;S.busy=true;$('rpgView').innerHTML=wait('Avaliando o resultado da batalha...');
-    try{b.result=await rpc('finish_story_battle',{p_session:b.id});storyFight();const r=b.result;if(r.won)toast('Vitória! +'+n(r.xp_awarded)+' XP e +'+n(r.coins_awarded)+' Coins.');else toast('A criatura resistiu. Você pode tentar novamente!');}
-    catch(e){$('rpgView').innerHTML=fail(e.message||'Não foi possível registrar o combate.');}
-    finally{S.busy=false;}
+    const b=S.storyBattle;if(!b||S.busy)return;
+    if(!b.answered||b.index!==b.questions.length-1){toast('Responda todas as questões antes de concluir.');return;}
+    S.busy=true;$('rpgView').innerHTML=wait('Calculando sua vitória ou derrota...');
+    let timeoutId;
+    try{
+      const result=await Promise.race([
+        rpc('finish_story_battle',{p_session:b.id}),
+        new Promise((_,reject)=>{timeoutId=setTimeout(()=>reject(new Error('A avaliação está demorando mais que o esperado. Tente registrar novamente; sua tentativa não será duplicada.')),18000);})
+      ]);
+      b.result=result;
+      $('rpgView').innerHTML=storyResult(result);
+      if(result.won)toast('Vitória! +'+n(result.xp_awarded)+' XP e +'+n(result.coins_awarded)+' Coins.');
+      else toast('A criatura resistiu. Você pode tentar novamente!');
+    }catch(e){
+      $('rpgView').innerHTML='<section class="adv-panel adv-empty"><b>Não foi possível concluir a avaliação.</b><p>'+esc(e.message||'Falha ao registrar o resultado.')+'</p><button class="adv-btn" data-adv="finish-story">Tentar registrar novamente</button><button class="adv-btn adv-btn-soft" data-adv="story-map">Voltar ao mapa</button></section>';
+    }finally{clearTimeout(timeoutId);S.busy=false;}
   }
   function storyResult(r){
     const b=S.storyBattle,e=b.encounter;
@@ -371,6 +383,7 @@
     if(a==='answer-story')return answerStory(Number(b.dataset.index));
     if(a==='retry-story-answer'){S.storyBattle.answered=false;return storyFight();}
     if(a==='next-story'){if(S.storyBattle.index===S.storyBattle.questions.length-1)return finishStory();S.storyBattle.index++;S.storyBattle.answered=false;return storyFight();}
+    if(a==='finish-story')return finishStory();
     if(a==='story-continue'||a==='story-map'){S.storyBattle=null;return story();}
     if(a==='story-retry'){const id=S.storyBattle.encounter.id;S.storyBattle=null;return startStory(id);}
     if(a==='leave-story'){S.storyBattle=null;return story();}
