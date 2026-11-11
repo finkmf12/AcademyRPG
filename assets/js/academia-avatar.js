@@ -54,10 +54,12 @@
       facialHair=id('facialHair')||'none',beardChoice=id('beardColor')||'match',
       eyebrowStyle=id('eyebrowStyle')||'natural',freckles=id('freckles')||'none',scar=id('scar')||'none';
     const skinColor=({porcelain:'#f8e3d3',light:'#f0c69f',warm:'#dfa77f',tan:'#c88962',brown:'#a96f54',deep:'#70483e'})[skinTone]||'#f0c69f';
-    const hairColors={natural:({'hair-cocoa':'#55382f','hair-ember':'#b95f39','hair-silver':'#d5d8e1','hair-stargazer':'#536e9b'})[hair]||'#55382f',black:'#211d24',darkBrown:'#3d2926',brown:'#55382f',chestnut:'#8b4e35',blonde:'#e4c274',copper:'#b95f39',silver:'#d5d8e1',blue:'#536e9b',purple:'#8961b2',pink:'#c76f9c',white:'#f0eff8'};
-    const hairColor=hairColors[hairChoice]||hairColors.natural;
-    const hairStroke=({silver:'#737d91',white:'#8b8b9a',blue:'#2b4268',purple:'#4d356a',pink:'#733f61',blonde:'#936a35'})[hairChoice]||'#342b34';
-    const hairLight=({silver:'#fff',white:'#fff',blue:'#c6e4ff',purple:'#e1c8ff',pink:'#ffd0e7',blonde:'#fff0b9',copper:'#ffd08a'})[hairChoice]||'#9a7457';
+    const equippedHairKey=({'hair-cocoa':'brown','hair-ember':'copper','hair-silver':'silver','hair-stargazer':'blue'})[hair]||'brown';
+    const effectiveHairChoice=hairChoice==='natural'?equippedHairKey:hairChoice;
+    const hairColors={black:'#211d24',darkBrown:'#3d2926',brown:'#55382f',chestnut:'#8b4e35',blonde:'#e4c274',copper:'#b95f39',silver:'#d5d8e1',blue:'#536e9b',purple:'#8961b2',pink:'#c76f9c',white:'#f0eff8'};
+    const hairColor=hairColors[effectiveHairChoice]||hairColors.brown;
+    const hairStroke=({silver:'#737d91',white:'#8b8b9a',blue:'#2b4268',purple:'#4d356a',pink:'#733f61',blonde:'#936a35'})[effectiveHairChoice]||'#342b34';
+    const hairLight=({silver:'#fff',white:'#fff',blue:'#c6e4ff',purple:'#e1c8ff',pink:'#ffd0e7',blonde:'#fff0b9',copper:'#ffd08a'})[effectiveHairChoice]||'#9a7457';
     const auraColors={
       'aura-ember':'#ff873d','aura-celestial':'#8bdcff','aura-dedication':'#f5d98b',
       'aura-solar-ascendant':'#ffd04b','aura-void-emperor':'#bd78ff',
