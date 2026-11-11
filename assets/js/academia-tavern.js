@@ -208,6 +208,7 @@
         try {
           await channel.track({
             name: displayName(),
+            user_id: state.user.id,
             is_self: true,
             avatar: avatar(),
             online_at: new Date().toISOString()
