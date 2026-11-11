@@ -322,6 +322,8 @@
       }
       updateComposer();
     } catch (error) {
+      const picker = $('tvnImageInput');
+      if (picker) picker.value = '';
       toast(error.message || 'Não foi possível selecionar esta imagem.');
     }
   }
