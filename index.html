@@ -514,6 +514,9 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
       <button type="button" data-rpg="market"><span class="ico"><span class="coin-symbol coin-symbol-nav" aria-hidden="true"></span></span> Mercado Arcano</button>
     </nav>
 
+    <div class="nav-label nav-label-community">COMUNIDADE</div>
+    <nav class="rpgnav rpgnav-community" aria-label="Notícias da Academia"></nav>
+
     <div class="nav-label nav-label-adventure">AVENTURA</div>
     <nav class="rpgnav rpgnav-adventure" aria-label="Aventura e comunidade"></nav>
     <div class="xpmini" id="xpMini" data-rpg="perfil"></div>
@@ -539,10 +542,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
         <button class="home-quick-card quick-market" type="button" data-rpg="market"><span><span class="coin-symbol coin-symbol-nav" aria-hidden="true"></span></span><b>Mercado Arcano</b><small>Use Coins para personalizar seu herói</small><i>Ver tesouros →</i></button>
         <button class="home-quick-card quick-atelier" type="button" data-rpg="atelier"><span>✨</span><b>Ateliê Arcano</b><small>Monte seu visual e equipe relíquias</small><i>Personalizar →</i></button>
       </section>
-      <section class="home-news">
-        <div class="home-news-heading"><div><small>NOTÍCIAS DO REINO</small><h3>Mural da Academia</h3></div><span class="home-news-seal">✦</span></div>
-        <div class="home-news-grid"><article><span>📯</span><div><b>Novas jornadas aguardam</b><p>Visite o Modo História para continuar sua campanha e descobrir os desafios seguintes.</p></div><em>AVENTURA</em></article><article><span>🏆</span><div><b>Treine para subir no ranking</b><p>Responda aos quizzes, acumule experiência e conquiste seu lugar entre os campeões.</p></div><em>TREINAMENTO</em></article><article><span>🤝</span><div><b>Fortaleça sua guilda</b><p>Convide seus amigos, compartilhe estratégias e evoluam juntos.</p></div><em>COMUNIDADE</em></article></div>
-      </section>
+
       <div class="stats">
         <div class="stat"><small>Arquivos armazenados</small><strong id="totalFiles">0</strong></div>
         <div class="stat"><small>Disciplinas</small><strong>03</strong></div>
@@ -733,9 +733,9 @@ window.AcademiaCtx={get supabase(){return supabase},get user(){return authUser},
 initialize().catch(error=>{console.error(error);toast('Falha ao iniciar. Confira a configuração do Supabase.');});
 </script>
 <!-- O Ateliê deve ser registrado antes do módulo de XP, que consulta window.AcademiaAvatar. -->
-<script type="module" src="./academia-avatar.js?v=20261111-coin-wings-fix"></script>
+<script type="module" src="./academia-avatar.js?v=20261111-aura-news-update"></script>
 <script type="module" src="./academia-xp.js?v=20261111-coin-fix"></script>
-<script type="module" src="./academia-adventure.js?v=20261111-coin-fix"></script>
+<script type="module" src="./academia-adventure.js?v=20261111-news-center"></script>
 <script type="module" src="./academia-feedback.js?v=20261111-feedback"></script>
 <script type="module" src="./academia-home.js?v=20261111-coin-fix"></script>
 </body></html>
