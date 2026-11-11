@@ -560,6 +560,13 @@ $('rpgView').addEventListener('input',e=>{
   }
 });
 document.addEventListener('click', e => { const b = e.target.closest('[data-rpg]'); if (b) openRpg(b.dataset.rpg); });
+document.addEventListener('academia-avatar-changed',e=>{
+  if(S?.p&&e.detail?.appearance){
+    S.p.appearance=e.detail.appearance;
+    mini();
+    if(isOpen&&view==='perfil')renderPerfil();
+  }
+});
 // Ao clicar em qualquer item do menu/cards antigos, esta área é escondida e o site funciona como antes.
 document.querySelectorAll('.nav button,[data-open]').forEach(b => b.addEventListener('click', closeRpg));
 
