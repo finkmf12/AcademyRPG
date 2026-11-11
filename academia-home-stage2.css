@@ -1,0 +1,60 @@
+/* Academia RPG · Dashboard da segunda etapa */
+.app .realm-hero{position:relative;isolation:isolate;overflow:hidden;min-height:260px;margin:0 0 20px;padding:34px clamp(22px,4vw,42px);display:flex;align-items:center;border:1px solid #665b82;border-radius:18px;background:radial-gradient(ellipse at 76% 58%,rgba(94,86,157,.32),transparent 38%),linear-gradient(105deg,rgba(8,20,34,.98) 0%,rgba(16,29,49,.94) 48%,rgba(29,28,57,.76) 100%);box-shadow:0 18px 45px #03091455,inset 0 0 35px #7d76c018}
+.app .realm-hero:before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,#091522 0%,#0b1726d9 43%,#111a2b66 100%),radial-gradient(ellipse at 80% 100%,#397b6a33,transparent 55%);pointer-events:none}
+.app .realm-hero:after{content:"";position:absolute;z-index:-1;inset:0;opacity:.55;background:linear-gradient(180deg,transparent 55%,#07111d 100%),repeating-linear-gradient(90deg,transparent 0 42px,#9cc9e808 43px 44px);pointer-events:none}
+.app .realm-hero-content{max-width:650px;position:relative;z-index:2}
+.app .realm-eyebrow,.app .home-news-heading>div>small{font-size:9px;letter-spacing:2.5px;font-weight:800;color:#c5b0f0}
+.app .realm-hero h3{margin:13px 0 9px;font:clamp(27px,3.3vw,40px)/1.13 Georgia,serif;color:#f0e5ff;text-shadow:0 3px 16px #000}
+.app .realm-hero p{max-width:510px;margin:0;color:#c0c9dc;font-size:13px;line-height:1.65}
+.app .realm-hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:22px}
+.app .realm-hero-actions button{border:1px solid #c4a56c;border-radius:8px;padding:11px 16px;background:linear-gradient(135deg,#e4c47e,#a77a43);color:#1d170d;font-weight:850;font-size:12px;box-shadow:0 5px 18px #0005}
+.app .realm-hero-actions button span{font-size:17px;margin-left:10px}
+.app .realm-online{font-size:10px;color:#aab9c9;letter-spacing:.3px}
+.app .realm-online i{display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:50%;background:#70d6a1;box-shadow:0 0 10px #70d6a1}
+.app .realm-hero-rune{position:absolute;right:9%;top:50%;transform:translateY(-50%);width:190px;height:190px;display:grid;place-items:center;border:1px solid #c5a9ed44;border-radius:50%;color:#d6c0ff55;font-size:145px;text-shadow:0 0 40px #a98aff55;box-shadow:0 0 0 16px #b9a2e809,0 0 0 34px #b9a2e806,0 0 65px #a98aff20;animation:realmRuneFloat 7s ease-in-out infinite}
+@keyframes realmRuneFloat{0%,100%{transform:translateY(-50%) rotate(-8deg)}50%{transform:translateY(calc(-50% - 8px)) rotate(8deg)}}
+.app .home-player-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:14px;margin:0 0 28px}
+.app .home-player-card,.app .home-daily-card{min-width:0;display:flex;align-items:center;gap:17px;padding:18px 20px;border:1px solid #46546b;border-radius:13px;background:linear-gradient(125deg,#17263a,#111b2b);box-shadow:inset 0 0 25px #a6c7ff08}
+.app .home-player-avatar{width:74px;height:74px;flex:none;display:grid;place-items:center;border:1px solid #c4a56c;border-radius:15px;background:radial-gradient(circle,#544575,#1b263a 72%);font-size:37px;box-shadow:0 0 22px #b99a5a22}
+.app .home-player-info{flex:1;min-width:0}
+.app .home-player-info>small,.app .home-daily-card small{font-size:9px;letter-spacing:1.8px;color:#c6a86f;font-weight:800}
+.app .home-player-info h3,.app .home-daily-card h3{margin:5px 0 3px;font:20px Georgia,serif;color:#f0e5ce;overflow-wrap:anywhere}
+.app .home-player-info p,.app .home-daily-card p{margin:0;color:#aab8ca;font-size:11px;line-height:1.5}
+.app .home-xp-track{height:7px;margin:12px 0 7px;border:1px solid #35445b;border-radius:9px;background:#0a1320;overflow:hidden}
+.app .home-xp-track i{display:block;width:0;height:100%;border-radius:9px;background:linear-gradient(90deg,#7e6bb4,#e5c17a);transition:width .7s}
+.app .home-player-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#c4cde0;font-size:10px}
+.app .home-player-meta span:last-child{color:#f0cf8d}
+.app .home-daily-card{align-items:flex-start;background:linear-gradient(125deg,#25243b,#171e30);border-color:#655681}
+.app .home-daily-icon{font-size:30px;filter:drop-shadow(0 0 10px #d9b96c66)}
+.app .home-daily-card>div{min-width:0}
+.app .home-daily-card h3{font-size:17px}
+.app .home-daily-card p{margin:5px 0 10px}
+.app .home-daily-card button{border:0;background:none;padding:0;color:#d8c0ff;font-size:10px;font-weight:800}
+.app .home-section-head{margin:27px 0 13px}
+.app .home-section-head>span{font-size:9px;letter-spacing:1.8px;color:#7f91aa}
+.app .home-quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:27px}
+.app .home-quick-card{position:relative;min-height:145px;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;padding:16px;border:1px solid #35465e;border-radius:12px;background:linear-gradient(145deg,#1a2b40,#111b2a);color:#e7edf7;transition:transform .18s,border-color .18s,box-shadow .18s}
+.app .home-quick-card:after{content:"";position:absolute;width:90px;height:90px;right:-35px;top:-35px;border-radius:50%;background:#9b8bd51a;box-shadow:0 0 35px #9b8bd51a}
+.app .home-quick-card:hover{transform:translateY(-3px);border-color:#9b83c3;box-shadow:0 10px 24px #03091466}
+.app .home-quick-card>span{font-size:25px;margin-bottom:5px;filter:drop-shadow(0 0 8px #c5a9ed55)}
+.app .home-quick-card b{font:17px Georgia,serif}
+.app .home-quick-card small{color:#aab8ca;font-size:10px;line-height:1.4}
+.app .home-quick-card i{margin-top:auto;padding-top:9px;color:#d8bd82;font-size:9px;font-style:normal;font-weight:850;letter-spacing:.4px}
+.app .quick-boss{background:linear-gradient(145deg,#38232e,#171b2a);border-color:#704553}
+.app .quick-guild{background:linear-gradient(145deg,#202b43,#131c2b)}
+.app .quick-market{background:linear-gradient(145deg,#3a3021,#1a202d);border-color:#6a583a}
+.app .quick-atelier{background:linear-gradient(145deg,#302544,#171d2c);border-color:#655181}
+.app .home-news{padding:19px;border:1px solid #3b4960;border-radius:14px;background:linear-gradient(130deg,#111c2b,#171c2d);margin:0 0 22px}
+.app .home-news-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.app .home-news-heading h3{margin:5px 0 0;font:22px Georgia,serif;color:#e8ddc7}
+.app .home-news-seal{width:38px;height:38px;display:grid;place-items:center;border:1px solid #8c754d;border-radius:50%;color:#e5c37e;font-size:20px;box-shadow:0 0 15px #d8ae6220}
+.app .home-news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.app .home-news-grid article{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid #293b51;border-radius:9px;background:#0d1725}
+.app .home-news-grid article>span{font-size:20px}
+.app .home-news-grid article b{display:block;color:#e1d5c2;font-size:11px}
+.app .home-news-grid article p{margin:5px 0 0;color:#91a1b5;font-size:10px;line-height:1.5}
+.app .home-news-grid article em{display:none}
+@media(max-width:1000px){.app .home-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app .realm-hero-rune{right:4%;opacity:.55}}
+@media(max-width:760px){.app .home-player-grid{grid-template-columns:1fr}.app .home-news-grid{grid-template-columns:1fr}.app .realm-hero{min-height:235px;padding:25px 21px}.app .realm-hero-rune{right:-45px;width:150px;height:150px;font-size:110px;opacity:.25}.app .realm-hero-content{max-width:100%}}
+@media(max-width:480px){.app .home-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.app .home-quick-card{min-height:145px;padding:12px}.app .home-quick-card b{font-size:15px}.app .home-player-card,.app .home-daily-card{padding:14px;gap:12px}.app .home-player-avatar{width:58px;height:58px;font-size:29px}.app .home-news{padding:14px}.app .realm-hero h3{font-size:27px}.app .realm-hero-actions{gap:12px}}
+@media(prefers-reduced-motion:reduce){.app .realm-hero-rune,.app .home-quick-card{animation:none;transition:none}}
