@@ -4,7 +4,7 @@
   'use strict';
   const C=()=>window.AcademiaCtx, $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const S={catalog:[],owned:[],appearance:{},balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
+  const S={catalog:[],owned:[],appearance:{},background:null,balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
     ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
     ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],['weapon','Armas'],
@@ -410,11 +410,29 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       : '';
     return '<svg class="arc-avatar arc-avatar-'+esc(variant||'default')+(auraColor?' has-luminous-aura':gearGlowColor?' has-premium-glow':'')+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 225" role="img" aria-label="Personagem medieval personalizado" style="'+svgStyle+'display:block;overflow:visible" focusable="false"><defs>'+filterDefs+'</defs><g class="arc-layer-back">'+back+'</g><g class="arc-character-glow"'+glowFilter+'><g class="arc-layer-body">'+body+'</g><g class="arc-layer-head">'+head+'</g><g class="arc-layer-front">'+front+'</g>'+vaderArt+'</g>'+petArt+weaponArt+'</svg>';
   }
+  const BACKGROUND_ART={
+    'bg-forest':'<circle cx="610" cy="76" r="38" fill="#d9f3bf" opacity=".82"/><path d="M0 222 Q125 174 246 224 T500 218 T800 204 V320 H0Z" fill="#174b46"/><path d="M0 258 Q150 205 292 260 T565 246 T800 240 V320 H0Z" fill="#0d302f"/><g fill="#071d25"><path d="M0 320V190L44 118 88 190V320Z M64 320V166L112 84 160 166V320Z M132 320V204L174 130 216 204V320Z M578 320V190L622 105 666 190V320Z M646 320V164L696 78 746 164V320Z M720 320V206L760 142 800 206V320Z"/></g><g fill="#f4d98b"><circle cx="160" cy="112" r="3"/><circle cx="270" cy="154" r="2.5"/><circle cx="518" cy="130" r="3"/><circle cx="704" cy="204" r="2"/></g>',
+    'bg-celestial':'<circle cx="610" cy="86" r="47" fill="#e8dcff" opacity=".82"/><circle cx="628" cy="72" r="47" fill="#302b5d"/><ellipse cx="610" cy="86" rx="106" ry="24" fill="none" stroke="#d4b7ff" stroke-width="4" opacity=".65" transform="rotate(-18 610 86)"/><g fill="#f5e9ff"><circle cx="92" cy="58" r="3"/><circle cx="188" cy="120" r="2"/><circle cx="310" cy="48" r="3"/><circle cx="438" cy="103" r="2.5"/><circle cx="720" cy="170" r="2.5"/><circle cx="550" cy="35" r="2"/></g><g stroke="#bba5ef" stroke-width="2" opacity=".55" fill="none"><path d="M92 58L188 120 310 48 438 103 550 35"/><path d="M0 250L120 180 236 248 370 180 500 246 660 174 800 235"/></g><path d="M0 286L110 236 205 274 320 220 430 272 558 224 680 270 800 226V320H0Z" fill="#211d48"/><path d="M0 305H800V320H0Z" fill="#10152f"/>',
+    'bg-library':'<path d="M130 320V110Q130 22 220 22H580Q670 22 670 110V320Z" fill="#4a2f4c" opacity=".68" stroke="#d6a96e" stroke-width="8"/><path d="M180 320V122Q180 70 230 70H570Q620 70 620 122V320Z" fill="#201c35" stroke="#a77c58" stroke-width="5"/><path d="M220 320V145H580V320Z" fill="#35243b"/><g stroke="#d3a86c" stroke-width="8" fill="none"><path d="M250 150V300M550 150V300M220 205H580M220 266H580"/></g><g fill="#b77b50"><rect x="264" y="168" width="28" height="33"/><rect x="300" y="160" width="24" height="41"/><rect x="332" y="174" width="31" height="27"/><rect x="374" y="157" width="26" height="44"/><rect x="410" y="168" width="35" height="33"/><rect x="455" y="160" width="26" height="41"/><rect x="492" y="171" width="34" height="30"/><rect x="260" y="218" width="34" height="38"/><rect x="304" y="224" width="26" height="32"/><rect x="340" y="214" width="31" height="42"/><rect x="380" y="221" width="28" height="35"/><rect x="418" y="215" width="36" height="41"/><rect x="464" y="221" width="25" height="35"/><rect x="500" y="216" width="30" height="40"/></g><g fill="#f0d99a"><circle cx="110" cy="115" r="4"/><circle cx="696" cy="86" r="3"/><path d="M400 42L410 60 430 64 414 78 418 98 400 87 382 98 386 78 370 64 390 60Z"/></g>',
+    'bg-frost':'<path d="M0 245L140 78 250 214 370 60 520 234 650 92 800 240V320H0Z" fill="#315f82"/><path d="M90 142L140 78 184 134 150 122Z M318 118L370 60 420 130 377 112Z M610 145L650 92 696 154 654 132Z" fill="#e3f7ff" opacity=".92"/><path d="M0 270L180 206 310 260 465 196 620 260 800 205V320H0Z" fill="#173d62"/><g fill="#d4f5ff" opacity=".78"><path d="M115 320V220L152 177 189 220V320Z M594 320V216L630 162 666 216V320Z"/><path d="M365 320V178L400 125 435 178V320Z"/></g><path d="M40 92Q220 8 390 72T760 54" fill="none" stroke="#9bf1e7" stroke-width="14" opacity=".42"/><g fill="#e9fbff"><circle cx="90" cy="56" r="3"/><circle cx="270" cy="100" r="2"/><circle cx="540" cy="45" r="3"/><circle cx="730" cy="125" r="2.5"/></g>',
+    'bg-volcano':'<circle cx="625" cy="76" r="44" fill="#ff9a53" opacity=".42"/><path d="M0 270L130 210 260 246 430 100 590 246 700 195 800 255V320H0Z" fill="#432537"/><path d="M310 184L430 100 552 184 500 176 468 205 430 169 395 204Z" fill="#171b2b"/><path d="M418 117L430 100 444 119 435 132Z" fill="#ffac5c"/><path d="M0 300Q140 276 250 298T500 293T800 286V320H0Z" fill="#8a3f37"/><path d="M355 320Q390 274 430 286Q467 300 500 320Z" fill="#ff693f" opacity=".9"/><g fill="#ffb05c"><circle cx="185" cy="105" r="3"/><circle cx="260" cy="150" r="2"/><circle cx="665" cy="162" r="3"/><circle cx="730" cy="96" r="2.5"/></g>',
+    'bg-emerald':'<circle cx="655" cy="82" r="35" fill="#d7edb0" opacity=".72"/><path d="M0 190Q95 92 185 182T360 170T540 180T800 150V320H0Z" fill="#1f684f"/><g fill="#0b352f"><path d="M0 320V125Q36 72 72 125V320Z M52 320V96Q100 36 148 96V320Z M655 320V115Q700 54 745 115V320Z M720 320V145Q760 90 800 145V320Z"/></g><path d="M278 320V168L400 92 522 168V320Z" fill="#86684d" opacity=".85"/><path d="M310 320V188L400 130 490 188V320Z" fill="#174d43"/><path d="M360 320V216Q400 164 440 216V320Z" fill="#0b2829"/><path d="M400 92L420 130H380Z" fill="#d7c28a"/><g fill="#9ff0a5"><circle cx="198" cy="140" r="4"/><circle cx="590" cy="200" r="3"/><circle cx="250" cy="245" r="2.5"/><circle cx="548" cy="110" r="3"/></g>',
+    'bg-royal':'<circle cx="635" cy="76" r="42" fill="#f3d18b" opacity=".72"/><path d="M0 270H800V320H0Z" fill="#261b31"/><path d="M100 320V170L160 112 220 170V320Z M230 320V132L300 62 370 132V320Z M430 320V132L500 62 570 132V320Z M580 320V170L640 112 700 170V320Z" fill="#50334d" stroke="#c89a5d" stroke-width="5"/><g fill="#1f1d33"><rect x="145" y="205" width="30" height="115"/><rect x="285" y="180" width="30" height="140"/><rect x="485" y="180" width="30" height="140"/><rect x="625" y="205" width="30" height="115"/></g><g fill="#f0c879"><path d="M150 110L160 72 170 110Z M290 60L300 18 310 60Z M490 60L500 18 510 60Z M630 110L640 72 650 110Z"/><path d="M300 116L350 116 350 150 300 150Z M450 116L500 116 500 150 450 150Z"/></g><path d="M0 285Q160 250 300 286T570 276T800 280" fill="none" stroke="#e6bd76" stroke-width="3" opacity=".62"/>',
+    'bg-abyss':'<path d="M0 0H800V320H0Z" fill="#071d3e" opacity=".25"/><path d="M0 180Q90 140 180 180T360 180T540 180T800 176V320H0Z" fill="#124d70" opacity=".88"/><path d="M0 224Q100 185 200 224T400 224T600 224T800 218V320H0Z" fill="#0b3456"/><path d="M120 320V200L180 150 240 200V320Z M540 320V188L600 130 660 188V320Z" fill="#132a4a" stroke="#5eb1c5" stroke-width="4" opacity=".9"/><path d="M360 320V230L400 170 440 230V320Z" fill="#17395c"/><g fill="#75dff0" opacity=".72"><circle cx="96" cy="90" r="5"/><circle cx="145" cy="135" r="3"/><circle cx="700" cy="100" r="4"/><circle cx="620" cy="60" r="2.5"/><circle cx="330" cy="110" r="3"/></g><g fill="none" stroke="#7bd9ec" stroke-width="2" opacity=".4"><path d="M85 0L140 170 M715 0L660 175 M390 0L410 140"/></g>',
+    'bg-cherry':'<circle cx="630" cy="72" r="48" fill="#ffd4da" opacity=".68"/><path d="M0 244Q150 200 280 238T540 225T800 244V320H0Z" fill="#55304e"/><path d="M90 320Q220 240 270 130Q300 90 345 112Q300 145 292 184Q360 145 405 128" fill="none" stroke="#4a2b35" stroke-width="30" stroke-linecap="round"/><path d="M250 180Q205 110 145 104 M292 153Q360 70 430 78 M315 210Q400 165 480 175" fill="none" stroke="#613444" stroke-width="16" stroke-linecap="round"/><g fill="#f3a9cc"><circle cx="145" cy="104" r="24"/><circle cx="182" cy="88" r="20"/><circle cx="210" cy="122" r="25"/><circle cx="430" cy="78" r="24"/><circle cx="464" cy="104" r="20"/><circle cx="400" cy="112" r="22"/><circle cx="478" cy="175" r="23"/><circle cx="440" cy="190" r="19"/><circle cx="270" cy="130" r="22"/></g><g fill="#ffe8f1"><circle cx="145" cy="104" r="6"/><circle cx="210" cy="122" r="5"/><circle cx="430" cy="78" r="6"/><circle cx="478" cy="175" r="5"/></g><path d="M0 290Q160 270 300 294T600 282T800 290V320H0Z" fill="#2d2638"/>',
+    'bg-desert':'<circle cx="620" cy="78" r="52" fill="#ffd18a" opacity=".78"/><path d="M0 232Q125 176 260 226T530 220T800 208V320H0Z" fill="#98604a"/><path d="M0 270Q170 222 340 268T650 255T800 266V320H0Z" fill="#5d3b3d"/><path d="M160 272L280 120 400 272Z" fill="#463044"/><path d="M280 120L400 272H330Z" fill="#bd8057"/><path d="M460 270L550 166 640 270Z" fill="#533446"/><path d="M550 166L640 270H590Z" fill="#c38a5b"/><path d="M300 320V222L350 180 400 222V320Z" fill="#d5a46b" opacity=".9"/><path d="M330 320V242Q350 205 370 242V320Z" fill="#523442"/><g fill="#ffedbe"><circle cx="100" cy="116" r="3"/><circle cx="710" cy="150" r="2.5"/><circle cx="520" cy="108" r="2"/></g>'
+  };
   function titleMarkup(appearance,variant='stage'){
     const selected=item(appearance?.title);
     if(!selected)return '';
     const slug=selected.id.replace(/[^a-z0-9_-]/g,'');
     return '<div class="arc-title-plate arc-title-'+slug+' arc-title-'+variant+'"><span class="arc-title-sigil">✦</span><b>'+esc(selected.name)+'</b><span class="arc-title-sigil">✦</span></div>';
+  }
+  function backgroundMarkup(id,variant='stage'){
+    const key=String(id||'');
+    if(!Object.prototype.hasOwnProperty.call(BACKGROUND_ART,key))return '';
+    const mode=['stage','profile','card','market'].includes(variant)?variant:'stage';
+    return '<div class="arc-bg-scene arc-'+mode+'-background arc-'+key+'" aria-hidden="true"><svg viewBox="0 0 800 320" preserveAspectRatio="xMidYMid slice" focusable="false">'+BACKGROUND_ART[key]+'</svg><span class="arc-bg-vignette"></span></div>';
   }
     function toast(message){const c=C();if(c?.toast)c.toast(message);}
   function notifyAppearance(){
@@ -430,13 +448,14 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       const synced=await sb.rpc('avatar_sync_achievement_rewards');
       if(synced.error)console.warn('Ateliê: sincronização de recompensas adiada:',synced.error.message);
     }catch(syncError){console.warn('Ateliê: sincronização de recompensas indisponível:',syncError?.message||syncError);}
-    const [catalog,owned,profile,wallet]=await Promise.all([
+    const [catalog,owned,profile,wallet,background]=await Promise.all([
       sb.from('avatar_items').select('id,name,slot,rarity,icon,description,asset_key,unlock_type,price,achievement_id').eq('active',true).order('price'),
       sb.from('user_avatar_items').select('item_id,unlock_source,unlocked_at').order('unlocked_at',{ascending:false}),
       sb.from('player_profiles').select('appearance,class').maybeSingle(),
-      sb.from('coin_wallets').select('balance').maybeSingle()
+      sb.from('coin_wallets').select('balance').maybeSingle(),
+      sb.from('user_cosmetics').select('item_id').eq('equipped',true).like('item_id','bg-%').limit(1)
     ]);
-    const failed=[['catálogo',catalog],['inventário',owned],['perfil',profile],['carteira',wallet]].find(([,x])=>x.error);
+    const failed=[['catálogo',catalog],['inventário',owned],['perfil',profile],['carteira',wallet],['fundo',background]].find(([,x])=>x.error);
     if(failed)throw new Error('Falha ao carregar '+failed[0]+': '+failed[1].error.message);
     const slotOrder=SLOTS.reduce((map,row,index)=>{map[row[0]]=index;return map;},{});
     S.catalog=(catalog.data||[]).sort((a,b)=>
@@ -445,6 +464,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       Number(a.price||0)-Number(b.price||0) ||
       a.name.localeCompare(b.name,'pt-BR'));
     S.owned=owned.data||[];S.appearance=profile.data?.appearance||{};
+    S.background=background.data?.[0]?.item_id||null;
     S.playerClass=profile.data?.class||'mago';S.balance=wallet.data?.balance||0;
   }
   function card(x){
@@ -502,7 +522,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
         }).join('')
       : list.map(card).join('');
     root.innerHTML=
-      '<section class="arc-hero"><div><div class="arc-eyebrow">✦ ATELIÊ ARCANO ✦</div><h3>Seu personagem, sua lenda.</h3><p>Combine cabelos, chapéus, roupas, capas, máscaras e itens mágicos. Os visuais conquistados por mérito ficam guardados para sempre.</p><div class="arc-wallet"><span class="coin-symbol coin-symbol-wallet-inline" aria-hidden="true"></span><div><small>SALDO DISPONÍVEL</small><b>'+S.balance.toLocaleString('pt-BR')+' Coins</b></div></div></div><div class="arc-stage arc-stage-aura-'+(current.aura||'none')+'"><div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'<div class="arc-stage-caption"><b>'+esc(previewName)+'</b><small>'+esc(slotLabel(selected))+'</small>'+previewButtons+'</div></div></section>'+
+      '<section class="arc-hero"><div><div class="arc-eyebrow">✦ ATELIÊ ARCANO ✦</div><h3>Seu personagem, sua lenda.</h3><p>Combine cabelos, chapéus, roupas, capas, máscaras e itens mágicos. Os visuais conquistados por mérito ficam guardados para sempre.</p><div class="arc-wallet"><span class="coin-symbol coin-symbol-wallet-inline" aria-hidden="true"></span><div><small>SALDO DISPONÍVEL</small><b>'+S.balance.toLocaleString('pt-BR')+' Coins</b></div></div></div><div class="arc-stage arc-stage-aura-'+(current.aura||'none')+'">'+backgroundMarkup(S.background,'stage')+'<div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'<div class="arc-stage-caption"><b>'+esc(previewName)+'</b><small>'+esc(slotLabel(selected))+'</small>'+previewButtons+'</div></div></section>'+
       '<div class="arc-toolbar"><div><h3>Guarda-roupa</h3><p>Os itens comprados usam as Coins que você já acumula na Academia.</p></div><div class="arc-tabs">'+tabs+'</div></div>'+
       (S.tab==='inventory'?'<div class="arc-inventory-note">Itens no inventário: '+S.owned.length+' · Recompensas de conquistas não custam Coins.</div>':'')+
       '<div class="arc-catalog-layout"><aside class="arc-side-nav" aria-label="Categorias do Ateliê"><div class="arc-side-title">FILTRAR VISUAIS</div>'+cats+'</aside><div class="arc-catalog-main"><div class="arc-catalog-heading"><div><span>CATÁLOGO ARCANO</span><h4>'+categoryHeading+'</h4></div><small>'+categoryMeta+'</small></div><div class="arc-item-grid">'+(items||'<div class="arc-empty">'+(S.tab==='inventory'?'Você ainda não possui itens nesta categoria. Visite a loja ou complete conquistas para receber novos visuais.':'Nenhum item encontrado nesta categoria.')+'</div>')+'</div></div></div>'+
@@ -553,5 +573,6 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     });
   }
   document.addEventListener('academia-avatar-changed',e=>{if(e.detail?.appearance)S.appearance=e.detail.appearance;});
-  window.AcademiaAvatar={render,open,renderAtelier,titleMarkup,nameMarkup};
+  document.addEventListener('academia-background-changed',e=>{S.background=e.detail?.background||null;if(document.querySelector('[data-rpg="atelier"].active'))renderAtelier();});
+  window.AcademiaAvatar={render,open,renderAtelier,titleMarkup,nameMarkup,backgroundMarkup};
 })();
