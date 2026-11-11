@@ -74,6 +74,7 @@ const HEAD = {
   market: ['TESOUROS', 'Mercado Arcano', 'Conquiste Coins, personalize seu personagem e equipe suas relíquias.'],
   atelier: ['PERSONAGEM', 'Ateliê Arcano', 'Monte seu visual, experimente equipamentos e equipe suas recompensas.']
 };
+const achievementReward = id => window.AcademiaAchievements?.rewardForId?.(id) ?? 40;
 const MARKET_DEMO_ITEMS = [
   {id:'title-apprentice',name:'Aprendiz Arcano',category:'titles',price:50,rarity:'Comum',icon:'📜',description:'O primeiro passo de uma grande jornada.'},
   {id:'title-coder',name:'Mestre do Código',category:'titles',price:200,rarity:'Raro',icon:'⌘',description:'Para quem domina os enigmas da lógica.'},
@@ -231,7 +232,7 @@ function renderMarket() {
   const history=M.transactions.length?M.transactions.slice(0,12).map(t=>`<div class="mk-history-row"><span>${esc(t.description)}</span><b class="${t.amount>0?'plus':'minus'}">${t.amount>0?'+':''}${t.amount} Coins</b></div>`).join(''):'<div class="mk-empty">Suas movimentações aparecerão aqui.</div>';
   el.innerHTML=`
     ${g?'<div class="rpg-note">Modo convidado: você pode conhecer os tesouros, mas precisa entrar com Google para ganhar, comprar e salvar Coins no seu perfil.</div>':''}
-    <section class="mk-hero"><div><span class="mk-eyebrow">✦ A feira dos aventureiros ✦</span><h3>Seu personagem. Suas escolhas.</h3><p>Conquiste moedas estudando e personalize sua identidade nos reinos da Academia.</p><div class="mk-rewards"><span>Quiz <b>+150</b></span><span>Sequência de 5 <b>+75</b></span><span>Conquista <b>+40</b></span><span>Missão diária <b>+2.500</b></span></div></div><button class="mk-atelier-cta" data-act="atelier">✦ Abrir o Ateliê Arcano</button><div class="mk-wallet"><span class="coin-symbol coin-symbol-wallet" aria-hidden="true"></span><small>SUA CARTEIRA</small><strong>${g?'—':M.balance.toLocaleString('pt-BR')+' Coins'}</strong></div></section>
+    <section class="mk-hero"><div><span class="mk-eyebrow">✦ A feira dos aventureiros ✦</span><h3>Seu personagem. Suas escolhas.</h3><p>Conquiste moedas estudando e personalize sua identidade nos reinos da Academia.</p><div class="mk-rewards"><span>Quiz <b>+150</b></span><span>Sequência de 5 <b>+75</b></span><span>Conquista <b>+15 a +200</b></span><span>Missão diária <b>+2.500</b></span></div></div><button class="mk-atelier-cta" data-act="atelier">✦ Abrir o Ateliê Arcano</button><div class="mk-wallet"><span class="coin-symbol coin-symbol-wallet" aria-hidden="true"></span><small>SUA CARTEIRA</small><strong>${g?'—':M.balance.toLocaleString('pt-BR')+' Coins'}</strong></div></section>
     <div class="mk-metrics"><div><small>Itens no inventário</small><b>${g?'—':inv.length}</b></div><div><small>Itens equipados</small><b>${g?'—':equipped}</b></div><div><small>Próxima raridade</small><b>Épica</b></div></div>
     <section class="mk-daily"><div><b>📜 Missão diária</b><small>Resgate sua recompensa uma vez por dia.</small></div><button data-market-act="daily" ${g||!M.dailyAvailable?'disabled':''}>${g?'Entre para resgatar':M.dailyAvailable?'Resgatar +2.500 Coins':'Concluída hoje'}</button></section>
     <div class="mk-toolbar"><h3>Catálogo de tesouros</h3><input class="search" id="marketSearch" value="${esc(marketQuery)}" placeholder="Buscar item..." aria-label="Buscar item"></div>
@@ -374,7 +375,7 @@ async function finish() {
         : '<div class="rpg-note">Resultado validado. Nenhum XP novo desta vez: você já recebeu a recompensa desta categoria hoje ou atingiu o limite diário.</div>';
       if (coinTotal > 0) xpHtml += `<p class="mk-earned"><span class="coin-symbol" aria-hidden="true"></span> +${coinTotal} Coins adicionadas à sua carteira.</p>`;
       if (after > before) xpHtml += `<p><b>Você subiu para o nível ${after}!</b></p>`;
-      (data.achievements || []).forEach(id => { if (ACH[id]) xpHtml += `<p>🏅 Nova conquista: <b>${ACH[id][1]}</b> · +40 Coins</p>`; });
+      (data.achievements || []).forEach(id => { if (ACH[id]) xpHtml += `<p>🏅 Nova conquista: <b>${ACH[id][1]}</b> · +${fmt(achievementReward(id))} Coins</p>`; });
       if (total > 0 || coinTotal > 0) epic('reward', 'Recompensa do treinamento', (total > 0 ? '+' + fmt(total) + ' XP' : '') + (total > 0 && coinTotal > 0 ? ' · ' : '') + (coinTotal > 0 ? '+' + fmt(coinTotal) + ' Coins' : '') + ' adicionados à sua jornada.', '🎁');
       if (after > before) epic('level', 'Novo nível alcançado!', 'Você evoluiu para o nível ' + after + '. Continue avançando, aventureiro.', '⬆');
       (data.achievements || []).forEach(id => { if (ACH[id]) epic('achievement', 'Conquista desbloqueada', ACH[id][1], ACH[id][0]); });
