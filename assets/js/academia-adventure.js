@@ -40,7 +40,18 @@
   const GUILD_SHOP_ITEMS=[
     ['guild-crest-dragon','Brasão do Dragão','crest','🐉'],['guild-crest-phoenix','Brasão da Fênix','crest','🔥'],
     ['guild-shield-royal','Escudo da Realeza','shield','🛡️'],['guild-shield-obsidian','Escudo de Obsidiana','shield','⚔️'],
-    ['guild-effect-aurora','Aura Boreal','effect','✨'],['guild-effect-flame','Chamas Arcanas','effect','🔥'],['guild-effect-runes','Runas Luminosas','effect','ᚱ']
+    ['guild-effect-aurora','Aura Boreal','effect','✨'],['guild-effect-flame','Chamas Arcanas','effect','🔥'],['guild-effect-runes','Runas Luminosas','effect','ᚱ'],
+    ['guild-shield-dragonsteel','Escudo Aço Dracônico','shield','🐉'],['guild-shield-frostguard','Escudo Guardião Glacial','shield','❄️'],
+    ['guild-shield-sunforged','Escudo Forjado pelo Sol','shield','☀️'],['guild-shield-voidglass','Escudo Vidro do Vazio','shield','🌌'],
+    ['guild-shield-emerald','Escudo Esmeralda Ancestral','shield','💚'],['guild-shield-bloodmoon','Escudo Lua Sangrenta','shield','🌑'],
+    ['guild-shield-storm','Escudo Tempestade Celeste','shield','⚡'],['guild-shield-royal-marble','Escudo Mármore Imperial','shield','🏛️'],
+    ['guild-shield-runic','Escudo Rúnico do Ancião','shield','ᚱ'],['guild-shield-abyss','Escudo Abismo Prismático','shield','💠'],
+    ['guild-crest-wolf','Brasão da Matilha Lunar','crest','🐺'],['guild-crest-griffin','Brasão do Grifo Real','crest','🦅'],
+    ['guild-crest-serpent','Brasão da Serpente Ancestral','crest','🐍'],['guild-crest-starfire','Brasão Chama Estelar','crest','🌠'],
+    ['guild-crest-celestial','Brasão Celestial','crest','👑'],
+    ['guild-effect-mist','Véu de Névoa Arcana','effect','🌫️'],['guild-effect-lightning','Descarga Tempestuosa','effect','⚡'],
+    ['guild-effect-stardust','Poeira Estelar','effect','✨'],['guild-effect-shadow','Chama Sombria','effect','🟣'],
+    ['guild-effect-divine','Halo Divino','effect','🌟']
   ];
   const ownedGuildItems=type=>[['','Nenhum item equipado'],...((S.guildItems||[]).filter(x=>!type||x.id.startsWith('guild-'+type+'-')).map(x=>[x.id,x.name]))];
   const flagConfig=raw=>({
