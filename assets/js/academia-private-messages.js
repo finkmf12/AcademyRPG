@@ -292,19 +292,20 @@
   function bindEvents() {
     document.addEventListener('click',event => {
       const tab = event.target.closest('#rpgView [data-tvn-tab]');
-      if (!tab) return;
-      if (tab.dataset.tvnTab === 'private') {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        openPrivateTab(tab);
-      } else if (tab.dataset.tvnTab === 'global' || tab.dataset.tvnTab === 'guild') {
-        // O manipulador original da Taverna continua cuidando dos canais existentes.
+      if (tab) {
+        if (tab.dataset.tvnTab === 'private') {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          openPrivateTab(tab);
+        }
+        return;
       }
       const friendButton = event.target.closest('#rpgView [data-private-friend]');
       if (friendButton) {
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
         selectFriend(friendButton.dataset.privateFriend);
       }
     },true);
