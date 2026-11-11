@@ -21,6 +21,7 @@
     sending: false,
     loading: false,
     loadingOlder: false,
+    loadToken: 0,
     unseen: 0,
     authSubscription: null
   };
@@ -102,8 +103,10 @@
     state.pageOpen = true;
     pageHeader();
     renderShell();
-    if (state.active === 'guild' && !state.guild) state.active = 'global';
-    switchChannel(state.active);
+    loadCommunityData().catch(error => {
+      console.error('Taverna · atualizar comunidade:', error);
+      toast('Não foi possível atualizar os dados da comunidade.');
+    });
   }
 
   function channelTitle() {
@@ -237,7 +240,7 @@
     const list = $('tvnOnlineList');
     const hero = $('tvnHeroOnline');
     if (count) count.textContent = String(state.online.length);
-    if (hero) hero.textContent = state.online.length + ' aventureiro' + (state.online.length === 1 ? '' : 's') + ' na Taverna';
+    if (hero) hero.textContent = state.online.length + ' aventureiro' + (state.online.length === 1 ? '' : 's') + ' na Academia';
     if (!list) return;
     if (!state.online.length) {
       list.innerHTML = '<div class="tvn-online-empty">Ninguém por aqui neste instante.</div>';
@@ -303,9 +306,18 @@
       : { channel_type: 'guild', guild_id: state.guild && state.guild.guild && state.guild.guild.id };
   }
 
+  function currentChannelKey() {
+    return state.active === 'global'
+      ? 'global'
+      : 'guild:' + (state.guild && state.guild.guild && state.guild.guild.id || 'none');
+  }
+
   async function loadMessages(reset) {
-    if (!state.client || !state.user || state.loading) return;
+    if (!state.client || !state.user) return;
     if (state.active === 'guild' && !(state.guild && state.guild.guild)) return;
+    if (!reset && state.loading) return;
+    const requestToken = reset ? ++state.loadToken : state.loadToken;
+    const requestedChannel = currentChannelKey();
     state.loading = true;
     const feed = $('tvnFeed');
     if (reset && feed) {
@@ -322,6 +334,7 @@
       }
       const { data, error } = await query.order('created_at', { ascending: false }).order('id', { ascending: false }).limit(PAGE_SIZE);
       if (error) throw error;
+      if (requestToken !== state.loadToken || requestedChannel !== currentChannelKey()) return;
       const rows = (data || []).reverse();
       if (reset) state.messages = rows;
       else {
@@ -335,7 +348,7 @@
       console.error('Taverna · carregar mensagens:', error);
       if (feed) feed.innerHTML = '<div class="tvn-error"><b>Não foi possível abrir as conversas.</b><p>' + escapeHtml(error.message || 'Confira sua conexão e tente novamente.') + '</p><button type="button" data-tvn-retry>Tentar novamente</button></div>';
     } finally {
-      state.loading = false;
+      if (requestToken === state.loadToken) state.loading = false;
     }
   }
 
@@ -413,6 +426,10 @@
     if (state.sending || !state.client || !state.user) return;
     if (state.active === 'guild' && !(state.guild && state.guild.guild)) {
       toast('Entre em uma guilda antes de usar este canal.');
+      return;
+    }
+    if (state.active === 'guild' && state.guild.guild.active === false) {
+      toast('Esta guilda está suspensa no momento e não pode enviar mensagens.');
       return;
     }
     const input = $('tvnMessageInput');
@@ -524,6 +541,12 @@
     if (channel !== 'global' && channel !== 'guild') return;
     state.active = channel;
     if (channel === 'guild' && !(state.guild && state.guild.guild)) {
+      state.loadToken += 1;
+      state.loading = false;
+      if (state.messageChannel) {
+        state.client.removeChannel(state.messageChannel);
+        state.messageChannel = null;
+      }
       renderShell();
       const feed = $('tvnFeed');
       if (feed) {
@@ -550,6 +573,9 @@
     state.profile = null;
     state.guild = null;
     state.teacher = false;
+    state.pageOpen = false;
+    state.loadToken += 1;
+    state.loading = false;
     state.online = [];
     state.messages = [];
     state.hasMore = false;
