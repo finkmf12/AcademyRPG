@@ -969,3 +969,21 @@
 /* Suporte a usuários que preferem movimento reduzido nos equipamentos animados. */
 @media (prefers-reduced-motion: reduce){.arc-avatar animate,.arc-avatar animateTransform{display:none!important}}
 /* epic-armor-wings-v1 */
+
+/* Novos cenários do Mercado Arcano: paletas próprias e atmosferas animadas. */
+.arc-scene-bg-moonlit-ruins{background:radial-gradient(ellipse at 50% 34%,#584d83 0%,#272344 48%,#11182b 100%)}
+.arc-scene-bg-dragon-peaks{background:radial-gradient(ellipse at 75% 30%,#9a493b 0%,#472b3c 42%,#171b2a 100%)}
+.arc-scene-bg-aurora-falls{background:radial-gradient(ellipse at 50% 20%,#3b8e8b 0%,#1b5365 45%,#102338 100%)}
+.arc-scene-bg-crystal-cavern{background:radial-gradient(ellipse at 50% 48%,#347b9a 0%,#1c4565 48%,#101b35 100%)}
+.arc-scene-bg-storm-citadel{background:radial-gradient(ellipse at 50% 25%,#416184 0%,#253b59 45%,#101a2d 100%)}
+.arc-scene-bg-astral-garden{background:radial-gradient(ellipse at 50% 35%,#3b776c 0%,#234b50 48%,#142638 100%)}
+.arc-scene-bg-shadow-realm{background:radial-gradient(ellipse at 50% 45%,#5b3d83 0%,#282344 48%,#101322 100%)}
+.arc-scene-bg-solar-sanctum{background:radial-gradient(ellipse at 50% 30%,#9b7440 0%,#59452f 48%,#211e25 100%)}
+.arc-scene-bg-moonlit-ruins .arc-bg-vignette{box-shadow:inset 0 0 50px #08091d99}
+.arc-scene-bg-dragon-peaks .arc-bg-vignette{background:linear-gradient(180deg,#1c101355,transparent 42%,#140e18aa)}
+.arc-scene-bg-aurora-falls .arc-bg-vignette{background:linear-gradient(180deg,#0c253333,transparent 48%,#081b2aaa)}
+.arc-scene-bg-crystal-cavern .arc-bg-vignette{box-shadow:inset 0 0 48px #07182d99}
+.arc-scene-bg-storm-citadel .arc-bg-vignette{background:linear-gradient(180deg,#0b152655,transparent 45%,#091323aa)}
+.arc-scene-bg-astral-garden .arc-bg-vignette{background:linear-gradient(180deg,#0b1c2033,transparent 45%,#0a1a24aa)}
+.arc-scene-bg-shadow-realm .arc-bg-vignette{box-shadow:inset 0 0 60px #050611cc}
+.arc-scene-bg-solar-sanctum .arc-bg-vignette{background:linear-gradient(180deg,#251a0d33,transparent 45%,#1b160faa)}
