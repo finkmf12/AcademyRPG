@@ -4,6 +4,9 @@
   const C=()=>window.AcademiaCtx, $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const num=v=>Number(v||0).toLocaleString('pt-BR');
+  const COIN_REWARDS=Object.freeze({Comum:15,Incomum:30,Raro:60,'Épico':100,'Lendário':200});
+  const rewardFor=item=>COIN_REWARDS[item[5]]??40;
+  const rewardForId=id=>{const item=BOOK.find(entry=>entry[0]===id);return item?rewardFor(item):40;};
   const BOOK=[
     ['primeiro','🎯','Primeiro Passo','Complete seu primeiro quiz.','Conhecimento','Comum','quiz_count',1],
     ['quiz-10','📘','Estudioso','Conclua 10 quizzes.','Conhecimento','Comum','quiz_count',10],
@@ -46,7 +49,7 @@
   }
   function unlockedMap(){return new Map((state.data?.unlocked||[]).map(x=>[x.id,x.unlocked_at]));}
   function card(item,stats,unlocked){
-    const p=progress(item,stats),date=unlocked.get(item[0]),done=!!date;
+    const p=progress(item,stats),date=unlocked.get(item[0]),done=!!date,reward=rewardFor(item);
     const rarity=item[5].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     let label=num(p.current)+' / '+num(p.target);
     if(item[0]==='historia-completa')label=num(stats.story_progress)+' / '+num(stats.story_total)+' etapas';
@@ -57,7 +60,7 @@
       <div class="ab-card-copy"><div class="ab-card-title">${esc(item[2])}</div><p>${esc(item[3])}</p></div>
       <div class="ab-card-bottom"><div class="ab-progress-label"><span>${done?'Conquista desbloqueada':p.raw>0?'Em andamento':'Ainda não iniciada'}</span><b>${done?'100%':p.pct+'%'}</b></div>
       <div class="ab-progress"><i style="width:${done?100:p.pct}%"></i></div>
-      <div class="ab-card-meta"><span>${esc(done?'Desbloqueada em '+when:label)}</span><strong>${done?'✓ Concluída':'+40 Coins'}</strong></div></div>
+      <div class="ab-card-meta"><span>${esc(done?'Desbloqueada em '+when:label)}</span><strong>+${num(reward)} Coins</strong></div></div>
     </article>`;
   }
   function renderBoard(){
@@ -86,7 +89,7 @@
       <section class="ab-shelf">
         <div class="ab-section-heading"><div><span class="ab-eyebrow">SUA COLEÇÃO</span><h3>Conquistas da Academia</h3></div><button type="button" class="ab-refresh" data-ach-action="refresh" ${state.loading?'disabled':''}>↻ Atualizar</button></div>
         <div class="ab-filters" aria-label="Filtrar conquistas">${filters}</div><div class="ab-categories" aria-label="Categorias de conquistas">${cats}</div>
-        <div class="ab-result-line"><span>${list.length} ${list.length===1?'conquista encontrada':'conquistas encontradas'}</span><span>Recompensa: <b>+40 Coins</b> por conquista</span></div>
+        <div class="ab-result-line"><span>${list.length} ${list.length===1?'conquista encontrada':'conquistas encontradas'}</span><span>Recompensas por raridade: <b>Comum +15 · Incomum +30 · Raro +60 · Épico +100 · Lendário +200 Coins</b></span></div>
         <div class="ab-grid">${list.map(x=>card(x,stats,unlocked)).join('')||'<div class="ab-empty">Nenhuma conquista nesta seleção. Experimente outro filtro.</div>'}</div>
       </section>
       <p class="ab-footnote">As conquistas ficam vinculadas à sua conta e acompanham você em qualquer computador. Algumas metas são reconhecidas automaticamente ao abrir este livro ou concluir um quiz.</p>`;
@@ -111,7 +114,8 @@
       if(!isBookActive())return;
       renderBoard();
       const fresh=Array.isArray(data.newly_unlocked)?data.newly_unlocked:[];
-      if(fresh.length)c.toast('🏅 '+fresh.length+' conquista(s) nova(s)! Você recebeu '+num(fresh.length*40)+' Coins.');
+      const freshCoins=fresh.reduce((sum,id)=>sum+rewardForId(id),0);
+      if(fresh.length)c.toast('🏅 '+fresh.length+' conquista(s) nova(s)! Você recebeu '+num(freshCoins)+' Coins.');
     }catch(e){state.error=e?.message||String(e);state.loading=false;if(isBookActive())errorView();}
   }
   function refresh(){if(!state.loading)open();}
@@ -120,5 +124,5 @@
     const f=e.target.closest('[data-ach-filter]');if(f){state.filter=f.dataset.achFilter;renderBoard();return;}
     const c=e.target.closest('[data-ach-category]');if(c){state.category=c.dataset.achCategory;renderBoard();}
   });
-  window.AcademiaAchievements={open,render:renderBoard,refresh};
+  window.AcademiaAchievements={open,render:renderBoard,refresh,rewardForId};
 })();
