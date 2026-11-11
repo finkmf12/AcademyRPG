@@ -533,10 +533,10 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     const current=getPreviewAppearance(),selected=item(S.previewId);
     const previewName=selected?'Prévia: '+selected.name:'Seu visual atual';
     const previewButtons=selected?'<button class="arc-button arc-button-soft" data-avatar-action="cancel-preview">Voltar ao visual equipado</button>':'<span class="arc-preview-hint">Experimente qualquer peça antes de comprar.</span>';
-    const list=S.catalog.filter(x=>(S.filter==='all'||(S.filter==='wings'?x.id.startsWith('wings-'):x.slot===S.filter))&&(S.tab==='shop'||owns(x.id)));
+    const list=S.catalog.filter(x=>(S.filter==='all'||(S.filter==='wings'?x.id.startsWith('wings-'):S.filter==='accessory'?(x.slot==='accessory'&&!x.id.startsWith('wings-')):x.slot===S.filter))&&(S.tab==='shop'||owns(x.id)));
     const categorySource=S.catalog.filter(x=>S.tab==='shop'||owns(x.id));
     const categoryButton=([key,label])=>{
-      const count=key==='all'?categorySource.length:key==='wings'?categorySource.filter(v=>v.id.startsWith('wings-')).length:categorySource.filter(v=>v.slot===key).length;
+      const count=key==='all'?categorySource.length:key==='wings'?categorySource.filter(v=>v.id.startsWith('wings-')).length:key==='accessory'?categorySource.filter(v=>v.slot==='accessory'&&!v.id.startsWith('wings-')).length:categorySource.filter(v=>v.slot===key).length;
       return '<button type="button" class="arc-filter '+(S.filter===key?'active':'')+'" data-avatar-filter="'+key+'" aria-pressed="'+(S.filter===key?'true':'false')+'"><span class="arc-filter-icon">'+SLOT_ICON[key]+'</span><span class="arc-filter-label">'+label+'</span><small>'+count+'</small></button>';
     };
     const sideGroups=[
