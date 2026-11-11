@@ -4,7 +4,7 @@
   isolation:isolate;
   background:
     linear-gradient(180deg,rgba(5,13,24,.70),rgba(7,15,27,.82)),
-    url("./images/academia-mountain-bg.jpg") center center / cover fixed,
+    url("../../1337879.png") center center / cover fixed,
     linear-gradient(135deg,#102638,#1c3449 60%,#26344b);
 }
 .app::before{
