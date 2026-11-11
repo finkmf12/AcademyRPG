@@ -3,11 +3,14 @@
   'use strict';
 
   const MAX_LENGTH = 400;
+  const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+  const ATTACHMENTS_BUCKET = 'chat-attachments';
+  const ALLOWED_IMAGE_TYPES = ['image/jpeg','image/png','image/webp'];
   const $ = id => document.getElementById(id);
   const state = {
     client: null, user: null, friends: [], selected: null, messages: [],
     unread: {}, latest: {}, privateChannel: null, presenceChannel: null,
-    busy: false, loading: false, loadedFor: null, observer: null
+    busy: false, selectedImage: null, previewUrl: null, loading: false, loadedFor: null, observer: null
   };
 
   const esc = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
@@ -22,6 +25,93 @@
   const friendName = friend => friend?.player_name || 'Aventureiro';
   const selectedFriend = () => state.friends.find(friend => friend.user_id === state.selected) || null;
   const totalUnread = () => Object.values(state.unread).reduce((sum, value) => sum + Number(value || 0), 0);
+
+
+  function imageExtension(file) {
+    return file.type === 'image/jpeg' ? '.jpg' : file.type === 'image/png' ? '.png' : file.type === 'image/webp' ? '.webp' : '';
+  }
+
+  async function validateImageFile(file) {
+    if (!file) throw new Error('Selecione uma imagem.');
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) throw new Error('Formato não permitido. Use JPG, PNG ou WEBP.');
+    if (file.size > MAX_IMAGE_BYTES) throw new Error('A imagem deve ter no máximo 5 MB.');
+    const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+    const jpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+    const png = bytes.length >= 8 && [137,80,78,71,13,10,26,10].every((value,index) => bytes[index] === value);
+    const webp = bytes.length >= 12 && String.fromCharCode(...bytes.slice(0,4)) === 'RIFF' && String.fromCharCode(...bytes.slice(8,12)) === 'WEBP';
+    if (!(file.type === 'image/jpeg' && jpeg || file.type === 'image/png' && png || file.type === 'image/webp' && webp)) {
+      throw new Error('O arquivo não corresponde a uma imagem JPG, PNG ou WEBP válida.');
+    }
+    return imageExtension(file);
+  }
+
+  function formatImageSize(bytes) {
+    return bytes >= 1024 * 1024 ? (bytes / (1024 * 1024)).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
+  }
+
+  function releaseSelectedImage() {
+    if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+    state.previewUrl = null;
+    state.selectedImage = null;
+    const input = $('tvnPrivateImageInput');
+    if (input) input.value = '';
+    const preview = $('tvnPrivateImagePreview');
+    if (preview) { preview.hidden = true; preview.innerHTML = ''; }
+    updatePrivateCounter();
+  }
+
+  async function chooseImage(file) {
+    if (!file) return;
+    try {
+      await validateImageFile(file);
+      releaseSelectedImage();
+      state.selectedImage = file;
+      state.previewUrl = URL.createObjectURL(file);
+      const preview = $('tvnPrivateImagePreview');
+      if (preview) {
+        preview.innerHTML = '<img src="' + state.previewUrl + '" alt="Pré-visualização da imagem"><span><b>' + esc(file.name) + '</b><small>' + formatImageSize(file.size) + ' · até 5 MB</small></span><button type="button" data-tvn-image-remove aria-label="Remover imagem anexada" title="Remover imagem">×</button>';
+        preview.hidden = false;
+      }
+      updatePrivateCounter();
+    } catch (error) {
+      toast(error.message || 'Não foi possível selecionar esta imagem.');
+    }
+  }
+
+  async function uploadChatImage(file, directory) {
+    const extension = await validateImageFile(file);
+    const path = directory + '/' + crypto.randomUUID() + extension;
+    const { error } = await state.client.storage.from(ATTACHMENTS_BUCKET).upload(path, file, {
+      cacheControl: '86400',
+      contentType: file.type,
+      upsert: false
+    });
+    if (error) throw error;
+    return path;
+  }
+
+  async function resolveMessageImages(messages, friendId) {
+    await Promise.all((messages || []).map(async message => {
+      if (!message.attachment_path || message.attachment_url || message.attachment_error) return;
+      try {
+        const { data, error } = await state.client.storage.from(ATTACHMENTS_BUCKET).createSignedUrl(message.attachment_path, 86400);
+        if (error || !data?.signedUrl) throw error || new Error('URL temporária indisponível.');
+        message.attachment_url = data.signedUrl;
+      } catch (error) {
+        message.attachment_error = true;
+        console.warn('Mensagens privadas · imagem anexada:', error.message);
+      }
+    }));
+    if (friendId && state.selected === friendId && isPrivateOpen()) renderConversation();
+  }
+
+  function imageMarkup(message) {
+    if (!message.attachment_path) return '';
+    if (message.attachment_url) {
+      return '<a class="tvn-message-image-link" href="' + esc(message.attachment_url) + '" target="_blank" rel="noopener noreferrer" aria-label="Abrir imagem em tamanho completo"><img class="tvn-message-image" src="' + esc(message.attachment_url) + '" alt="Imagem na conversa com ' + esc(friendName(selectedFriend())) + '" loading="lazy" decoding="async"></a>';
+    }
+    return '<div class="tvn-message-image-status">' + (message.attachment_error ? 'Imagem indisponível para esta conta.' : 'Carregando imagem anexada...') + '</div>';
+  }
 
   function onlineIds() {
     const presence = state.presenceChannel?.presenceState?.() || {};
@@ -54,7 +144,7 @@
   async function refreshLatest() {
     if (!state.client || !state.user) return;
     const {data,error} = await state.client.from('private_messages')
-      .select('id,sender_id,recipient_id,content,created_at,read_at')
+      .select('id,sender_id,recipient_id,content,attachment_path,created_at,read_at')
       .or('sender_id.eq.' + state.user.id + ',recipient_id.eq.' + state.user.id)
       .order('created_at',{ascending:false}).limit(500);
     if (error) throw error;
@@ -102,7 +192,7 @@
       const id = friend.user_id;
       const last = state.latest[id];
       const unread = Number(state.unread[id] || 0);
-      const preview = last ? (last.sender_id === state.user.id ? 'Você: ' : '') + last.content : 'Comece uma conversa';
+      const preview = last ? (last.sender_id === state.user.id ? 'Você: ' : '') + (last.content || (last.attachment_path ? '📷 Imagem' : 'Mensagem')) : 'Comece uma conversa';
       return '<button type="button" class="tvn-private-friend ' + (state.selected === id ? 'is-selected' : '') + '" data-private-friend="' + esc(id) + '">' +
         '<span class="tvn-private-avatar">' + esc(friend.avatar || '🧙') + '<i class="' + (online.has(id) ? 'is-online' : '') + '"></i></span>' +
         '<span class="tvn-private-friend-copy"><b>' + esc(friendName(friend)) + '</b><small>' + esc(preview) + '</small></span>' +
@@ -125,7 +215,7 @@
         (friend
           ? '<header class="tvn-chat-head tvn-private-chat-head"><div class="tvn-channel-mark">' + esc(friend.avatar || '🧙') + '</div><div class="tvn-channel-title"><div class="tvn-eyebrow">CONVERSA PARTICULAR</div><h3>' + esc(friendName(friend)) + '</h3><p>Somente você e este amigo podem ver as mensagens.</p></div><span class="tvn-private-lock">🔒 PRIVADO</span></header>' +
             '<div class="tvn-feed" id="tvnPrivateFeed" role="log" aria-live="polite"><div class="tvn-feed-loading"><span class="tvn-spinner"></span><b>Preparando a conversa...</b></div></div>' +
-            '<form class="tvn-composer" id="tvnPrivateComposer"><div class="tvn-composer-top"><span>Mensagem direta para ' + esc(friendName(friend)) + '</span><span id="tvnPrivateCounter">0 / ' + MAX_LENGTH + '</span></div><div class="tvn-compose-row"><textarea id="tvnPrivateInput" maxlength="' + MAX_LENGTH + '" rows="1" placeholder="Escreva uma mensagem privada..." aria-label="Mensagem privada"></textarea><button type="submit" class="tvn-send" id="tvnPrivateSend"><span>Enviar</span><b>➤</b></button></div><div class="tvn-composer-hint"><span>Enter para enviar · Shift + Enter para pular linha</span><span>Conversa protegida entre amigos.</span></div></form>'
+            '<form class="tvn-composer" id="tvnPrivateComposer"><div class="tvn-composer-top"><span>Mensagem direta para ' + esc(friendName(friend)) + '</span><span id="tvnPrivateCounter">0 / ' + MAX_LENGTH + '</span></div><div class="tvn-compose-row"><button type="button" class="tvn-attach" data-tvn-attach aria-label="Anexar imagem" title="Anexar imagem">▧</button><textarea id="tvnPrivateInput" maxlength="' + MAX_LENGTH + '" rows="1" placeholder="Escreva uma mensagem privada..." aria-label="Mensagem privada"></textarea><button type="submit" class="tvn-send" id="tvnPrivateSend"><span>Enviar</span><b>➤</b></button></div><input type="file" id="tvnPrivateImageInput" accept="image/jpeg,image/png,image/webp" hidden><div class="tvn-image-preview" id="tvnPrivateImagePreview" hidden></div><div class="tvn-composer-hint"><span>Enter para enviar · Shift + Enter para pular linha</span><span>Conversa protegida entre amigos.</span></div></form>'
           : '<div class="tvn-private-no-selection"><div>✉</div><h3>Escolha um companheiro</h3><p>Selecione um amigo na lista ao lado para abrir uma conversa privada.</p></div>') +
       '</section>';
     renderFriendList();
@@ -149,7 +239,7 @@
       return '<article class="tvn-message ' + (own ? 'is-own' : '') + '" data-private-message-id="' + esc(message.id) + '">' +
         '<div class="tvn-message-avatar">' + esc(own ? (window.AcademiaCtx?.user?.user_metadata?.avatar_url ? '🧙' : '✦') : (selectedFriend()?.avatar || '🧙')) + '</div>' +
         '<div class="tvn-message-main"><div class="tvn-message-meta"><b>' + esc(sender) + '</b><time>' + formatTime(message.created_at) + '</time></div>' +
-        '<div class="tvn-message-bubble">' + formatContent(message.content) + '</div></div></article>';
+        (message.content ? '<div class="tvn-message-bubble">' + formatContent(message.content) + '</div>' : '') + imageMarkup(message) + '</div></article>';
     }).join('');
     feed.scrollTop = feed.scrollHeight;
   }
@@ -179,6 +269,7 @@
     updateUnreadBadge();
     renderConversation();
     renderFriendList();
+    resolveMessageImages(state.messages.slice(), friendId);
     state.loading = false;
   }
 
@@ -187,14 +278,18 @@
     const input = $('tvnPrivateInput');
     const content = input?.value.trim() || '';
     const friend = selectedFriend();
-    if (!friend || !content || state.busy || !state.client) return;
+    const file = state.selectedImage;
+    if (!friend || (!content && !file) || state.busy || !state.client) return;
     if (content.length > MAX_LENGTH) return;
     state.busy = true;
-    const button = $('tvnPrivateSend');
-    if (button) button.disabled = true;
+    updatePrivateCounter();
+    let uploadedPath = null;
     try {
+      if (file) uploadedPath = await uploadChatImage(file, state.user.id + '/private/' + friend.user_id);
       const {data,error} = await state.client.rpc('send_private_message',{
-        p_recipient_id:friend.user_id,p_content:content
+        p_recipient_id:friend.user_id,
+        p_content:content,
+        p_attachment_path:uploadedPath
       });
       if (error) throw error;
       const message = data;
@@ -203,14 +298,19 @@
         state.messages.sort((a,b) => new Date(a.created_at)-new Date(b.created_at));
       }
       input.value = '';
+      releaseSelectedImage();
       updatePrivateCounter();
       renderConversation();
+      if (message?.attachment_path) resolveMessageImages([message], friend.user_id);
       await refreshLatest();
     } catch (error) {
+      if (uploadedPath) {
+        try { await state.client.storage.from(ATTACHMENTS_BUCKET).remove([uploadedPath]); } catch (_) {}
+      }
       toast(error.message || 'Não foi possível enviar a mensagem privada.');
     } finally {
       state.busy = false;
-      if (button) button.disabled = false;
+      updatePrivateCounter();
       input?.focus();
     }
   }
@@ -220,11 +320,12 @@
     const counter = $('tvnPrivateCounter');
     const button = $('tvnPrivateSend');
     if (counter) counter.textContent = (input?.value.length || 0) + ' / ' + MAX_LENGTH;
-    if (button) button.disabled = state.busy || !input?.value.trim();
+    if (button) button.disabled = state.busy || (!input?.value.trim() && !state.selectedImage);
   }
 
   function selectFriend(id) {
     if (!state.friends.some(friend => friend.user_id === id)) return;
+    releaseSelectedImage();
     state.selected = id;
     state.messages = [];
     renderPrivate();
@@ -238,6 +339,7 @@
         state.messages.push(message);
         state.messages.sort((a,b) => new Date(a.created_at)-new Date(b.created_at));
         renderConversation();
+        if (message.attachment_path) resolveMessageImages([message], other);
       }
       if (message.recipient_id === state.user.id) {
         state.client.rpc('mark_private_messages_read',{p_other_user_id:other})
@@ -283,6 +385,7 @@
     document.querySelectorAll('#rpgView .tvn-tab').forEach(tab => tab.classList.toggle('is-active',tab === button));
     const grid = document.querySelector('#rpgView .tvn-grid');
     if (!grid) return;
+    releaseSelectedImage();
     state.selected = null;
     state.messages = [];
     renderPrivate();
@@ -301,6 +404,22 @@
         }
         return;
       }
+      const attachButton = event.target.closest('#rpgView [data-tvn-attach]');
+      if (attachButton && isPrivateOpen()) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        $('tvnPrivateImageInput')?.click();
+        return;
+      }
+      const removeImage = event.target.closest('#rpgView [data-tvn-image-remove]');
+      if (removeImage && isPrivateOpen()) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        releaseSelectedImage();
+        return;
+      }
       const friendButton = event.target.closest('#rpgView [data-private-friend]');
       if (friendButton) {
         event.preventDefault();
@@ -316,6 +435,9 @@
     document.addEventListener('input',event => {
       if (event.target?.id === 'tvnPrivateInput') updatePrivateCounter();
     });
+    document.addEventListener('change',event => {
+      if (event.target?.id === 'tvnPrivateImageInput') chooseImage(event.target.files?.[0]);
+    });
   }
 
   function handleAuth(user) {
@@ -323,6 +445,7 @@
     stopRealtime();
     state.user = user || null;
     state.friends = [];
+    releaseSelectedImage();
     state.selected = null;
     state.messages = [];
     state.unread = {};
