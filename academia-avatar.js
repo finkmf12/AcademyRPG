@@ -398,7 +398,7 @@
     };
     const sideGroups=[
       {title:'Aparência',items:[['hair','Cabelos'],['hat','Chapéus e elmos']]},
-      {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['accessory','Acessórios'],['weapon','Armas']]},
+      {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],['weapon','Armas']]},
       {title:'Identidade',items:[['nameColor','Cores neon']]},{title:'Poderes e títulos',items:[['aura','Auras'],['pet','Pets'],['title','Títulos']]}
     ];
     const cats='<div class="arc-side-all">'+categoryButton(['all','Todos os itens'])+'</div>'+
@@ -411,9 +411,11 @@
     const tabs='<button class="arc-tab '+(S.tab==='shop'?'active':'')+'" data-avatar-tab="shop">Loja de visuais</button><button class="arc-tab '+(S.tab==='inventory'?'active':'')+'" data-avatar-tab="inventory">Meu inventário ('+S.owned.length+')</button>';
     const items=S.filter==='wings'?list.map(card).join(''):S.filter==='all'
       ? SLOTS.slice(1).map(([slot,label])=>{
-          const group=list.filter(x=>x.slot===slot&&!(slot==='accessory'&&x.id.startsWith('wings-')));
+          const group=slot==='wings'
+            ? list.filter(x=>x.id.startsWith('wings-'))
+            : list.filter(x=>x.slot===slot&&!(slot==='accessory'&&x.id.startsWith('wings-')));
           return group.length?'<div class="arc-group-heading">'+label+'</div>'+group.map(card).join(''):'';
-        }).join('')+(list.some(x=>x.id.startsWith('wings-'))?'<div class="arc-group-heading">Asas</div>'+list.filter(x=>x.id.startsWith('wings-')).map(card).join(''):'')
+        }).join('')
       : list.map(card).join('');
     root.innerHTML=
       '<section class="arc-hero"><div><div class="arc-eyebrow">✦ ATELIÊ ARCANO ✦</div><h3>Seu personagem, sua lenda.</h3><p>Combine cabelos, chapéus, roupas, capas, máscaras e itens mágicos. Os visuais conquistados por mérito ficam guardados para sempre.</p><div class="arc-wallet"><span>🪙</span><div><small>SALDO DISPONÍVEL</small><b>'+S.balance.toLocaleString('pt-BR')+' Coins</b></div></div></div><div class="arc-stage arc-stage-aura-'+(current.aura||'none')+'"><div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'<div class="arc-stage-caption"><b>'+esc(previewName)+'</b><small>'+esc(SLOT_NAME[selected?.slot]||'Aventureiro')+'</small>'+previewButtons+'</div></div></section>'+
