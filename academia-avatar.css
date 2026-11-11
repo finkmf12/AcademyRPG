@@ -901,3 +901,40 @@
 }
 .arc-title-title-administrator .arc-title-sigil{color:#fff9ae;text-shadow:0 0 9px #fff06b,0 0 18px #ffbf00}
 @keyframes arc-admin-yellow-pulse{0%,100%{filter:brightness(.92);box-shadow:inset 0 0 13px rgba(255,230,70,.28),0 0 8px rgba(255,224,45,.65),0 0 19px rgba(255,190,0,.5)}50%{filter:brightness(1.28);box-shadow:inset 0 0 23px rgba(255,230,70,.52),0 0 16px rgba(255,240,70,1),0 0 36px rgba(255,190,0,.88),0 0 50px rgba(255,245,90,.45)}}
+
+
+/* Identidade visual exclusiva das novas auras */
+.arc-stage-aura-aura-aurora-crown{border-color:#70e9d0;background:radial-gradient(ellipse at 50% 38%,#49e7bd55,transparent 62%),linear-gradient(180deg,#193b43,#111a2b 88%)}
+.arc-stage-aura-aura-storm-convergence{border-color:#62dfff;background:radial-gradient(ellipse at 50% 42%,#48cfff55,transparent 60%),linear-gradient(180deg,#142d48,#111827 88%)}
+.arc-stage-aura-aura-infernal-crown{border-color:#ff7044;background:radial-gradient(ellipse at 50% 42%,#ff542e66,transparent 62%),linear-gradient(180deg,#49251f,#171a28 88%)}
+.arc-stage-aura-aura-lunar-eclipse{border-color:#b9a7ff;background:radial-gradient(ellipse at 50% 28%,#8f7bd955,transparent 60%),linear-gradient(180deg,#292442,#111827 88%)}
+.arc-stage-aura-aura-spectral-chain{border-color:#b9a4ff;background:radial-gradient(ellipse at 50% 48%,#8f69d955,transparent 60%),linear-gradient(180deg,#2b2140,#111827 88%)}
+.arc-stage-aura-aura-rune-tempest{border-color:#8ee8ff;background:radial-gradient(ellipse at 50% 42%,#5bcfff55,transparent 60%),linear-gradient(180deg,#19354a,#111827 88%)}
+.arc-stage-aura-aura-titan-heart{border-color:#ff7894;background:radial-gradient(ellipse at 50% 48%,#ff5c7955,transparent 60%),linear-gradient(180deg,#482538,#171827 88%)}
+.arc-stage-aura-aura-celestial-wings{border-color:#f5e9bf;background:radial-gradient(ellipse at 50% 36%,#fff0bd55,transparent 60%),linear-gradient(180deg,#3b3940,#111827 88%)}
+.arc-stage-aura-aura-aurora-crown .arc-stage-glow{background:radial-gradient(ellipse,#75ffe055,transparent 70%)}
+.arc-stage-aura-aura-storm-convergence .arc-stage-glow{background:radial-gradient(ellipse,#62dfff55,transparent 70%)}
+.arc-stage-aura-aura-infernal-crown .arc-stage-glow{background:radial-gradient(ellipse,#ff704455,transparent 70%)}
+.arc-stage-aura-aura-lunar-eclipse .arc-stage-glow{background:radial-gradient(ellipse,#b9a7ff55,transparent 70%)}
+.arc-stage-aura-aura-spectral-chain .arc-stage-glow{background:radial-gradient(ellipse,#b9a4ff55,transparent 70%)}
+.arc-stage-aura-aura-rune-tempest .arc-stage-glow{background:radial-gradient(ellipse,#8ee8ff55,transparent 70%)}
+.arc-stage-aura-aura-titan-heart .arc-stage-glow{background:radial-gradient(ellipse,#ff5c7955,transparent 70%)}
+.arc-stage-aura-aura-celestial-wings .arc-stage-glow{background:radial-gradient(ellipse,#fff0bd55,transparent 70%)}
+
+/* Novos títulos: cada placa usa material, textura e movimento próprios */
+.arc-title-title-stormbreaker{border-color:#8deaff;background:repeating-linear-gradient(125deg,#ffffff18 0 1px,transparent 1px 5px),linear-gradient(115deg,#183c55,#4ca4c6 48%,#14283e);color:#e8fbff;box-shadow:inset 0 0 15px #7ee8ff55,0 0 22px #52dfff66;text-shadow:0 0 8px #a8f4ff,0 0 18px #39cfff;animation:arc-title-storm-pulse 2.2s ease-in-out infinite}
+.arc-title-title-astral-oracle{border-color:#d7b5ff;background:radial-gradient(circle at 20% 25%,#ffffff55 0 1px,transparent 2px),radial-gradient(circle at 75% 70%,#ffffff55 0 1px,transparent 2px),linear-gradient(120deg,#251b4d,#7657a8 50%,#211a42);background-size:18px 18px,23px 23px,auto;color:#f5eaff;box-shadow:inset 0 0 15px #cda7ff55,0 0 22px #a779ff66;text-shadow:0 0 9px #d9b8ff}
+.arc-title-title-abyssal-monarch{border-color:#b38aff;background:repeating-linear-gradient(45deg,#ffffff0b 0 2px,transparent 2px 7px),linear-gradient(120deg,#100e22,#39245d 50%,#0b0c19);color:#e8d7ff;box-shadow:inset 0 0 18px #8e4dff55,0 0 24px #8e4dff66;text-shadow:0 0 8px #c69aff}
+.arc-title-title-ember-king{border-color:#ffb35c;background:repeating-linear-gradient(0deg,#ffffff12 0 1px,transparent 1px 4px),linear-gradient(115deg,#572116,#c34d25 48%,#3b171b);color:#fff0c2;box-shadow:inset 0 0 15px #ff9b3c55,0 0 22px #ff6b3c66;text-shadow:0 0 8px #ffd18a;animation:arc-title-ember-flicker 1.8s ease-in-out infinite}
+.arc-title-title-riftwalker{border-color:#83f0d4;background:repeating-linear-gradient(90deg,#ffffff0b 0 1px,transparent 1px 5px),linear-gradient(110deg,#123a3a,#267e78 50%,#18273e);color:#d9fff5;box-shadow:inset 0 0 16px #65ffe055,0 0 22px #3ce0c866;text-shadow:0 0 8px #9bffe9}
+.arc-title-title-dragonheart{border-color:#ff9b70;background:repeating-linear-gradient(135deg,#ffd9a51a 0 2px,transparent 2px 7px),linear-gradient(115deg,#4b1b24,#a43e36 48%,#301923);color:#ffe4cb;box-shadow:inset 0 0 14px #ff8b5b55,0 0 24px #ff5c4b66;text-shadow:0 0 9px #ffb17a}
+.arc-title-title-eternal-architect{border-color:#e4d19b;background:repeating-linear-gradient(90deg,#fff4c51a 0 1px,transparent 1px 6px),linear-gradient(115deg,#49402b,#a58a4d 48%,#302a22);color:#fff4cf;box-shadow:inset 0 0 15px #ffe8a055,0 0 22px #eacb7866;text-shadow:0 0 8px #ffeab2}
+.arc-title-title-prismatic-archon{border-color:#f3b4ff;background:repeating-linear-gradient(135deg,#ffffff1c 0 2px,transparent 2px 7px),linear-gradient(110deg,#713f83,#417d9a 35%,#a35c8a 68%,#51418b);color:#fff2ff;box-shadow:inset 0 0 17px #ffffff44,0 0 25px #d38cff88;text-shadow:0 0 8px #fff,0 0 16px #e4aaff;animation:arc-title-prism-shift 5s linear infinite}
+@keyframes arc-title-storm-pulse{0%,100%{filter:brightness(.94);box-shadow:inset 0 0 12px #7ee8ff44,0 0 15px #52dfff44}50%{filter:brightness(1.2);box-shadow:inset 0 0 18px #a8f4ff88,0 0 28px #52dfff88}}
+@keyframes arc-title-ember-flicker{0%,100%{filter:brightness(1);text-shadow:0 0 7px #ffb17a}50%{filter:brightness(1.22);text-shadow:0 0 13px #ffd18a,0 0 20px #ff7044}}
+@keyframes arc-title-prism-shift{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+
+/* Pets de grande porte: destaque na prévia e na vitrine */
+.arc-pet-item-card .arc-item-visual{background:radial-gradient(ellipse at 70% 62%,rgba(121,205,255,.28),transparent 58%),linear-gradient(145deg,#26364a,#101827 82%)}
+.arc-pet-companion{filter:drop-shadow(0 0 5px rgba(160,220,255,.45));transform-origin:165px 190px}
+.arc-pet-item-card .arc-avatar{filter:drop-shadow(0 0 12px rgba(121,205,255,.32)) drop-shadow(0 10px 12px rgba(0,0,0,.55))}
