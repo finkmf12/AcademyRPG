@@ -101,6 +101,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 <link rel="stylesheet" href="./academia-home-redesign.css?v=20261111-home-redesign">
 <link rel="stylesheet" href="./academia-home-stage2.css?v=20261111-stage2">
 <link rel="stylesheet" href="./academia-visual-refresh.css?v=20261111-vibrant-realm">
+<link rel="stylesheet" href="./academia-achievements.css?v=20261111-book-v1">
 <link rel="stylesheet" href="./academia-home-world.css?v=20261111-legendary-dashboard">
 
 <style id="login-layout-fix">
@@ -499,6 +500,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
     <div class="nav-label nav-label-player">JOGADOR</div>
     <nav class="rpgnav rpgnav-profile" aria-label="Área do jogador">
       <button type="button" data-rpg="perfil"><span class="ico">★</span> Perfil do Jogador</button>
+      <button type="button" data-rpg="conquistas"><span class="ico">🏅</span> Livro de Conquistas</button>
       <button type="button" data-rpg="atelier"><span class="ico">✦</span> Ateliê Arcano</button>
     </nav>
 
@@ -760,6 +762,7 @@ initialize().catch(error=>{console.error(error);toast('Falha ao iniciar. Confira
 <!-- O Ateliê deve ser registrado antes do módulo de XP, que consulta window.AcademiaAvatar. -->
 <script type="module" src="./academia-avatar.js?v=20261111-aura-title-pet-v2"></script>
 <script type="module" src="./academia-xp.js?v=20261111-coin-fix"></script>
+<script type="module" src="./academia-achievements.js?v=20261111-book-v1"></script>
 <script type="module" src="./academia-adventure.js?v=20261111-news-center"></script>
 <script type="module" src="./academia-feedback.js?v=20261111-feedback"></script>
 <script type="module" src="./academia-home.js?v=20261111-legendary-dashboard"></script>
