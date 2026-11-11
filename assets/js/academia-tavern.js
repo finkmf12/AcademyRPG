@@ -4,6 +4,8 @@
 
   const PAGE_SIZE = 45;
   const MAX_LENGTH = 400;
+  // Selo visual reservado à conta proprietária do Academia RPG (Visage).
+  const OWNER_USER_ID = '766d178a-ac9b-41ad-9806-e1cc7630635a';
   const $ = id => document.getElementById(id);
   const state = {
     client: null,
@@ -269,12 +271,15 @@
     const own = !!(state.user && message.user_id === state.user.id);
     const canDelete = own || state.teacher;
     const name = nameMarkup(message.sender_name || 'Aventureiro', message.sender_appearance || {});
+    const ownerBadge = state.active === 'global' && message.user_id === OWNER_USER_ID
+      ? '<span class="tvn-owner-tag" title="Proprietário da Academia RPG" aria-label="Dono da Academia RPG"><span aria-hidden="true">✦</span> DONO <span aria-hidden="true">✦</span></span>'
+      : '';
     const classLabel = message.sender_class
       ? '<span class="tvn-class-label">' + escapeHtml(message.sender_class) + '</span>'
       : '';
     return '<article class="tvn-message ' + (own ? 'is-own' : '') + '" data-message-id="' + escapeHtml(message.id) + '">' +
       '<div class="tvn-message-avatar">' + escapeHtml(message.sender_avatar || '🧙') + '</div>' +
-      '<div class="tvn-message-main"><div class="tvn-message-meta"><b>' + name + '</b>' + classLabel + '<time>' + formatTime(message.created_at) + '</time>' +
+      '<div class="tvn-message-main"><div class="tvn-message-meta"><b>' + name + '</b>' + ownerBadge + classLabel + '<time>' + formatTime(message.created_at) + '</time>' +
       (canDelete ? '<button type="button" class="tvn-message-delete" data-tvn-delete="' + escapeHtml(message.id) + '" title="Excluir mensagem" aria-label="Excluir mensagem">×</button>' : '') +
       '</div><div class="tvn-message-bubble">' + formatMessage(message.content || '') + '</div></div></article>';
   }
