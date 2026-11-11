@@ -197,3 +197,13 @@
   .notifications-bell.has-unread svg { animation:none; }
   .notifications-bell { transition:none; }
 }
+
+
+/* Fundos equipáveis: o cenário escolhido passa a compor toda a ficha do aventureiro */
+#rpgView .pf-legend-has-bg{background:#0b1727}
+#rpgView .pf-legend-has-bg>.arc-profile-background{z-index:0;opacity:.94}
+#rpgView .pf-legend-has-bg .pf-legend-main,
+#rpgView .pf-legend-has-bg .pf-legend-side{position:relative;z-index:1}
+#rpgView .pf-legend-has-bg .pf-legend-portrait{background:rgba(6,17,31,.52);backdrop-filter:blur(2px)}
+#rpgView .pf-legend-has-bg .pf-legend-side{background:rgba(5,14,27,.66);backdrop-filter:blur(5px);border-color:rgba(231,213,171,.3)}
+#rpgView .pf-legend-has-bg:before{border-color:rgba(255,229,174,.28)}
