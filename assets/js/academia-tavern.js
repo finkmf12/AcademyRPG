@@ -345,6 +345,7 @@
       state.unseen = 0;
       renderMessages({ toBottom: !!reset });
     } catch (error) {
+      if (requestToken !== state.loadToken || requestedChannel !== currentChannelKey()) return;
       console.error('Taverna · carregar mensagens:', error);
       if (feed) feed.innerHTML = '<div class="tvn-error"><b>Não foi possível abrir as conversas.</b><p>' + escapeHtml(error.message || 'Confira sua conexão e tente novamente.') + '</p><button type="button" data-tvn-retry>Tentar novamente</button></div>';
     } finally {
@@ -511,6 +512,8 @@
   async function loadOlder() {
     if (state.loadingOlder || !state.hasMore || !state.messages.length) return;
     state.loadingOlder = true;
+    const requestToken = state.loadToken;
+    const requestedChannel = currentChannelKey();
     const button = document.querySelector('[data-tvn-older]');
     if (button) {
       button.disabled = true;
@@ -525,12 +528,14 @@
       const { data, error } = await query.lt('created_at', before)
         .order('created_at', { ascending: false }).order('id', { ascending: false }).limit(PAGE_SIZE);
       if (error) throw error;
+      if (requestToken !== state.loadToken || requestedChannel !== currentChannelKey()) return;
       const rows = (data || []).reverse();
       const known = new Set(state.messages.map(item => String(item.id)));
       state.messages = rows.filter(item => !known.has(String(item.id))).concat(state.messages);
       state.hasMore = (data || []).length === PAGE_SIZE;
       renderMessages({ preserveTop: true });
     } catch (error) {
+      if (requestToken !== state.loadToken || requestedChannel !== currentChannelKey()) return;
       toast(error.message || 'Não foi possível carregar as mensagens anteriores.');
     } finally {
       state.loadingOlder = false;
