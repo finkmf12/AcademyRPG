@@ -987,3 +987,27 @@
 .arc-scene-bg-astral-garden .arc-bg-vignette{background:linear-gradient(180deg,#0b1c2033,transparent 45%,#0a1a24aa)}
 .arc-scene-bg-shadow-realm .arc-bg-vignette{box-shadow:inset 0 0 60px #050611cc}
 .arc-scene-bg-solar-sanctum .arc-bg-vignette{background:linear-gradient(180deg,#251a0d33,transparent 45%,#1b160faa)}
+
+
+/* Guarda-roupa: barra de rolagem integrada à identidade visual arcana */
+.arc-side-nav{
+  scrollbar-width:thin;
+  scrollbar-color:#8d7448 #111d2d;
+  scrollbar-gutter:stable;
+}
+.arc-side-nav::-webkit-scrollbar{width:9px;height:9px}
+.arc-side-nav::-webkit-scrollbar-track{
+  background:linear-gradient(180deg,#0c1726,#17263a);
+  border:1px solid #293b51;
+  border-radius:12px;
+}
+.arc-side-nav::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#d4b875,#8b7042 55%,#5f5037);
+  border:2px solid #142237;
+  border-radius:12px;
+  box-shadow:inset 0 0 3px #fff5,0 0 7px #c9a85b44;
+}
+.arc-side-nav::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,#f0d99b,#b38c4b 55%,#80663b);
+}
+.arc-side-nav::-webkit-scrollbar-corner{background:#111d2d}
