@@ -33,3 +33,30 @@
 #rpgView .tvn-private-empty-friends p{max-width:210px;color:#899bb0;font-size:10px;line-height:1.6}
 @media(max-width:850px){#rpgView .tvn-private-layout{grid-template-columns:1fr;min-height:0}#rpgView .tvn-private-list-card{max-height:310px;overflow:auto}#rpgView .tvn-private-friends{grid-template-columns:repeat(2,minmax(0,1fr))}#rpgView .tvn-private-chat-card{min-height:560px}}
 @media(max-width:560px){#rpgView .tvn-tabbar{grid-template-columns:1fr}#rpgView .tvn-private-friends{grid-template-columns:1fr}#rpgView .tvn-private-list-card{max-height:260px}#rpgView .tvn-private-chat-head{align-items:flex-start;flex-wrap:wrap}#rpgView .tvn-private-lock{margin-left:auto}#rpgView #tvnPrivateFeed{height:370px;min-height:300px}#rpgView .tvn-private-chat-card{min-height:0}}
+
+
+/* Prévia e imagens anexadas nas mensagens privadas. */
+#rpgView .tvn-private-chat-card .tvn-compose-row .tvn-attach{
+  flex:0 0 42px;width:42px;height:42px;border:1px solid #6b5a42;border-radius:10px;
+  background:linear-gradient(145deg,#25374a,#182537);color:#e8c98c;font-size:22px;
+  display:grid;place-items:center;
+}
+#rpgView .tvn-private-chat-card .tvn-compose-row .tvn-attach:hover{border-color:#d5b778;background:#324258}
+#rpgView .tvn-private-chat-card .tvn-image-preview{
+  display:flex;align-items:center;gap:11px;margin:10px 0 2px;padding:8px 10px;
+  border:1px solid #6b5a42;border-radius:10px;background:#101d2c;
+}
+#rpgView .tvn-private-chat-card .tvn-image-preview[hidden]{display:none}
+#rpgView .tvn-private-chat-card .tvn-image-preview>img{width:54px;height:54px;object-fit:cover;border-radius:7px;border:1px solid #67758a}
+#rpgView .tvn-private-chat-card .tvn-image-preview>span{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+#rpgView .tvn-private-chat-card .tvn-image-preview>span b{overflow:hidden;color:#ede1ca;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+#rpgView .tvn-private-chat-card .tvn-image-preview>span small{color:#9eacbc;font-size:10px}
+#rpgView .tvn-private-chat-card .tvn-image-preview>button{width:30px;height:30px;border:1px solid #765252;border-radius:8px;background:#3a252a;color:#ffb5b5;font-size:19px}
+#rpgView .tvn-private-chat-card .tvn-message-image-link{display:block;width:min(100%,390px);margin-top:8px;overflow:hidden;border:1px solid #52667b;border-radius:11px;background:#0a1320}
+#rpgView .tvn-private-chat-card .tvn-message-image{display:block;width:100%;max-height:340px;object-fit:contain;background:#0a1320}
+#rpgView .tvn-private-chat-card .tvn-message-image-status{margin-top:8px;padding:11px 13px;border:1px dashed #53647a;border-radius:9px;color:#aab9ca;font-size:11px;background:#101d2b}
+@media(max-width:520px){
+  #rpgView .tvn-private-chat-card .tvn-compose-row .tvn-attach{flex-basis:38px;width:38px;height:40px}
+  #rpgView .tvn-private-chat-card .tvn-message-image-link{width:min(100%,300px)}
+  #rpgView .tvn-private-chat-card .tvn-message-image{max-height:260px}
+}
