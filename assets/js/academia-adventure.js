@@ -171,14 +171,33 @@
   }
   async function ranking(){
     const r=await rpc('get_leaderboard',{p_period:S.period}),rows=r.entries||[];
-    const list=rows.map(e=>`<div class="adv-rank-row ${e.rank<=3?'top-'+e.rank:''} ${e.is_me?'is-me':''}">
-      <span class="adv-rank-number">${e.rank<=3?['♛','Ⅱ','Ⅲ'][e.rank-1]:n(e.rank)}</span><span class="adv-rank-avatar">${window.AcademiaAvatar ? window.AcademiaAvatar.render(e.appearance||{},'rank',e.class) : esc(e.avatar||'🧙')}</span>
-      <div class="adv-rank-name"><b>${window.AcademiaAvatar?.nameMarkup(e.name,e.appearance||{})||esc(e.name)}</b>${window.AcademiaAvatar?.titleMarkup(e.appearance||{},'rank') || ''}<small>${esc(e.class||'Aventureiro')} · Nível ${n(e.level)}</small></div>
+    const avatar=e=>window.AcademiaAvatar?window.AcademiaAvatar.render(e.appearance||{},'rank',e.class):esc(e.avatar||'🧙');
+    const heroName=e=>window.AcademiaAvatar?.nameMarkup(e.name,e.appearance||{})||esc(e.name);
+    const heroTitle=e=>window.AcademiaAvatar?.titleMarkup(e.appearance||{},'rank')||'';
+    const podiumEntries=rows.filter(e=>e.rank<=3).sort((a,b)=>a.rank-b.rank);
+    const podiumOrder=[2,1,3].map(rank=>podiumEntries.find(e=>e.rank===rank)).filter(Boolean);
+    const podium=podiumEntries.length?'<section class="adv-podium" aria-label="Pódio dos três melhores aventureiros">'+podiumOrder.map(e=>`
+      <article class="adv-podium-place place-${e.rank} ${e.is_me?'is-me':''}">
+        <div class="adv-podium-hero">
+          <span class="adv-podium-crown" aria-hidden="true">${e.rank===1?'♛':e.rank===2?'✦':'✧'}</span>
+          <div class="adv-podium-avatar">${avatar(e)}</div>
+          <b class="adv-podium-name">${heroName(e)}</b>
+          ${heroTitle(e)}
+          <small class="adv-podium-class">${esc(e.class||'Aventureiro')} · Nv. ${n(e.level)}</small>
+          <strong class="adv-podium-xp">${n(e.xp)} <small>XP</small></strong>
+          ${e.is_me?badge('Você','ready'):''}
+        </div>
+        <div class="adv-podium-block"><span>${e.rank}</span><b>${e.rank===1?'1º LUGAR':e.rank===2?'2º LUGAR':'3º LUGAR'}</b></div>
+      </article>`).join('')+'</section>':'';
+    const list=rows.filter(e=>e.rank>3).map(e=>`<div class="adv-rank-row ${e.is_me?'is-me':''}">
+      <span class="adv-rank-number">${n(e.rank)}</span><span class="adv-rank-avatar">${avatar(e)}</span>
+      <div class="adv-rank-name"><b>${heroName(e)}</b>${heroTitle(e)}<small>${esc(e.class||'Aventureiro')} · Nível ${n(e.level)}</small></div>
       <strong>${n(e.xp)} <small>XP</small></strong>${e.is_me?badge('Você','ready'):''}</div>`).join('');
     const me=r.my_rank?`Sua posição: #${n(r.my_rank)}`:'Seu personagem ainda não aparece nesta classificação.';
     $('rpgView').innerHTML=`<section class="adv-hero adv-rank-hero"><div><div class="adv-kicker">SALÃO DOS CAMPEÕES</div><h3>O conhecimento é sua maior arma.</h3><p>${esc(me)} Complete seu personagem para escolher o nome que será exibido aos outros aventureiros.</p></div><div class="adv-hero-mark">♛</div></section>
       <div class="adv-rank-toolbar"><div class="adv-tabs"><button class="${S.period==='all'?'active':''}" data-adv="period" data-period="all">Geral</button><button class="${S.period==='week'?'active':''}" data-adv="period" data-period="week">Esta semana</button><button class="${S.period==='month'?'active':''}" data-adv="period" data-period="month">Este mês</button></div><span class="adv-muted">Até 50 aventureiros</span></div>
-      <section class="adv-panel"><div class="adv-section-head"><div><h3>Classificação</h3><small>Somente XP validado pela Academia.</small></div></div><div class="adv-rank-list">${list||'<div class="adv-empty">Ainda não há aventureiros no ranking. Seja o primeiro a treinar!</div>'}</div></section>
+      ${podium}
+      <section class="adv-panel"><div class="adv-section-head"><div><h3>Classificação completa</h3><small>Somente XP validado pela Academia.</small></div></div><div class="adv-rank-list">${list||(!podium?'<div class="adv-empty">Ainda não há aventureiros no ranking. Seja o primeiro a treinar!</div>':'<div class="adv-empty">Os três primeiros aventureiros já ocupam o pódio.</div>')}</div></section>
       <p class="adv-footnote">O ranking mostra apenas nome de aventureiro, avatar, classe, nível e XP. E-mails não são exibidos.</p>`;
   }
 
