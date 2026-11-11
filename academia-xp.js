@@ -218,15 +218,15 @@ function renderMarket() {
   const history=M.transactions.length?M.transactions.slice(0,12).map(t=>`<div class="mk-history-row"><span>${esc(t.description)}</span><b class="${t.amount>0?'plus':'minus'}">${t.amount>0?'+':''}${t.amount} Coins</b></div>`).join(''):'<div class="mk-empty">Suas movimentações aparecerão aqui.</div>';
   el.innerHTML=`
     ${g?'<div class="rpg-note">Modo convidado: você pode conhecer os tesouros, mas precisa entrar com Google para ganhar, comprar e salvar Coins no seu perfil.</div>':''}
-    <section class="mk-hero"><div><span class="mk-eyebrow">✦ A feira dos aventureiros ✦</span><h3>Seu personagem. Suas escolhas.</h3><p>Conquiste moedas estudando e personalize sua identidade nos reinos da Academia.</p><div class="mk-rewards"><span>Quiz <b>+10</b></span><span>Sequência de 5 <b>+20</b></span><span>Conquista <b>+40</b></span><span>Missão diária <b>+30</b></span></div></div><button class="mk-atelier-cta" data-act="atelier">✦ Abrir o Ateliê Arcano</button><div class="mk-wallet"><span>🪙</span><small>SUA CARTEIRA</small><strong>${g?'—':M.balance.toLocaleString('pt-BR')+' Coins'}</strong></div></section>
+    <section class="mk-hero"><div><span class="mk-eyebrow">✦ A feira dos aventureiros ✦</span><h3>Seu personagem. Suas escolhas.</h3><p>Conquiste moedas estudando e personalize sua identidade nos reinos da Academia.</p><div class="mk-rewards"><span>Quiz <b>+150</b></span><span>Sequência de 5 <b>+75</b></span><span>Conquista <b>+40</b></span><span>Missão diária <b>+2.500</b></span></div></div><button class="mk-atelier-cta" data-act="atelier">✦ Abrir o Ateliê Arcano</button><div class="mk-wallet"><span>🪙</span><small>SUA CARTEIRA</small><strong>${g?'—':M.balance.toLocaleString('pt-BR')+' Coins'}</strong></div></section>
     <div class="mk-metrics"><div><small>Itens no inventário</small><b>${g?'—':inv.length}</b></div><div><small>Itens equipados</small><b>${g?'—':equipped}</b></div><div><small>Próxima raridade</small><b>Épica</b></div></div>
-    <section class="mk-daily"><div><b>📜 Missão diária</b><small>Resgate sua recompensa uma vez por dia.</small></div><button data-market-act="daily" ${g||!M.dailyAvailable?'disabled':''}>${g?'Entre para resgatar':M.dailyAvailable?'Resgatar +30 Coins':'Concluída hoje'}</button></section>
+    <section class="mk-daily"><div><b>📜 Missão diária</b><small>Resgate sua recompensa uma vez por dia.</small></div><button data-market-act="daily" ${g||!M.dailyAvailable?'disabled':''}>${g?'Entre para resgatar':M.dailyAvailable?'Resgatar +2.500 Coins':'Concluída hoje'}</button></section>
     <div class="mk-toolbar"><h3>Catálogo de tesouros</h3><input class="search" id="marketSearch" value="${esc(marketQuery)}" placeholder="Buscar item..." aria-label="Buscar item"></div>
     <div class="mk-filters">${catButtons}</div><div class="mk-grid" id="marketCatalog">${filtered.map(marketItemCard).join('')||'<div class="mk-empty">Nenhum tesouro encontrado.</div>'}</div>
     <section class="panel mk-panel" id="marketInventory"><h3>Seu inventário</h3><div class="mk-inventory">${g?'<div class="mk-empty">Entre com Google para visualizar seu inventário pessoal.</div>':inventoryHtml}</div><small class="mk-note">Itens comprados ficam disponíveis para equipar e desequipar sem custo adicional.</small></section>
     <section class="panel mk-panel"><h3>Prévia do perfil</h3><div class="mk-profile"><div class="mk-avatar ${frame?'has-frame':''}">${esc(avatar)}</div><div><h4>${esc(name)} ${nick?'<span class="mk-nick">✦ '+esc(nick.name)+'</span>':''}</h4><p>${esc(title?.name||'Aventureiro')} · Nível ${S?levelOf(S.p.total_xp):'—'}</p><small>Os cosméticos equipados serão exibidos no perfil do jogador.</small></div></div></section>
     <section class="panel mk-panel"><h3>Histórico de Coins</h3><div class="mk-history">${g?'<div class="mk-empty">O histórico fica salvo na conta Google.</div>':history}</div></section>
-    <p class="mk-note">Coins são pontos virtuais do jogo. Não podem ser transferidas entre contas e não envolvem compras com dinheiro real. Recompensas de chefes (+50) e eventos especiais serão conectadas quando esses modos forem implementados.</p>`;
+    <p class="mk-note">Coins são pontos virtuais do jogo. Não podem ser transferidas entre contas e não envolvem compras com dinheiro real. Chefes podem render até 2.000 Coins por vitória; a campanha também entrega grandes recompensas na primeira conclusão.</p>`;
 }
 
 async function marketAction(button) {
@@ -237,7 +237,7 @@ async function marketAction(button) {
     if(action==='daily'){
       const {data,error}=await C().supabase.rpc('market_claim_daily');
       if(error)throw error;
-      C().toast(data>0?'Missão diária concluída: +30 Coins!':'Você já resgatou a missão diária de hoje.');
+      C().toast(data>0?'Baú diário aberto: +2.500 Coins!':'Você já resgatou o baú diário de hoje.');
     }else if(action==='buy'){
       const item=M.items.find(x=>x.id===id);
       const {data,error}=await C().supabase.rpc('market_buy_item',{p_item_id:id});
