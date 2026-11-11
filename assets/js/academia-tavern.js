@@ -609,6 +609,10 @@
     state.messages = state.messages.filter(item => String(item.id) !== String(id));
     const node = document.querySelector('[data-message-id="' + CSS.escape(String(id)) + '"]');
     if (node) node.remove();
+    if (message.user_id === state.user.id && message.attachment_path) {
+      const { error: removeError } = await state.client.storage.from(ATTACHMENTS_BUCKET).remove([message.attachment_path]);
+      if (removeError) console.warn('Taverna · remover anexo órfão:', removeError.message);
+    }
     toast('Mensagem removida.');
   }
 
@@ -657,6 +661,9 @@
       state.messages = rows.filter(item => !known.has(String(item.id))).concat(state.messages);
       state.hasMore = (data || []).length === PAGE_SIZE;
       renderMessages({ preserveTop: true });
+      resolveMessageImages(rows).then(() => {
+        if (requestToken === state.loadToken && requestedChannel === currentChannelKey()) renderMessages();
+      });
     } catch (error) {
       if (requestToken !== state.loadToken || requestedChannel !== currentChannelKey()) return;
       toast(error.message || 'Não foi possível carregar as mensagens anteriores.');
@@ -794,6 +801,28 @@
         if (guildButton) guildButton.click();
         else toast('Abra a área Guildas no menu Aventura.');
       }
+    });
+
+    root.addEventListener('dragover', event => {
+      if (document.querySelector('#rpgView #tvnPrivateComposer')) return;
+      if (!event.target.closest('.tvn-chat-card') || !event.dataTransfer?.types?.includes('Files')) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'copy';
+      $('tvnComposer')?.classList.add('is-dragging-image');
+    });
+
+    root.addEventListener('dragleave', event => {
+      const card = event.target.closest('.tvn-chat-card');
+      if (!card) return;
+      if (!event.relatedTarget || !card.contains(event.relatedTarget)) $('tvnComposer')?.classList.remove('is-dragging-image');
+    });
+
+    root.addEventListener('drop', event => {
+      if (document.querySelector('#rpgView #tvnPrivateComposer')) return;
+      if (!event.target.closest('.tvn-chat-card') || !event.dataTransfer?.files?.length) return;
+      event.preventDefault();
+      $('tvnComposer')?.classList.remove('is-dragging-image');
+      chooseImage(event.dataTransfer.files[0]);
     });
 
     root.addEventListener('input', event => {
