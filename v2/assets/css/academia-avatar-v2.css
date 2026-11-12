@@ -1231,3 +1231,10 @@
 .atelier-bg-card-actions .atelier-bg-action{font-size:7px}
 @media(max-width:900px){.atelier-bg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.atelier-backgrounds .atelier-bg-showcase{grid-template-columns:1fr}.atelier-bg-stage-info{padding:18px}}
 @media(max-width:540px){.atelier-bg-stage{min-height:310px}.atelier-bg-stage>.arc-avatar{height:260px}.atelier-bg-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.atelier-bg-art{height:110px}.atelier-bg-copy{padding:8px}.atelier-bg-copy b{font-size:11px}.atelier-bg-copy p{font-size:7px;min-height:46px}.atelier-bg-card-actions{grid-template-columns:1fr}.atelier-bg-card-actions button{min-height:29px}.atelier-v2-tabs .arc-tab{min-width:calc(50% - 5px);flex:1 1 calc(50% - 5px)}}
+
+/* Nova coleção de armaduras — destaque visual sem esconder os itens antigos */
+.atelier-v2-catalog .arc-new-skin{border-color:rgba(203,171,255,.43);box-shadow:0 10px 28px rgba(0,0,0,.34),inset 0 0 24px rgba(145,105,227,.07)}
+.atelier-v2-catalog .arc-new-skin .arc-item-visual{background:radial-gradient(ellipse at 50% 46%,rgba(171,133,255,.34),transparent 58%),radial-gradient(ellipse at 50% 100%,rgba(234,190,117,.13),transparent 55%),linear-gradient(180deg,#1a2040,#0a1228)}
+.atelier-v2-catalog .arc-new-skin .arc-item-top{flex-wrap:wrap}
+.atelier-v2-catalog .arc-item-new-tag{padding:4px 6px;border:1px solid rgba(226,195,126,.55);border-radius:20px;background:linear-gradient(90deg,#6c4a29,#b28b4d);color:#fff0c2;font-size:6px;font-style:normal;font-weight:900;letter-spacing:1px}
+.atelier-v2-catalog .arc-new-skin:hover{border-color:#c6a9ff;box-shadow:0 16px 34px #0006,0 0 22px #aa8cff25}
