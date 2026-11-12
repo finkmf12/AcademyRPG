@@ -10,7 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=1">
+  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=2">
+  <link rel="stylesheet" href="./assets/css/academia-avatar-v2.css?v=1">
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div><div class="stars" aria-hidden="true"></div>
@@ -68,11 +69,13 @@
           <div class="section-heading lower-heading"><div><p class="eyebrow">TERRITÓRIOS</p><h3>Escolha seu próximo destino</h3></div><span class="muted small">4 regiões para explorar</span></div>
           <div class="realm-grid"><button class="realm-card realm-code" data-page="biblioteca"><span class="realm-symbol">⌘</span><small>REGIÃO I</small><b>Programação</b><span>Desvende a lógica por trás dos sistemas.</span><i>Explorar →</i></button><button class="realm-card realm-data" data-page="biblioteca"><span class="realm-symbol">▤</span><small>REGIÃO II</small><b>Banco de dados</b><span>Organize informações e descubra conexões.</span><i>Explorar →</i></button><button class="realm-card realm-model" data-page="biblioteca"><span class="realm-symbol">◇</span><small>REGIÃO III</small><b>Modelagem</b><span>Projete estruturas para grandes ideias.</span><i>Explorar →</i></button><button class="realm-card realm-tech" data-page="mapa"><span class="realm-symbol">✧</span><small>REGIÃO IV</small><b>Tecnologia</b><span>Explore o universo da inovação.</span><i>Explorar →</i></button></div>
         </section>
+        <section id="page-personagem" class="page"><div class="character-intro"><div><p class="eyebrow">SUA IDENTIDADE NO REINO</p><h2>Crie seu <em>aventureiro.</em></h2><p>Defina seu nome, escolha sua classe e personalize cada detalhe da aparência.</p></div><div class="character-seal">♙<small>HERÓI<br>DA ACADEMIA</small></div></div><section class="character-identity"><div class="identity-heading"><span>01 · FICHA DO AVENTUREIRO</span><small>Informações públicas do personagem</small></div><div class="identity-fields"><label>Nome do aventureiro<input id="character-name" type="text" minlength="3" maxlength="20" placeholder="Ex.: Guardião Arcano" autocomplete="off"></label><label>Classe<select id="character-class"><option value="guerreiro">Guerreiro</option><option value="mago">Mago</option><option value="arqueiro">Arqueiro</option><option value="assassino">Assassino</option></select></label><button id="save-character" class="identity-save" type="button">Salvar ficha <span>→</span></button></div><p id="character-status" class="identity-status" role="status"></p></section><div class="creator-section-title"><span>02 · APARÊNCIA</span><h3>Ateliê de personalização</h3><p>Pré-visualize seu herói, ajuste rosto, cabelo e detalhes, e salve quando estiver satisfeito.</p></div><div id="rpgView" class="character-atelier"></div></section>
         <section id="page-generic" class="page"><div class="generic-hero"><p class="eyebrow" id="generic-kicker">ACADEMIA RPG · 2.0</p><h2 id="generic-title">Seu próximo capítulo.</h2><p id="generic-description">Este território está sendo preparado para sua jornada.</p><span class="generic-rune">✧</span></div><div class="generic-content"><div class="generic-icon" id="generic-icon">✦</div><div><h3 id="generic-card-title">Um novo espaço está tomando forma.</h3><p id="generic-card-description">A nova Academia está sendo construída por etapas, mantendo seus dados e sua conta protegidos.</p></div></div></section>
       </div>
     </main>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
-  <script type="module" src="./assets/js/academy-v2.js?v=1"></script>
+  <script defer src="./assets/js/academia-avatar-v2.js?v=1"></script>
+  <script type="module" src="./assets/js/academy-v2.js?v=2"></script>
 </body>
 </html>
