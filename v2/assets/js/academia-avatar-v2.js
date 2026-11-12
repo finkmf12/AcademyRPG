@@ -660,46 +660,55 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
   }
   function renderAtelier(){
     const root=$('rpgView');if(!root)return;
-    if(S.guest){root.innerHTML='<section class="arc-hero"><div><div class="arc-eyebrow">ATELIÊ ARCANO</div><h3>Vista sua próxima aventura.</h3><p>Entre com sua conta Google para comprar itens, desbloquear recompensas e sincronizar seu personagem.</p></div>'+render({},'preview','mago')+'</section><div class="rpg-note">O modo convidado não acessa Coins nem inventário. Sua aparência será salva na conta conectada.</div>';return;}
+    if(S.guest){root.innerHTML='<section class="atelier-v2-guest"><div><span class="arc-eyebrow">ATELIÊ ARCANO</span><h3>Vista a sua próxima lenda.</h3><p>Entre com sua conta para desbloquear visuais, guardar combinações e sincronizar seu inventário.</p></div>'+render({},'preview','mago')+'</section><div class="rpg-note">O modo visitante pode explorar o Ateliê, mas não pode comprar ou salvar equipamentos.</div>';return;}
     if(S.error){root.innerHTML='<div class="panel"><b>Não foi possível abrir o Ateliê Arcano.</b><p class="sub">'+esc(S.error)+'</p><button class="secondary" data-avatar-action="reload">Tentar novamente</button></div>';return;}
+    if(S.tab==='backgrounds'){renderBackgroundGallery();return;}
     if(S.tab==='creator'){renderCreator();return;}
-    if(!S.catalog.length){root.innerHTML='<div class="panel"><div class="empty">Carregando os visuais do Ateliê Arcano...</div></div>';return;}
+    if(!S.catalog.length){root.innerHTML='<div class="panel"><div class="empty">Preparando as vitrines do Ateliê Arcano…</div></div>';return;}
     const current=getPreviewAppearance(),selected=item(S.previewId);
-    const previewName=selected?'Prévia: '+selected.name:'Seu visual atual';
-    const previewButtons=selected?'<button class="arc-button arc-button-soft" data-avatar-action="cancel-preview">Voltar ao visual equipado</button>':'<span class="arc-preview-hint">Experimente qualquer peça antes de comprar.</span>';
-    const list=S.catalog.filter(x=>(S.filter==='all'||(S.filter==='wings'?x.id.startsWith('wings-'):S.filter==='accessory'?(x.slot==='accessory'&&!x.id.startsWith('wings-')):x.slot===S.filter))&&(S.tab==='shop'||owns(x.id)));
+    const spotlight=selected||S.catalog.find(x=>x.id==='armor-astral-tempest')||S.catalog.find(x=>x.slot==='outfit'&&x.rarity==='Lendário')||S.catalog[0];
+    const featuredAppearance=Object.assign({},S.appearance||{});
+    if(spotlight)featuredAppearance[spotlight.slot]=spotlight.id;
     const categorySource=S.catalog.filter(x=>S.tab==='shop'||owns(x.id));
+    const list=S.catalog.filter(x=>(S.filter==='all'||(S.filter==='wings'?x.id.startsWith('wings-'):S.filter==='accessory'?(x.slot==='accessory'&&!x.id.startsWith('wings-')):x.slot===S.filter))&&(S.tab==='shop'||owns(x.id)));
     const categoryButton=([key,label])=>{
       const count=key==='all'?categorySource.length:key==='wings'?categorySource.filter(v=>v.id.startsWith('wings-')).length:key==='accessory'?categorySource.filter(v=>v.slot==='accessory'&&!v.id.startsWith('wings-')).length:categorySource.filter(v=>v.slot===key).length;
       return '<button type="button" class="arc-filter '+(S.filter===key?'active':'')+'" data-avatar-filter="'+key+'" aria-pressed="'+(S.filter===key?'true':'false')+'"><span class="arc-filter-icon">'+SLOT_ICON[key]+'</span><span class="arc-filter-label">'+label+'</span><small>'+count+'</small></button>';
     };
     const sideGroups=[
-      {title:'Aparência',items:[['hair','Cabelos'],['hat','Chapéus e elmos']]},
-      {title:'Equipamentos',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],['weapon','Armas']]},
-      {title:'Identidade',items:[['nameColor','Cores neon']]},{title:'Poderes e títulos',items:[['aura','Auras'],['pet','Pets'],['title','Títulos']]}
+      {title:'PERSONAGEM',items:[['hair','Cabelos'],['hat','Coroas e elmos']]},
+      {title:'EQUIPAMENTOS',items:[['outfit','Armaduras'],['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['weapon','Armas'],['accessory','Relíquias']]},
+      {title:'EFEITOS MÁGICOS',items:[['aura','Auras'],['pet','Companheiros']]},
+      {title:'IDENTIDADE',items:[['nameColor','Cores do nome'],['title','Títulos']]}
     ];
-    const cats='<div class="arc-side-all">'+categoryButton(['all','Todos os itens'])+'</div>'+
-      '<div class="arc-nav-groups">'+sideGroups.map(group=>
-        '<section class="arc-nav-group"><h4 class="arc-nav-heading">'+group.title+'</h4><div class="arc-nav-options">'+group.items.map(categoryButton).join('')+'</div></section>'
-      ).join('')+'</div>';
+    const cats='<div class="arc-side-all">'+categoryButton(['all','Coleção completa'])+'</div><div class="arc-nav-groups">'+sideGroups.map(group=>'<section class="arc-nav-group"><h4 class="arc-nav-heading">'+group.title+'</h4><div class="arc-nav-options">'+group.items.map(categoryButton).join('')+'</div></section>').join('')+'</div>';
     const activeCategory=S.filter==='wings'?['wings','Asas']:SLOTS.find(x=>x[0]===S.filter);
     const categoryHeading=S.filter==='all'?'Todos os visuais':(activeCategory?.[1]||'Visuais');
-    const categoryMeta=list.length+' '+(list.length===1?'item':'itens');
-    const tabs='<button class="arc-tab '+(S.tab==='shop'?'active':'')+'" data-avatar-tab="shop">Loja de visuais</button><button class="arc-tab '+(S.tab==='inventory'?'active':'')+'" data-avatar-tab="inventory">Meu inventário ('+S.owned.length+')</button><button class="arc-tab '+(S.tab==='creator'?'active':'')+'" data-avatar-tab="creator">Criador de Heróis</button>';
+    const categoryMeta=list.length+' '+(list.length===1?'peça disponível':'peças disponíveis');
+    const tabs='<button class="arc-tab '+(S.tab==='shop'?'active':'')+'" data-avatar-tab="shop">Vitrine arcana</button><button class="arc-tab '+(S.tab==='inventory'?'active':'')+'" data-avatar-tab="inventory">Minha coleção <b>'+S.owned.length+'</b></button><button class="arc-tab '+(S.tab==='backgrounds'?'active':'')+'" data-avatar-tab="backgrounds">Fundos <b>'+S.ownedBackgrounds.length+'</b></button><button class="arc-tab '+(S.tab==='creator'?'active':'')+'" data-avatar-tab="creator">Personalizar herói</button>';
     const items=S.filter==='wings'?list.map(card).join(''):S.filter==='all'
       ? SLOTS.slice(1).map(([slot,label])=>{
-          const group=slot==='wings'
-            ? list.filter(x=>x.id.startsWith('wings-'))
-            : list.filter(x=>x.slot===slot&&!(slot==='accessory'&&x.id.startsWith('wings-')));
+          const group=slot==='wings'?list.filter(x=>x.id.startsWith('wings-')):list.filter(x=>x.slot===slot&&!(slot==='accessory'&&x.id.startsWith('wings-')));
           return group.length?'<div class="arc-group-heading">'+label+'</div>'+group.map(card).join(''):'';
         }).join('')
-      : list.map(card).join('');
+      :list.map(card).join('');
+    const featuredOwn=owns(spotlight.id),featuredEquipped=equipped(spotlight.id);
+    const featuredAction=featuredOwn
+      ?'<button class="atelier-feature-action '+(featuredEquipped?'is-equipped':'')+'" data-avatar-action="'+(featuredEquipped?'unequip':'equip')+'" data-id="'+esc(spotlight.id)+'">'+(featuredEquipped?'Equipado · Remover':'Equipar visual')+'</button>'
+      :spotlight.unlock_type==='achievement'
+        ?'<span class="atelier-feature-unlock">Recompensa: '+esc(ACH_NAME[spotlight.achievement_id]||'conquista especial')+'</span>'
+        :'<button class="atelier-feature-action" data-avatar-action="buy" data-id="'+esc(spotlight.id)+'">Desbloquear por '+Number(spotlight.price).toLocaleString('pt-BR')+' Coins</button>';
     root.innerHTML=
-      '<section class="arc-hero"><div><div class="arc-eyebrow">✦ ATELIÊ ARCANO ✦</div><h3>Seu personagem, sua lenda.</h3><p>Combine cabelos, chapéus, roupas, capas, máscaras e itens mágicos. Os visuais conquistados por mérito ficam guardados para sempre.</p><div class="arc-wallet"><span class="coin-symbol coin-symbol-wallet-inline" aria-hidden="true"></span><div><small>SALDO DISPONÍVEL</small><b>'+S.balance.toLocaleString('pt-BR')+' Coins</b></div></div></div><div class="arc-stage arc-stage-aura-'+(current.aura||'none')+'">'+backgroundMarkup(S.background,'stage')+'<div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'<div class="arc-stage-caption"><b>'+esc(previewName)+'</b><small>'+esc(slotLabel(selected))+'</small>'+previewButtons+'</div></div></section>'+
-      '<div class="arc-toolbar"><div><h3>Guarda-roupa</h3><p>Os itens comprados usam as Coins que você já acumula na Academia.</p></div><div class="arc-tabs">'+tabs+'</div></div>'+
-      (S.tab==='inventory'?'<div class="arc-inventory-note">Itens no inventário: '+S.owned.length+' · Recompensas de conquistas não custam Coins.</div>':'')+
-      '<div class="arc-catalog-layout"><aside class="arc-side-nav" aria-label="Categorias do Ateliê"><div class="arc-side-title">FILTRAR VISUAIS</div>'+cats+'</aside><div class="arc-catalog-main"><div class="arc-catalog-heading"><div><span>CATÁLOGO ARCANO</span><h4>'+categoryHeading+'</h4></div><small>'+categoryMeta+'</small></div><div class="arc-item-grid">'+(items||'<div class="arc-empty">'+(S.tab==='inventory'?'Você ainda não possui itens nesta categoria. Visite a loja ou complete conquistas para receber novos visuais.':'Nenhum item encontrado nesta categoria.')+'</div>')+'</div></div></div>'+
-      '<p class="arc-footnote">As prévias não alteram seu personagem. A aparência só muda quando você equipa um item, e fica sincronizada na sua conta.</p>';
+      '<section class="atelier-v2">'+
+        '<header class="atelier-v2-header"><div class="atelier-v2-title"><span class="arc-eyebrow">✦ FORJA · MODA · MAGIA ✦</span><h2>Ateliê <em>Arcano</em></h2><p>Forje sua identidade. Vista sua lenda. Cada peça conta uma história.</p></div><div class="atelier-v2-wallet"><span class="atelier-coin-glyph">◈</span><div><small>SEU SALDO</small><b>'+Number(S.balance).toLocaleString('pt-BR')+' <i>Coins</i></b></div></div></header>'+
+        '<section class="atelier-v2-showcase"><div class="atelier-v2-stage arc-stage-aura-'+(current.aura||'none')+'">'+backgroundMarkup(S.background,'stage')+'<div class="atelier-v2-stage-shimmer"></div><div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'<div class="atelier-v2-stage-label"><span>VISUAL DO AVENTUREIRO</span><b>'+esc(selected?'Experimentando: '+selected.name:'Sua aparência atual')+'</b></div><div class="atelier-v2-stage-controls"><button type="button" data-avatar-action="cancel-preview" '+(!selected?'disabled':'')+'>↺ <span>Visual equipado</span></button><span>PRÉ-VISUALIZAÇÃO AO VIVO</span></div></div>'+
+        '<aside class="atelier-v2-feature"><div class="atelier-feature-top"><span>✦ PEÇA EM DESTAQUE</span><b class="atelier-rarity-'+(RARITY[spotlight.rarity]||'common')+'">'+esc(spotlight.rarity)+'</b></div><div class="atelier-feature-art">'+render(featuredAppearance,'preview',S.playerClass)+'</div><div class="atelier-feature-copy"><small>'+esc(slotLabel(spotlight)).toUpperCase()+'</small><h3>'+esc(spotlight.name)+'</h3><p>'+esc(spotlight.description)+'</p><div class="atelier-feature-price"><span>VALOR</span><b>'+Number(spotlight.price).toLocaleString('pt-BR')+' <i>Coins</i></b></div>'+featuredAction+'<button class="atelier-feature-preview" data-avatar-action="preview" data-id="'+esc(spotlight.id)+'">Experimentar no meu herói</button></div></aside></section>'+
+        '<div class="atelier-v2-collection-head"><div><span class="arc-eyebrow">O SEU ESTILO COMEÇA AQUI</span><h3>Galeria de visuais</h3><p>Peças com identidade própria, do equipamento clássico às relíquias lendárias.</p></div><div class="atelier-v2-collection-count"><b>'+S.catalog.length+'</b><small>PEÇAS<br>NO CATÁLOGO</small></div></div>'+
+        '<div class="atelier-v2-tabs">'+tabs+'</div>'+
+        (S.tab==='inventory'?'<div class="atelier-v2-inventory-note">✦ '+S.owned.length+' itens desbloqueados na sua coleção. As recompensas de conquistas continuam gratuitas.</div>':'')+
+        '<div class="atelier-v2-catalog"><aside class="arc-side-nav" aria-label="Categorias do Ateliê"><div class="arc-side-title">EXPLORAR POR CATEGORIA</div>'+cats+'</aside><main class="atelier-v2-catalog-main"><div class="atelier-v2-catalog-heading"><div><span>COLEÇÃO DA ACADEMIA</span><h4>'+categoryHeading+'</h4></div><small>'+categoryMeta+'</small></div><div class="arc-item-grid">'+(items||'<div class="arc-empty">'+(S.tab==='inventory'?'Nenhuma peça nesta categoria ainda. Explore a vitrine e desbloqueie novos visuais.':'Nenhuma peça encontrada nesta categoria.')+'</div>')+'</div></main></div>'+
+        '<p class="arc-footnote">Experimente qualquer item antes de comprar. Compras, Coins, recompensas e inventário continuam vinculados à sua conta.</p>'+
+      '</section>';
   }
   async function open(initialTab='shop'){
     S.tab=initialTab==='creator'?'creator':'shop';S.filter='all';S.previewId=null;S.error=null;
