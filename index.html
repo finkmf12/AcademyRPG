@@ -459,7 +459,16 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 (() => {
   const cores = Number(navigator.hardwareConcurrency || 0);
   const memory = Number(navigator.deviceMemory || 0);
-  if ((memory > 0 && memory <= 4) || (cores > 0 && cores <= 4)) {
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+  const reducedMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Muitos computadores escolares têm 4 núcleos / 8 threads e 8 GB.
+  // O navegador também pode limitar ou ocultar esses indicadores.
+  const modestCpu = cores > 0 && cores <= 8;
+  const modestMemory = memory > 0 && memory <= 8;
+
+  if (modestCpu || modestMemory || saveData || reducedMotion) {
     document.documentElement.classList.add('academia-low-power');
   }
 })();
