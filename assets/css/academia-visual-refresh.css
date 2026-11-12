@@ -402,3 +402,11 @@
   animation-play-state:paused;
   will-change:auto;
 }
+
+
+/* Papel de parede estático: mantém as partículas visíveis sem movimento contínuo. */
+.app::before {
+  animation: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
