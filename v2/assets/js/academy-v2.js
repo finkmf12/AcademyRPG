@@ -65,6 +65,7 @@ function renderCharacterOverview(){
  const rows=snapshot?.equipped||[];
  equipped.innerHTML=rows.length?rows.map(x=>'<article class="character-equipped-item"><span class="character-equipped-icon">'+escapeText(x.icon||'✦')+'</span><div><b>'+escapeText(x.name)+'</b><small>'+escapeText(x.label)+'</small></div><span class="character-equipped-state">ATIVO</span></article>').join(''):'<div class="character-loadout-empty"><b>Nenhum equipamento especial ativo.</b><span>Visite o Ateliê para montar seu conjunto.</span></div>';
 }
+window.addEventListener('academia-character-overview-refresh',()=>renderCharacterOverview());
 function showApp(user,isGuest=false){
  sessionUser=user;guest=isGuest;
  $('login-screen').hidden=true;$('app-shell').hidden=false;
