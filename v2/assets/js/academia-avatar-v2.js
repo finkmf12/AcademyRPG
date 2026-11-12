@@ -801,6 +801,6 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     action(b).catch(e=>{console.error(e);toast('Não foi possível concluir esta ação.');});
   });
   document.addEventListener('academia-avatar-changed',e=>{if(e.detail?.appearance)S.appearance=e.detail.appearance;});
-  document.addEventListener('academia-background-changed',e=>{S.background=e.detail?.background||null;if(document.querySelector('[data-rpg="atelier"].active'))renderAtelier();});
+  document.addEventListener('academia-background-changed',e=>{S.background=e.detail?.background||null;if(document.querySelector('.page.active #rpgView, .page.active #atelierView'))renderAtelier();});
   window.AcademiaAvatar={render,open,openCreator,renderAtelier,titleMarkup,nameMarkup,backgroundMarkup};
 })();
