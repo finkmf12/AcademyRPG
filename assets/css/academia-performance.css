@@ -1,79 +1,111 @@
-/* Academia RPG — perfil de desempenho
-   Mantém a identidade visual, mas remove efeitos contínuos e filtros caros. */
+/* Academia RPG — otimização de renderização para computadores modestos.
+   Mantém o papel de parede principal e a identidade visual; evita repintar
+   a mesma imagem enorme em vários painéis e desliga efeitos decorativos caros. */
+
 html { scroll-behavior: auto !important; }
 
-.login-card,
-.login .brand-emblem,
-.app .sidebar,
-.app .notifications-panel,
-.app .home-world-panel,
-.app .realm-map-panel,
-.app .realm-location,
-.app .home-daily-card,
-.app .home-player-card-legend {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.login-card {
-  background: rgba(8, 17, 29, .94) !important;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, .28) !important;
-}
-
-.login .brand-emblem {
-  filter: none !important;
-}
-
+/* Uma única camada usa o wallpaper pesado: o fundo geral do aplicativo. */
 .app {
   background-attachment: scroll !important;
+  background-position: center top !important;
+}
+
+.app .sidebar {
+  background: linear-gradient(180deg, rgba(10, 19, 37, .98), rgba(8, 15, 29, .98)) !important;
+  background-image: linear-gradient(180deg, rgba(10, 19, 37, .98), rgba(8, 15, 29, .98)) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 6px 0 18px rgba(0, 0, 0, .18) !important;
+}
+
+/* Evita repetir o wallpaper de 8,8 MB em heróis, mapas e cartões. */
+.app .realm-hero {
+  background-image:
+    linear-gradient(90deg, rgba(5, 12, 27, .94), rgba(8, 17, 36, .83) 55%, rgba(15, 20, 44, .62)),
+    radial-gradient(ellipse at 78% 42%, rgba(148, 121, 232, .18), transparent 38%) !important;
+}
+
+.app .realm-map-panel {
+  background-image: linear-gradient(180deg, rgba(10, 20, 38, .94), rgba(8, 17, 33, .97)) !important;
+}
+
+.app .home-player-card-legend {
+  background-image: linear-gradient(110deg, rgba(16, 28, 54, .98), rgba(19, 31, 57, .96) 65%, rgba(39, 35, 72, .94)) !important;
+}
+
+#rpgView .space-profile-art {
+  background-image:
+    linear-gradient(180deg, rgba(10, 17, 34, .35), rgba(8, 15, 29, .78)),
+    radial-gradient(ellipse at 50% 72%, rgba(139, 182, 232, .12), transparent 54%) !important;
+}
+
+/* Reduz composição de camadas translúcidas e filtros em áreas extensas. */
+.app::before,
+.app::after,
+.app .notifications-panel,
+.app .home-world-panel,
+.app .realm-location,
+.app .home-daily-card,
+.app .home-player-card-legend,
+.app .stat,
+.app .panel,
+.app .subject-card,
+.app .hero,
+.app .user-pill,
+.login-card,
+.login .brand-emblem {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 .app::before {
   display: none !important;
+  content: none !important;
   animation: none !important;
 }
 
 .app::after {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  animation: none !important;
 }
 
-.app .sidebar {
-  background-attachment: scroll !important;
-  box-shadow: 6px 0 18px rgba(0, 0, 0, .18) !important;
-}
-
-.app .home-world-panel,
-.app .realm-map-panel,
-.app .realm-location,
-.app .notifications-panel {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .16) !important;
-}
-
-/* Nenhum elemento decorativo deve ficar animando em segundo plano. */
+/* Desliga animações contínuas e partículas; mantém hover e feedback instantâneo. */
 .app *,
 .app *::before,
 .app *::after,
-.login *,
-.login *::before,
-.login *::after {
+.login-effects,
+.login-effects *,
+.login-effects *::before,
+.login-effects *::after {
   animation: none !important;
-  transition: none !important;
   scroll-behavior: auto !important;
 }
 
-/* Evita movimentos e efeitos de hover que forçam novas composições. */
-.app button:hover,
-.app .subject-card:hover,
+.app img,
+.app svg,
+.login img,
+.login svg,
+.login .brand-emblem {
+  filter: none !important;
+}
+
 .app .home-quick-card:hover,
 .app .realm-location:hover,
-.app .realm-hero-actions button:hover,
-.app .notifications-bell:hover {
+.app .subject-card:hover,
+.app button:hover {
   transform: none !important;
   filter: none !important;
 }
 
-/* Respeita também usuários que ativaram redução de movimento no sistema. */
+.login-effects,
+.login-effects__beams,
+.login-effects__candles,
+.login-effects__aura {
+  display: none !important;
+  mix-blend-mode: normal !important;
+  filter: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -82,79 +114,4 @@ html { scroll-behavior: auto !important; }
     transition: none !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Segunda camada: neutraliza filtros caros espalhados pelos módulos RPG. */
-.app,
-.app * ,
-.app *::before,
-.app *::after {
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-
-.app * {
-  animation: none !important;
-  transition: none !important;
-}
-
-.app img,
-.app svg,
-.app .arc-avatar,
-.app .home-player-portrait img {
-  filter: none !important;
-}
-
-/* O papel de parede permanece estático, sem camada fixa ou efeito de vidro. */
-.app {
-  background-attachment: scroll !important;
-}
-
-.app::before {
-  display: none !important;
-  content: none !important;
-}
-
-.app::after {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-
-/* Camada final: remove os efeitos de iluminação animada da tela de entrada.
-   O papel de parede continua visível, mas sem camadas desfocadas sobre ele. */
-.login-effects,
-.login-effects__beams,
-.login-effects__candles,
-.login-effects__aura {
-  display: none !important;
-  animation: none !important;
-  filter: none !important;
-  mix-blend-mode: normal !important;
-}
-
-/* Evita que filtros de imagens e elementos decorativos provoquem recomposição. */
-.login *,
-.login *::before,
-.login *::after,
-.app *,
-.app *::before,
-.app *::after {
-  animation: none !important;
-  transition: none !important;
-  scroll-behavior: auto !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
-
-.login img,
-.login svg,
-.app img,
-.app svg {
-  filter: none !important;
-}
-
-/* Mantém o wallpaper como imagem estática, sem rolagem fixa. */
-.app {
-  background-attachment: scroll !important;
 }
