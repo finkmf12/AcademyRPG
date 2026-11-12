@@ -782,18 +782,29 @@ let academiaModulesScheduled = false;
 function loadAcademiaModules() {
   if (academiaModulesPromise) return academiaModulesPromise;
   academiaModulesPromise = (async () => {
+    // Divide a inicialização em pequenos lotes para evitar um pico único de CPU.
     await import('./assets/js/academia-avatar.js?v=20261112-hair-sidefix-v1');
-    await Promise.all([
-      import('./assets/js/academia-notifications.js?v=20261111-notification-center-v1'),
-      import('./assets/js/academia-xp.js?v=20261111-hero-creator-v1'),
-      import('./assets/js/academia-achievements.js?v=20261111-achievement-rewards-v2'),
-      import('./assets/js/academia-adventure.js?v=20261111-guild-arcane-expansion-v1'),
-      import('./assets/js/academia-feedback.js?v=20261111-feedback'),
-      import('./assets/js/academia-home.js?v=20261111-legendary-dashboard'),
-      import('./assets/js/academia-tavern.js?v=20261111-chat-images-v1'),
-      import('./assets/js/academia-private-messages.js?v=20261111-chat-images-v1'),
-      import('./assets/js/academia-visitation.js?v=20261112-player-spaces-v1')
-    ]);
+    await new Promise(resolve => {
+      const run = () => Promise.all([
+        import('./assets/js/academia-notifications.js?v=20261111-notification-center-v1'),
+        import('./assets/js/academia-xp.js?v=20261111-hero-creator-v1'),
+        import('./assets/js/academia-achievements.js?v=20261111-achievement-rewards-v2'),
+        import('./assets/js/academia-home.js?v=20261111-legendary-dashboard')
+      ]).then(resolve);
+      if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1800 });
+      else setTimeout(run, 500);
+    });
+    await new Promise(resolve => {
+      const run = () => Promise.all([
+        import('./assets/js/academia-adventure.js?v=20261111-guild-arcane-expansion-v1'),
+        import('./assets/js/academia-feedback.js?v=20261111-feedback'),
+        import('./assets/js/academia-tavern.js?v=20261111-chat-images-v1'),
+        import('./assets/js/academia-private-messages.js?v=20261111-chat-images-v1'),
+        import('./assets/js/academia-visitation.js?v=20261112-player-spaces-v1')
+      ]).then(resolve);
+      if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2200 });
+      else setTimeout(run, 700);
+    });
   })().catch(error => {
     academiaModulesPromise = null;
     academiaModulesScheduled = false;
