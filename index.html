@@ -790,7 +790,7 @@ function loadAcademiaModules() {
         import('./assets/js/academia-xp.js?v=20261111-hero-creator-v1'),
         import('./assets/js/academia-achievements.js?v=20261111-achievement-rewards-v2'),
         import('./assets/js/academia-home.js?v=20261111-legendary-dashboard')
-      ]).then(resolve);
+      ]).then(resolve, reject);
       if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1800 });
       else setTimeout(run, 500);
     });
@@ -801,7 +801,7 @@ function loadAcademiaModules() {
         import('./assets/js/academia-tavern.js?v=20261111-chat-images-v1'),
         import('./assets/js/academia-private-messages.js?v=20261111-chat-images-v1'),
         import('./assets/js/academia-visitation.js?v=20261112-player-spaces-v1')
-      ]).then(resolve);
+      ]).then(resolve, reject);
       if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2200 });
       else setTimeout(run, 700);
     });
