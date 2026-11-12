@@ -1072,3 +1072,315 @@
     -webkit-backdrop-filter: none;
   }
 }
+
+
+/* ---------------------------------------------------------
+   Harmonização dos módulos RPG existentes
+   Reaproveita os componentes de jogo; apenas atualiza a pele.
+   --------------------------------------------------------- */
+:root {
+  --adv-gold: #e2c58b;
+  --adv-gold-bright: #f0dcae;
+  --adv-ink: #070d1b;
+  --adv-panel: #101b31;
+  --adv-panel-2: #152440;
+  --adv-line: #304361;
+  --adv-muted: #a7b4cc;
+  --adv-text: #f1f4ff;
+  --adv-green: #8ee1c2;
+  --adv-red: #d98d9b;
+  --ab-accent: #b9a5ef;
+}
+
+.app #rpgView .adv-hero,
+.app #rpgView .adv-story-hero,
+.app #rpgView .adv-story-fight-banner,
+.app #rpgView .adv-podium-hero,
+.app #rpgView .adv-flag-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 84% 25%, rgba(156, 131, 235, .18), transparent 36%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(22, 32, 62, .96) 58%, rgba(17, 42, 60, .96));
+  box-shadow: var(--arc-shadow-soft), inset 0 1px rgba(255, 255, 255, .06);
+}
+
+.app #rpgView .adv-panel,
+.app #rpgView .adv-mission,
+.app #rpgView .adv-boss-card,
+.app #rpgView .adv-question-panel,
+.app #rpgView .adv-hp-card,
+.app #rpgView .adv-table-wrap,
+.app #rpgView .adv-guild-forms,
+.app #rpgView .adv-fight-hud,
+.app #rpgView .adv-answer-list,
+.app #rpgView .adv-flag-panel {
+  border-color: rgba(126, 153, 195, .22);
+  background: linear-gradient(145deg, rgba(18, 31, 55, .96), rgba(12, 23, 43, .96));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+}
+
+.app #rpgView .adv-tabs button,
+.app #rpgView .adv-guild-tabs button,
+.app #rpgView .adv-teacher-tabs button {
+  border-color: rgba(126, 153, 195, .22);
+  background: rgba(18, 31, 54, .78);
+  color: #b9c7dc;
+}
+
+.app #rpgView .adv-tabs button.active,
+.app #rpgView .adv-guild-tabs button.active,
+.app #rpgView .adv-teacher-tabs button.active {
+  border-color: rgba(156, 131, 235, .58);
+  background: linear-gradient(110deg, rgba(112, 87, 177, .32), rgba(62, 97, 151, .2));
+  color: #eee8ff;
+  box-shadow: inset 0 0 0 1px rgba(156, 131, 235, .1);
+}
+
+.app #rpgView .adv-table th {
+  background: rgba(26, 42, 69, .94);
+  color: #c4b5ef;
+}
+
+.app #rpgView .adv-table td {
+  border-color: rgba(126, 153, 195, .14);
+  color: #c9d4e6;
+}
+
+.app #rpgView .adv-table tr:hover td {
+  background: rgba(90, 105, 153, .12);
+}
+
+/* Ateliê: câmara de personagem e catálogo */
+.app #rpgView .arc-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 82% 28%, rgba(156, 131, 235, .2), transparent 40%),
+    linear-gradient(130deg, rgba(12, 21, 42, .97), rgba(24, 31, 62, .96) 62%, rgba(15, 37, 53, .95));
+}
+
+.app #rpgView .arc-avatar-preview,
+.app #rpgView .arc-stage {
+  border-color: rgba(146, 132, 206, .42);
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(142, 125, 220, .18), transparent 48%),
+    linear-gradient(180deg, rgba(21, 34, 61, .96), rgba(8, 17, 33, .98));
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .26), inset 0 0 34px rgba(141, 127, 207, .06);
+}
+
+.app #rpgView .arc-stage:before,
+.app #rpgView .arc-stage-glow {
+  background: radial-gradient(circle, rgba(156, 131, 235, .23), transparent 70%);
+}
+
+.app #rpgView .arc-tabs,
+.app #rpgView .arc-side-nav {
+  border-color: rgba(126, 153, 195, .2);
+  background: rgba(12, 23, 43, .92);
+}
+
+.app #rpgView .arc-tab,
+.app #rpgView .arc-filter {
+  border-color: rgba(126, 153, 195, .18);
+  background: rgba(20, 34, 59, .82);
+  color: #b7c5db;
+}
+
+.app #rpgView .arc-tab.active,
+.app #rpgView .arc-filter.active {
+  border-color: rgba(156, 131, 235, .58);
+  background: linear-gradient(110deg, rgba(111, 87, 177, .3), rgba(57, 90, 143, .22));
+  color: #efe8ff;
+}
+
+.app #rpgView .arc-item-card,
+.app #rpgView .arc-premium-card,
+.app #rpgView .arc-title-card,
+.app #rpgView .arc-title-card-preview {
+  border-color: rgba(126, 153, 195, .24);
+  background: linear-gradient(145deg, rgba(21, 35, 62, .96), rgba(12, 23, 43, .96));
+  box-shadow: 0 10px 27px rgba(0, 0, 0, .18);
+}
+
+.app #rpgView .arc-item-card:hover,
+.app #rpgView .arc-premium-card:hover {
+  border-color: rgba(156, 131, 235, .56);
+  box-shadow: 0 17px 34px rgba(0, 0, 0, .28), 0 0 20px rgba(156, 131, 235, .08);
+}
+
+.app #rpgView .arc-button,
+.app #rpgView .arc-item-main {
+  border-color: rgba(226, 197, 139, .58);
+  background: linear-gradient(135deg, #efdbad, #c89e65);
+  color: #211b2a;
+}
+
+.app #rpgView .arc-button-soft,
+.app #rpgView .arc-preview-btn {
+  border-color: rgba(134, 157, 200, .3);
+  background: rgba(26, 43, 72, .9);
+  color: #e0e8f8;
+}
+
+.app #rpgView .arc-preview-btn.active {
+  border-color: rgba(156, 131, 235, .62);
+  background: rgba(86, 68, 143, .4);
+  color: #eee7ff;
+}
+
+/* Taverna, chat global e conversas privadas */
+.app #rpgView .tvn-page {
+  color: var(--arc-text);
+}
+
+.app #rpgView .tvn-hero {
+  border-color: rgba(156, 131, 235, .38);
+  background:
+    radial-gradient(ellipse at 83% 30%, rgba(156, 131, 235, .2), transparent 38%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(23, 31, 61, .96) 62%, rgba(15, 39, 55, .96));
+}
+
+.app #rpgView .tvn-chat-card,
+.app #rpgView .tvn-side-card,
+.app #rpgView .tvn-private-list-card,
+.app #rpgView .tvn-private-chat-card,
+.app #rpgView .tvn-rules-card,
+.app #rpgView .tvn-channel-card {
+  border-color: rgba(126, 153, 195, .22);
+  background: linear-gradient(145deg, rgba(17, 30, 54, .97), rgba(10, 21, 40, .97));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .2);
+}
+
+.app #rpgView .tvn-tabbar {
+  border-color: rgba(126, 153, 195, .22);
+  background: rgba(10, 20, 39, .86);
+}
+
+.app #rpgView .tvn-tab,
+.app #rpgView .tvn-private-friend {
+  border-color: rgba(126, 153, 195, .17);
+  background: rgba(20, 34, 58, .72);
+  color: #c1cde0;
+}
+
+.app #rpgView .tvn-tab.is-active,
+.app #rpgView .tvn-private-friend.is-selected {
+  border-color: rgba(156, 131, 235, .56);
+  background: linear-gradient(110deg, rgba(109, 86, 174, .3), rgba(53, 88, 143, .2));
+  color: #f0eaff;
+  box-shadow: inset 3px 0 0 var(--arc-violet);
+}
+
+.app #rpgView .tvn-chat-head,
+.app #rpgView .tvn-private-chat-head {
+  border-color: rgba(126, 153, 195, .18);
+  background: rgba(23, 38, 65, .94);
+}
+
+.app #rpgView .tvn-composer,
+.app #rpgView .tvn-private-chat-card .tvn-compose-row {
+  border-color: rgba(126, 153, 195, .26);
+  background: rgba(7, 16, 32, .84);
+}
+
+.app #rpgView .tvn-composer textarea,
+.app #rpgView .tvn-private-chat-card textarea {
+  color: var(--arc-text);
+}
+
+.app #rpgView .tvn-message,
+.app #rpgView .tvn-private-message {
+  border-color: rgba(126, 153, 195, .14);
+  background: rgba(19, 33, 57, .72);
+}
+
+.app #rpgView .tvn-message a,
+.app #rpgView .tvn-private-message a {
+  color: #a8d9fa;
+}
+
+/* Conquistas: o dourado indica raridade; o violeta dá unidade ao livro */
+.app #rpgView .ab-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 85% 30%, rgba(156, 131, 235, .18), transparent 38%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(21, 32, 61, .96));
+}
+
+.app #rpgView .ab-card {
+  border-color: rgba(126, 153, 195, .22);
+  background: linear-gradient(145deg, rgba(19, 33, 58, .96), rgba(11, 22, 41, .96));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .18);
+}
+
+.app #rpgView .ab-card:hover {
+  border-color: rgba(156, 131, 235, .5);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .26);
+}
+
+.app #rpgView .ab-filter,
+.app #rpgView .ab-category {
+  border-color: rgba(126, 153, 195, .23);
+  background: rgba(20, 34, 58, .82);
+  color: #c0cce0;
+}
+
+.app #rpgView .ab-filter.active,
+.app #rpgView .ab-category.active {
+  border-color: rgba(156, 131, 235, .55);
+  background: rgba(93, 74, 151, .34);
+  color: #eee7ff;
+}
+
+/* Espaços pessoais e visitação de personagens */
+.app #rpgView .space-profile-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 78% 28%, rgba(156, 131, 235, .19), transparent 40%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(22, 34, 63, .96));
+}
+
+.app #rpgView .space-item-card,
+.app #rpgView .space-guestbook,
+.app #rpgView .space-message,
+.app #rpgView .space-settings-form,
+.app #rpgView .space-visitor {
+  border-color: rgba(126, 153, 195, .21);
+  background: rgba(16, 29, 51, .91);
+}
+
+.app #rpgView .space-message-meta time,
+.app #rpgView .space-visitor time {
+  color: #8e9fbd;
+}
+
+.app #rpgView .space-guestbook-form textarea,
+.app #rpgView .space-settings-form select {
+  border-color: rgba(126, 153, 195, .27);
+  background: rgba(7, 15, 30, .84);
+  color: var(--arc-text);
+}
+
+/* Tabelas, inputs e botões comuns dos módulos dinâmicos */
+.app #rpgView table {
+  border-color: rgba(126, 153, 195, .18);
+  color: #d5deee;
+}
+
+.app #rpgView th {
+  color: #c7b7f2;
+}
+
+.app #rpgView td {
+  border-color: rgba(126, 153, 195, .14);
+}
+
+.app #rpgView input,
+.app #rpgView select,
+.app #rpgView textarea {
+  accent-color: var(--arc-violet);
+}
+
+.app #rpgView button:disabled {
+  filter: saturate(.65);
+  opacity: .58;
+}
