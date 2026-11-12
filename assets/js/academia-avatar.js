@@ -668,12 +668,14 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       '<div class="arc-catalog-layout"><aside class="arc-side-nav" aria-label="Categorias do Ateliê"><div class="arc-side-title">FILTRAR VISUAIS</div>'+cats+'</aside><div class="arc-catalog-main"><div class="arc-catalog-heading"><div><span>CATÁLOGO ARCANO</span><h4>'+categoryHeading+'</h4></div><small>'+categoryMeta+'</small></div><div class="arc-item-grid">'+(items||'<div class="arc-empty">'+(S.tab==='inventory'?'Você ainda não possui itens nesta categoria. Visite a loja ou complete conquistas para receber novos visuais.':'Nenhum item encontrado nesta categoria.')+'</div>')+'</div></div></div>'+
       '<p class="arc-footnote">As prévias não alteram seu personagem. A aparência só muda quando você equipa um item, e fica sincronizada na sua conta.</p>';
   }
-  async function open(){
-    S.tab='shop';S.filter='all';S.previewId=null;S.error=null;
+  async function open(initialTab='shop'){
+    S.tab=initialTab==='creator'?'creator':'shop';S.filter='all';S.previewId=null;S.error=null;
+    if(S.tab==='creator')S.creatorDraft=normalizeCreator(S.appearance);
     renderAtelier();
     try{await load();S.creatorDraft=normalizeCreator(S.appearance);}catch(e){S.error=e.message||String(e);console.error('Ateliê Arcano:',e);}
     if(document.querySelector('[data-rpg="atelier"].active'))renderAtelier();
   }
+  const openCreator=()=>open('creator');
   async function action(button){
     if(!button||S.busy)return;
     const act=button.dataset.avatarAction,id=button.dataset.id;
@@ -735,5 +737,5 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
   }
   document.addEventListener('academia-avatar-changed',e=>{if(e.detail?.appearance)S.appearance=e.detail.appearance;});
   document.addEventListener('academia-background-changed',e=>{S.background=e.detail?.background||null;if(document.querySelector('[data-rpg="atelier"].active'))renderAtelier();});
-  window.AcademiaAvatar={render,open,renderAtelier,titleMarkup,nameMarkup,backgroundMarkup};
+  window.AcademiaAvatar={render,open,openCreator,renderAtelier,titleMarkup,nameMarkup,backgroundMarkup};
 })();
