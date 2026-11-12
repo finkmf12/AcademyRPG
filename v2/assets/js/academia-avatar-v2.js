@@ -630,7 +630,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       ? '<div class="arc-title-card-preview">'+titleMarkup(preview,'card')+'<small>PRÉVIA DO TÍTULO</small></div>'
       : x.slot==='nameColor'
         ? '<div class="arc-name-color-preview"><b class="'+nameColorClass(x.id)+'">Aventureiro</b><small>PRÉVIA DA COR DO NOME</small></div>'
-        : render(preview,'item',S.playerClass);
+        : NEW_SKINS.has(x.id)?'<div class="arc-skin-art-sprite arc-skin-art-'+x.id+'" role="img" aria-label="Arte conceitual de '+esc(x.name)+'"></div>':render(preview,'item',S.playerClass);
     return '<article class="arc-item-card arc-rarity-'+(RARITY[x.rarity]||'common')+(premium?' arc-premium-card':'')+(x.slot==='title'?' arc-title-item-card':'')+(x.slot==='aura'?' arc-aura-item-card':'')+(x.slot==='pet'?' arc-pet-item-card':'')+(fresh?' arc-new-skin':'')+'"><div class="arc-item-visual">'+visual+'</div><div class="arc-item-copy"><div class="arc-item-top"><span>'+esc(x.id.startsWith('wings-')?'Asas':(SLOT_NAME[x.slot]||x.slot))+'</span><b>'+esc(x.rarity)+'</b>'+(fresh?'<i class="arc-item-new-tag">NOVA COLEÇÃO</i>':'')+'</div><h4>'+esc(x.name)+'</h4><p>'+esc(x.description)+'</p><div class="arc-item-bottom">'+action+'</div><div class="arc-item-actions"><button class="arc-preview-btn '+(S.previewId===x.id?'active':'')+'" data-avatar-action="preview" data-id="'+esc(x.id)+'">'+(S.previewId===x.id?'Em prévia':'Experimentar')+'</button>'+main+'</div></div></article>';
   }
   function renderBackgroundGallery(){
