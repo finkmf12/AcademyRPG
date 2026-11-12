@@ -42,6 +42,7 @@ async function loadProfile(){
  $('home-total-coins').textContent=coins.toLocaleString('pt-BR');
  $('home-xp-bar').style.width=Math.min(100,(xp%100))+'%';
  syncContext();
+ if(window.AcademiaAvatar&&$('home-avatar'))$('home-avatar').innerHTML=window.AcademiaAvatar.render(profileData.appearance||{},'mini',profileData.class||'mago');
 }
 function showApp(user,isGuest=false){
  sessionUser=user;guest=isGuest;
