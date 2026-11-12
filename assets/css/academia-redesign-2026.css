@@ -1734,3 +1734,652 @@
   .app::before { animation: none; }
   .app button { transition: none; }
 }
+
+
+/* =========================================================
+   ETAPA 2 · MÓDULOS INTERNOS
+   Biblioteca, Mercado Arcano, Ateliê e Perfil do Aventureiro.
+   Apenas apresentação: nenhuma regra de negócio é alterada.
+   ========================================================= */
+
+/* Biblioteca: arquivo de estudos com linguagem de arquivo arcano */
+.app #library{
+  display:block;
+  color:#e6edf8;
+}
+.app #library>.library-intro{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin:0 0 18px;
+}
+.app #library .panel{
+  position:relative;
+  overflow:hidden;
+  padding:clamp(16px,2.4vw,26px);
+  border:1px solid rgba(130,166,210,.24);
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 100% 0,rgba(99,145,205,.13),transparent 42%),
+    linear-gradient(145deg,rgba(15,29,49,.94),rgba(9,19,34,.96));
+  box-shadow:0 18px 44px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.035);
+}
+.app #library .toolbar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0 0 18px;
+  padding:0 0 17px;
+  border-bottom:1px solid rgba(144,171,207,.15);
+}
+.app #library .search{
+  min-width:0;
+  min-height:44px;
+  padding:11px 15px;
+  border:1px solid rgba(134,165,207,.28);
+  border-radius:11px;
+  outline:none;
+  background:rgba(5,14,27,.72);
+  color:#edf4ff;
+  box-shadow:inset 0 1px 5px rgba(0,0,0,.18);
+}
+.app #library .search::placeholder{color:#7e94b2}
+.app #library .search:focus{
+  border-color:rgba(134,183,244,.7);
+  box-shadow:0 0 0 3px rgba(93,145,211,.13);
+}
+.app #library .upload-label{
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  flex:0 0 auto;
+  padding:10px 16px;
+  border:1px solid rgba(228,194,127,.48);
+  border-radius:11px;
+  background:linear-gradient(135deg,#d8bd83,#b58a50);
+  color:#1b1a20;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.25px;
+  box-shadow:0 7px 18px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.42);
+  transition:transform .2s,filter .2s,box-shadow .2s;
+}
+.app #library .upload-label:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.07);
+  box-shadow:0 10px 24px rgba(0,0,0,.24),0 0 20px rgba(216,184,120,.13);
+}
+.app #library .file-list{gap:9px}
+.app #library .file-row{
+  min-width:0;
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px 14px;
+  border:1px solid rgba(128,158,197,.16);
+  border-radius:12px;
+  background:linear-gradient(100deg,rgba(25,42,65,.76),rgba(14,27,46,.84));
+  transition:border-color .2s,transform .2s,background .2s;
+}
+.app #library .file-row:hover{
+  transform:translateX(2px);
+  border-color:rgba(133,178,232,.38);
+  background:linear-gradient(100deg,rgba(30,51,78,.88),rgba(17,32,53,.9));
+}
+.app #library .file-icon{
+  width:42px;height:42px;
+  flex:0 0 42px;
+  border:1px solid rgba(139,173,217,.22);
+  border-radius:11px;
+  background:linear-gradient(145deg,rgba(78,116,164,.24),rgba(102,87,155,.16));
+  color:#c8dcfa;
+}
+.app #library .file-info strong{color:#e8f0fc;font-size:12px}
+.app #library .file-info small{display:block;margin-top:4px;color:#8298b4;font-size:10px}
+.app #library .file-actions{flex:0 0 auto;gap:7px}
+.app #library .file-actions button{
+  min-height:34px;
+  padding:7px 11px;
+  border:1px solid rgba(125,161,207,.23);
+  border-radius:8px;
+  background:rgba(75,111,157,.13);
+  color:#c8dcf5;
+  font-weight:750;
+  transition:background .2s,border-color .2s;
+}
+.app #library .file-actions button:hover{
+  border-color:rgba(142,185,239,.48);
+  background:rgba(86,132,190,.23);
+}
+.app #library .file-actions button.delete{
+  border-color:rgba(194,119,133,.22);
+  background:rgba(117,43,62,.13);
+  color:#e2aab5;
+}
+.app #library .file-actions button.delete:hover{
+  border-color:rgba(221,133,151,.48);
+  background:rgba(139,51,72,.24);
+}
+.app #library .empty{
+  min-height:210px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  border:1px dashed rgba(129,163,207,.24);
+  border-radius:14px;
+  background:rgba(7,17,31,.28);
+  color:#93a9c5;
+  line-height:1.6;
+}
+.app #library .empty:before{
+  content:"⌘";
+  width:48px;height:48px;
+  display:grid;place-items:center;
+  border:1px solid rgba(137,172,219,.25);
+  border-radius:14px;
+  background:rgba(91,129,180,.12);
+  color:#b6d1f5;
+  font-size:24px;
+}
+.app #library .empty b{color:#dce9fa;font:600 17px Georgia,serif}
+
+/* Mercado Arcano: vitrine de relíquias com acentos de bronze e ametista */
+.app #rpgView .mk-hero{
+  position:relative;
+  overflow:hidden;
+  min-height:230px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:20px;
+  padding:clamp(22px,3vw,34px);
+  border:1px solid rgba(204,164,105,.38);
+  border-radius:20px;
+  background:
+    radial-gradient(ellipse at 83% 12%,rgba(160,116,201,.24),transparent 34%),
+    radial-gradient(ellipse at 6% 100%,rgba(186,137,76,.15),transparent 38%),
+    linear-gradient(118deg,#1d2035 0%,#25213a 54%,#171c31 100%);
+  box-shadow:0 20px 48px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.07);
+}
+.app #rpgView .mk-hero:before{
+  content:"✧";
+  position:absolute;
+  right:clamp(170px,20vw,270px);
+  top:50%;
+  transform:translateY(-55%);
+  color:rgba(227,199,145,.1);
+  font-size:clamp(100px,15vw,180px);
+  pointer-events:none;
+}
+.app #rpgView .mk-hero>div:first-child{position:relative;z-index:1;max-width:650px}
+.app #rpgView .mk-eyebrow{color:#d7b77e;letter-spacing:2.3px;font-size:9px;font-weight:900}
+.app #rpgView .mk-hero h3{
+  margin:9px 0 8px;
+  color:#f6e7c9;
+  font:600 clamp(24px,3vw,36px)/1.15 Georgia,serif;
+  letter-spacing:.1px;
+}
+.app #rpgView .mk-hero p{max-width:560px;color:#c0bfd2;font-size:12px;line-height:1.7}
+.app #rpgView .mk-rewards{display:flex;flex-wrap:wrap;gap:7px;margin-top:17px}
+.app #rpgView .mk-rewards span{
+  padding:7px 10px;
+  border:1px solid rgba(215,188,139,.17);
+  border-radius:8px;
+  background:rgba(7,12,25,.28);
+  color:#bcb8c9;
+  font-size:9px;
+}
+.app #rpgView .mk-rewards b{color:#f0d18f}
+.app #rpgView .mk-atelier-cta{
+  position:relative;z-index:2;
+  grid-column:2;grid-row:1;
+  align-self:end;
+  padding:11px 14px;
+  border:1px solid rgba(226,193,133,.38);
+  border-radius:10px;
+  background:rgba(7,12,24,.45);
+  color:#f0d7a7;
+  font-size:10px;font-weight:850;
+}
+.app #rpgView .mk-atelier-cta:hover{background:rgba(179,137,77,.2);border-color:rgba(232,200,143,.68)}
+.app #rpgView .mk-wallet{
+  position:relative;z-index:2;
+  grid-column:2;grid-row:1;
+  align-self:start;
+  min-width:172px;
+  padding:17px 19px;
+  border:1px solid rgba(229,193,126,.48);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(12,17,31,.86),rgba(33,26,43,.88));
+  box-shadow:0 12px 26px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.06);
+}
+.app #rpgView .mk-wallet small{color:#b9a987;font-size:8px;letter-spacing:1.7px;font-weight:850}
+.app #rpgView .mk-wallet strong{color:#f5d995;font:700 21px Georgia,serif}
+.app #rpgView .mk-metrics{gap:10px;margin:13px 0 19px}
+.app #rpgView .mk-metrics>div{
+  padding:14px 17px;
+  border:1px solid rgba(140,151,197,.2);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(28,31,53,.83),rgba(14,20,38,.9));
+}
+.app #rpgView .mk-metrics small{color:#a6a7bd;font-size:9px;letter-spacing:.5px}
+.app #rpgView .mk-metrics b{color:#e7d5ac;font:700 22px Georgia,serif}
+.app #rpgView .mk-daily{
+  padding:14px 17px;
+  border:1px solid rgba(193,157,103,.25);
+  border-radius:13px;
+  background:linear-gradient(100deg,rgba(80,58,51,.26),rgba(37,31,51,.72));
+}
+.app #rpgView .mk-daily b{color:#f0dfbf;font:600 14px Georgia,serif}
+.app #rpgView .mk-daily small{color:#b9b4c1;font-size:10px}
+.app #rpgView .mk-daily button{
+  border:1px solid rgba(226,193,132,.4);
+  border-radius:9px;
+  background:linear-gradient(135deg,#d4b77d,#a9844f);
+  color:#1d1a20;
+  font-size:10px;font-weight:900;
+}
+.app #rpgView .mk-daily button:disabled{opacity:.5;filter:saturate(.5)}
+.app #rpgView .mk-toolbar{margin:26px 0 12px}
+.app #rpgView .mk-toolbar h3,.app #rpgView .mk-panel h3{color:#efe2cb;font:600 21px Georgia,serif}
+.app #rpgView .mk-toolbar .search{
+  min-height:40px;
+  border:1px solid rgba(154,150,190,.27);
+  border-radius:10px;
+  background:rgba(11,16,31,.72);
+  color:#eeeafa;
+}
+.app #rpgView .mk-filter{
+  border:1px solid rgba(151,142,183,.2);
+  border-radius:20px;
+  background:rgba(26,26,47,.72);
+  color:#bcb9cd;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.app #rpgView .mk-filter.active{
+  border-color:rgba(220,185,123,.48);
+  background:linear-gradient(100deg,rgba(166,124,74,.23),rgba(111,84,143,.2));
+  color:#f2d9a8;
+}
+.app #rpgView .mk-grid{gap:13px}
+.app #rpgView .mk-item{
+  overflow:hidden;
+  border:1px solid rgba(148,142,180,.2);
+  border-radius:15px;
+  background:linear-gradient(155deg,rgba(31,31,54,.96),rgba(14,19,36,.97));
+  box-shadow:0 10px 25px rgba(0,0,0,.16);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.app #rpgView .mk-item:hover{
+  transform:translateY(-3px);
+  border-color:rgba(205,174,126,.42);
+  box-shadow:0 17px 32px rgba(0,0,0,.24),0 0 20px rgba(149,116,189,.08);
+}
+.app #rpgView .mk-art{background:radial-gradient(circle at 50% 38%,rgba(146,117,192,.2),transparent 58%),linear-gradient(145deg,#262540,#171b31)}
+.app #rpgView .mk-item-background .mk-art{background:#1b2038}
+.app #rpgView .mk-itembody{padding:15px}
+.app #rpgView .mk-itemtitle h4{color:#f0e6d6;font:600 15px Georgia,serif}
+.app #rpgView .mk-itemtitle small{color:#aaa8c0}
+.app #rpgView .mk-itemtitle strong{color:#e9c982;font-size:12px}
+.app #rpgView .mk-item p{color:#aeb4c7;font-size:10px;line-height:1.6}
+.app #rpgView .mk-buy{
+  min-height:37px;
+  border:1px solid rgba(224,190,127,.38);
+  border-radius:9px;
+  background:linear-gradient(120deg,#c7a66e,#9c7950);
+  color:#1b1920;
+  font-size:10px;font-weight:900;
+}
+.app #rpgView .mk-buy:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.app #rpgView .mk-buy.owned,.app #rpgView .mk-buy:disabled{border-color:rgba(138,155,177,.2);background:rgba(95,107,127,.18);color:#9eacc0}
+.app #rpgView .mk-panel{
+  margin-top:17px;
+  padding:20px;
+  border:1px solid rgba(143,151,188,.2);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(21,26,46,.92),rgba(11,18,34,.95));
+}
+.app #rpgView .mk-inv{
+  border-color:rgba(145,150,184,.16);
+  border-radius:10px;
+  background:rgba(6,13,27,.35);
+}
+.app #rpgView .mk-inv-info b{color:#e8e4ed}
+.app #rpgView .mk-inv-info small{color:#999eb4}
+.app #rpgView .mk-inv button{
+  border:1px solid rgba(157,155,192,.28);
+  border-radius:8px;
+  background:rgba(100,91,143,.16);
+  color:#d5c9ed;
+}
+.app #rpgView .mk-profile{
+  padding:14px;
+  border:1px solid rgba(142,150,188,.17);
+  border-radius:12px;
+  background:rgba(6,13,27,.34);
+}
+.app #rpgView .mk-profile h4{color:#f1e5d0;font:600 17px Georgia,serif}
+.app #rpgView .mk-profile p{color:#b4b6c8}
+.app #rpgView .mk-history-row{border-color:rgba(143,150,184,.13);color:#c5c5d4}
+
+/* Ateliê Arcano: oficina de criação, com palco de personagem e navegação lateral */
+.app #rpgView .arc-hero{
+  position:relative;
+  overflow:hidden;
+  min-height:245px;
+  padding:clamp(20px,3vw,32px);
+  border:1px solid rgba(135,154,214,.34);
+  border-radius:19px;
+  background:
+    radial-gradient(ellipse at 82% 42%,rgba(122,101,204,.22),transparent 35%),
+    radial-gradient(ellipse at 0 100%,rgba(77,132,177,.16),transparent 40%),
+    linear-gradient(115deg,#101f38,#1a2141 57%,#201d3d);
+  box-shadow:0 18px 42px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.06);
+}
+.app #rpgView .arc-hero>div:first-child{position:relative;z-index:1;max-width:500px}
+.app #rpgView .arc-eyebrow{color:#b8b0f1;font-size:9px;letter-spacing:2.1px;font-weight:900}
+.app #rpgView .arc-hero h3{color:#f0e9ff;font:600 clamp(24px,3vw,34px)/1.15 Georgia,serif}
+.app #rpgView .arc-hero p{max-width:480px;color:#b8c5df;font-size:11px;line-height:1.7}
+.app #rpgView .arc-wallet{
+  border-color:rgba(223,196,139,.3);
+  border-radius:11px;
+  background:rgba(6,14,29,.48);
+}
+.app #rpgView .arc-wallet small{color:#aab7d1}
+.app #rpgView .arc-wallet b{color:#f0d69d;font:700 18px Georgia,serif}
+.app #rpgView .arc-stage{
+  border:1px solid rgba(177,169,230,.4);
+  border-radius:17px;
+  background:radial-gradient(ellipse at 50% 36%,rgba(121,108,201,.28),transparent 55%),linear-gradient(145deg,rgba(8,17,35,.92),rgba(19,23,48,.96));
+  box-shadow:0 14px 32px rgba(0,0,0,.3),inset 0 0 35px rgba(139,128,223,.08);
+}
+.app #rpgView .arc-stage:before{border-color:rgba(193,184,245,.13)}
+.app #rpgView .arc-stage-caption{
+  border:1px solid rgba(159,155,205,.2);
+  border-radius:11px;
+  background:rgba(7,14,29,.78);
+  backdrop-filter:blur(10px);
+}
+.app #rpgView .arc-stage-caption b{color:#eee7ff}
+.app #rpgView .arc-stage-caption small{color:#9caed0}
+.app #rpgView .arc-toolbar{
+  align-items:flex-end;
+  margin:24px 0 14px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(138,155,207,.17);
+}
+.app #rpgView .arc-toolbar h3{color:#f0e9ff;font:600 22px Georgia,serif}
+.app #rpgView .arc-toolbar p{color:#9eafcc;font-size:10px}
+.app #rpgView .arc-tab{
+  border:1px solid rgba(151,154,205,.22);
+  border-radius:9px;
+  background:rgba(23,29,56,.72);
+  color:#b9c4df;
+}
+.app #rpgView .arc-tab.active{
+  border-color:rgba(202,181,246,.48);
+  background:linear-gradient(110deg,rgba(94,111,183,.32),rgba(133,89,177,.22));
+  color:#f1e7ff;
+  box-shadow:inset 0 -2px rgba(191,174,239,.45);
+}
+.app #rpgView .arc-catalog-layout{gap:16px}
+.app #rpgView .arc-side-nav{
+  border:1px solid rgba(131,151,208,.23);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(17,29,53,.94),rgba(10,19,37,.95));
+  box-shadow:0 12px 28px rgba(0,0,0,.16);
+}
+.app #rpgView .arc-side-title{color:#aab7d9}
+.app #rpgView .arc-nav-heading{color:#899fc8}
+.app #rpgView .arc-side-nav .arc-filter{
+  border-color:transparent;
+  border-radius:9px;
+  background:transparent;
+  color:#aebbd5;
+}
+.app #rpgView .arc-side-nav .arc-filter:hover{
+  border-color:rgba(145,166,220,.2);
+  background:rgba(104,123,187,.12);
+  color:#e0e6f5;
+}
+.app #rpgView .arc-side-nav .arc-filter.active{
+  border-color:rgba(205,184,244,.3);
+  background:linear-gradient(100deg,rgba(93,117,185,.24),rgba(131,90,177,.16));
+  color:#f0e8ff;
+  box-shadow:inset 3px 0 #bba9ed;
+}
+.app #rpgView .arc-side-nav .arc-filter.active .arc-filter-icon{color:#d2c4ff}
+.app #rpgView .arc-catalog-heading{
+  padding:0 0 11px;
+  border-bottom:1px solid rgba(139,157,207,.16);
+}
+.app #rpgView .arc-catalog-heading span{color:#9badd0;letter-spacing:1.7px}
+.app #rpgView .arc-catalog-heading h4{color:#f0e9ff;font:600 20px Georgia,serif}
+.app #rpgView .arc-item-card{
+  border-color:rgba(136,153,204,.2);
+  border-radius:13px;
+  background:linear-gradient(155deg,rgba(25,34,62,.97),rgba(11,19,39,.98));
+  box-shadow:0 9px 22px rgba(0,0,0,.17);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.app #rpgView .arc-item-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(174,158,234,.45);
+  box-shadow:0 15px 30px rgba(0,0,0,.25),0 0 18px rgba(126,111,207,.09);
+}
+.app #rpgView .arc-item-visual{background:radial-gradient(circle at 50% 40%,rgba(109,124,193,.2),transparent 60%),linear-gradient(145deg,#1a2949,#111a35)}
+.app #rpgView .arc-item-copy{background:transparent}
+.app #rpgView .arc-item-card h4{color:#f0eaff;font:600 15px Georgia,serif}
+.app #rpgView .arc-item-card p{color:#aebbd4;font-size:10px;line-height:1.55}
+.app #rpgView .arc-item-top b{color:#d6c6f3}
+.app #rpgView .arc-preview-btn{
+  border-color:rgba(143,164,220,.28);
+  border-radius:8px;
+  background:rgba(90,113,175,.13);
+  color:#c8d5f1;
+}
+.app #rpgView .arc-preview-btn:hover,.app #rpgView .arc-preview-btn.active{
+  border-color:rgba(179,164,237,.5);
+  background:rgba(116,99,181,.24);
+  color:#f0eaff;
+}
+.app #rpgView .arc-item-main{
+  border-color:rgba(218,188,128,.36);
+  border-radius:8px;
+  background:linear-gradient(120deg,#cbb27e,#9c8058);
+  color:#1b1a20;
+  font-weight:900;
+}
+.app #rpgView .arc-item-main.owned,.app #rpgView .arc-item-main.equipped,.app #rpgView .arc-item-main.locked{
+  border-color:rgba(143,159,191,.2);
+  background:rgba(97,113,147,.17);
+  color:#aab8d2;
+}
+.app #rpgView .arc-footnote{
+  padding:12px 14px;
+  border-left:2px solid rgba(164,151,220,.42);
+  background:rgba(30,33,61,.3);
+  color:#899fbd;
+  font-size:10px;
+  line-height:1.65;
+}
+
+/* Criador de Heróis: separar palco e controles sem apertar a prévia */
+.app #rpgView .arc-creator-head{
+  padding:0 0 16px;
+  border-bottom:1px solid rgba(145,159,210,.18);
+}
+.app #rpgView .arc-creator-head h3{color:#f0eaff;font:600 25px Georgia,serif}
+.app #rpgView .arc-creator-head p{color:#aebbd4}
+.app #rpgView .arc-creator-preview{
+  border:1px solid rgba(144,155,213,.24);
+  border-radius:15px;
+  background:linear-gradient(160deg,rgba(20,31,59,.95),rgba(9,18,37,.97));
+  box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+.app #rpgView .arc-creator-stage{
+  border:1px solid rgba(165,157,221,.3);
+  border-radius:13px;
+  background:radial-gradient(ellipse at 50% 38%,rgba(128,112,207,.23),transparent 60%),linear-gradient(145deg,#0d1b37,#1b2041);
+}
+.app #rpgView .arc-creator-group{
+  overflow:hidden;
+  border:1px solid rgba(139,154,207,.2);
+  border-radius:13px;
+  background:linear-gradient(145deg,rgba(20,31,57,.86),rgba(11,19,39,.9));
+}
+.app #rpgView .arc-creator-group>h4{
+  padding:13px 15px;
+  border-bottom:1px solid rgba(145,157,207,.15);
+  background:rgba(85,99,157,.11);
+  color:#d9d2f4;
+  font:600 14px Georgia,serif;
+}
+.app #rpgView .arc-creator-field>b{color:#dce5f8}
+.app #rpgView .arc-creator-choice{
+  border-color:rgba(141,157,205,.22);
+  border-radius:9px;
+  background:rgba(6,15,32,.48);
+  color:#b9c7e0;
+}
+.app #rpgView .arc-creator-choice:hover{border-color:rgba(164,157,224,.48);background:rgba(98,96,168,.16)}
+.app #rpgView .arc-creator-choice.active{
+  border-color:rgba(198,180,246,.62);
+  background:linear-gradient(120deg,rgba(97,120,186,.28),rgba(134,91,178,.2));
+  color:#f2eaff;
+  box-shadow:inset 0 0 0 1px rgba(190,175,241,.1);
+}
+
+/* Perfil do Aventureiro: ficha de personagem com leitura em camadas */
+.app #rpgView .pf-legend{
+  position:relative;
+  overflow:hidden;
+  gap:20px;
+  padding:clamp(20px,3vw,30px);
+  border:1px solid rgba(194,168,119,.34);
+  border-radius:19px;
+  background:
+    radial-gradient(ellipse at 14% 100%,rgba(60,119,143,.18),transparent 42%),
+    radial-gradient(ellipse at 100% 0,rgba(151,119,183,.17),transparent 38%),
+    linear-gradient(125deg,#14283b,#18243a 58%,#211f39);
+  box-shadow:0 18px 42px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.06);
+}
+.app #rpgView .pf-legend:before{border-color:rgba(224,199,151,.2)}
+.app #rpgView .pf-legend-main{gap:22px}
+.app #rpgView .pf-legend-portrait{
+  border:1px solid rgba(220,194,145,.4);
+  border-radius:15px;
+  background:radial-gradient(ellipse at 50% 36%,rgba(104,139,169,.26),transparent 60%),rgba(5,14,27,.56);
+  box-shadow:0 10px 26px rgba(0,0,0,.24),inset 0 0 24px rgba(152,187,216,.08);
+}
+.app #rpgView .pf-legend-kicker{color:#b9c4d3;letter-spacing:2px;font-size:8px}
+.app #rpgView .pf-legend-info h3{color:#f3e5c9;font:600 clamp(24px,3vw,32px) Georgia,serif}
+.app #rpgView .pf-legend-meta{color:#bdc9d9;line-height:1.8}
+.app #rpgView .pf-legend-actions button{
+  border:1px solid rgba(206,181,131,.35);
+  border-radius:9px;
+  background:rgba(6,16,29,.4);
+  color:#ead7b2;
+}
+.app #rpgView .pf-legend-actions button:hover{background:rgba(165,132,82,.17);border-color:rgba(224,194,142,.58)}
+.app #rpgView .pf-legend-side{
+  border:1px solid rgba(190,176,145,.24);
+  border-radius:13px;
+  background:rgba(5,14,27,.42);
+}
+.app #rpgView .pf-legend-side>small{color:#b7c5d7;letter-spacing:1.4px}
+.app #rpgView .pf-level-numbers{color:#d9e3ef}
+.app #rpgView .pf-level-numbers strong{color:#efd18d}
+.app #rpgView .pf-level-track{background:rgba(2,10,23,.6)}
+.app #rpgView .pf-level-track i{background:linear-gradient(90deg,#6b9fd0,#b49ce9,#e4c17c);box-shadow:0 0 13px rgba(152,172,231,.35)}
+.app #rpgView .pf-next-level{color:#aebdd0}
+.app #rpgView .pf-stat-grid{gap:11px;margin:15px 0 20px}
+.app #rpgView .pf-stat-grid>div,.app #rpgView .pf-stat-grid>article{
+  border:1px solid rgba(130,163,194,.2);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(18,39,58,.9),rgba(11,23,39,.94));
+}
+.app #rpgView .pf-stat-grid small{color:#94abc1}
+.app #rpgView .pf-stat-grid strong{color:#e5cf9f}
+.app #rpgView .pf-tabs{
+  gap:7px;
+  padding:5px;
+  border:1px solid rgba(132,153,191,.19);
+  border-radius:12px;
+  background:rgba(8,18,33,.52);
+}
+.app #rpgView .pf-tabs button{
+  border:1px solid transparent;
+  border-radius:8px;
+  background:transparent;
+  color:#aebbd0;
+}
+.app #rpgView .pf-tabs button.on{
+  border-color:rgba(204,180,133,.3);
+  background:linear-gradient(100deg,rgba(91,128,165,.22),rgba(129,99,164,.17));
+  color:#f0dfbd;
+}
+.app #rpgView .pf,.app #rpgView .pf .panel{
+  border-color:rgba(135,158,190,.2);
+  background:linear-gradient(145deg,rgba(16,31,50,.9),rgba(9,19,34,.94));
+}
+.app #rpgView .pf-info h3{color:#f1e5ce}
+.app #rpgView .pf-info{color:#b5c4d6}
+.app #rpgView .ach{
+  border-color:rgba(139,156,191,.18);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(22,37,58,.86),rgba(11,22,39,.92));
+}
+.app #rpgView .ach b{color:#e9d8b6}
+.app #rpgView .ach small{color:#9caec4}
+
+/* Ajustes de leitura e toque em telas menores */
+@media(max-width:900px){
+  .app #rpgView .mk-hero{grid-template-columns:minmax(0,1fr) auto}
+  .app #rpgView .mk-wallet{min-width:145px}
+  .app #rpgView .arc-catalog-layout{grid-template-columns:190px minmax(0,1fr)}
+}
+@media(max-width:680px){
+  .app #library .toolbar{align-items:stretch;flex-direction:column}
+  .app #library .upload-label{width:100%}
+  .app #library .file-row{align-items:flex-start;flex-wrap:wrap}
+  .app #library .file-info{padding-top:3px}
+  .app #library .file-actions{width:100%;padding-left:56px}
+  .app #library .file-actions button{flex:1}
+  .app #rpgView .mk-hero{display:flex;flex-direction:column;align-items:stretch;gap:13px}
+  .app #rpgView .mk-wallet{order:2;min-width:0}
+  .app #rpgView .mk-atelier-cta{order:3;align-self:stretch}
+  .app #rpgView .mk-rewards{gap:6px}
+  .app #rpgView .mk-daily{align-items:flex-start;flex-direction:column;gap:11px}
+  .app #rpgView .mk-daily button{width:100%}
+  .app #rpgView .mk-toolbar{align-items:stretch;flex-direction:column}
+  .app #rpgView .mk-toolbar .search{width:100%}
+  .app #rpgView .arc-hero{display:flex;flex-direction:column;align-items:stretch;gap:15px}
+  .app #rpgView .arc-stage{min-height:280px}
+  .app #rpgView .arc-toolbar{align-items:stretch;flex-direction:column}
+  .app #rpgView .arc-tabs{display:flex;flex-wrap:wrap}
+  .app #rpgView .arc-tab{flex:1 1 auto}
+  .app #rpgView .pf-legend{grid-template-columns:1fr}
+  .app #rpgView .pf-legend-main{align-items:center}
+}
+@media(max-width:480px){
+  .app #library .panel{padding:13px}
+  .app #library .file-row{gap:10px;padding:10px}
+  .app #library .file-actions{padding-left:0}
+  .app #rpgView .mk-metrics{grid-template-columns:1fr 1fr}
+  .app #rpgView .mk-metrics>div:last-child{grid-column:1/-1}
+  .app #rpgView .mk-itemtitle h4{font-size:13px}
+  .app #rpgView .arc-stage{min-height:250px}
+  .app #rpgView .pf-legend-main{flex-direction:column;text-align:center}
+  .app #rpgView .pf-legend-portrait{width:min(100%,220px);margin:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .app #library .file-row,.app #library .upload-label,
+  .app #rpgView .mk-item,.app #rpgView .arc-item-card{transition:none}
+}
