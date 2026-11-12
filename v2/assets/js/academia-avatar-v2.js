@@ -790,7 +790,11 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     if(b.dataset.avatarFilter){S.filter=b.dataset.avatarFilter;renderAtelier();return;}
     action(b).catch(e=>{console.error(e);toast('Não foi possível concluir esta ação.');});
   });
-  document.addEventListener('academia-avatar-changed',e=>{if(e.detail?.appearance)S.appearance=e.detail.appearance;});
+  document.addEventListener('academia-avatar-changed',e=>{if(e.detail?.appearance)S.appearance=e.detail.appearance;if(document.querySelector('.page.active #page-personagem'))window.dispatchEvent(new CustomEvent('academia-character-overview-refresh'));});
   document.addEventListener('academia-background-changed',e=>{S.background=e.detail?.background||null;if(document.querySelector('.page.active #rpgView, .page.active #atelierView'))renderAtelier();});
-  window.AcademiaAvatar={render,open,openCreator,renderAtelier,titleMarkup,nameMarkup,backgroundMarkup};
+  function getSnapshot(){
+    const equipped=Object.entries(S.appearance||{}).map(([slot,id])=>{const found=item(id);return found?{id:found.id,name:found.name,slot,label:slotLabel(found),icon:found.icon||SLOT_ICON[slot]||'✦'}:null;}).filter(Boolean);
+    return {appearance:Object.assign({},S.appearance),ownedCount:S.owned.length,equipped,balance:Number(S.balance||0),playerClass:S.playerClass};
+  }
+  window.AcademiaAvatar={render,open,openCreator,renderAtelier,titleMarkup,nameMarkup,backgroundMarkup,getSnapshot};
 })();
