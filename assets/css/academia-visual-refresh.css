@@ -29,7 +29,14 @@
     radial-gradient(2px 2px at 34% 82%,rgba(255,224,166,.72) 50%,transparent 100%),
     radial-gradient(ellipse at 50% 0%,rgba(113,218,190,.12),transparent 65%);
   background-size:320px 280px,410px 360px,370px 310px,460px 390px,100% 100%;
-  animation:realm-fireflies 32s linear infinite;
+  /*
+   * Mantém as partículas visíveis, mas move a camada inteira por transform.
+   * Animar background-position força repinturas contínuas em vez de permitir
+   * que o navegador componha a animação em uma camada.
+   */
+  will-change:transform;
+  transform:translate3d(0,0,0);
+  animation:realm-fireflies 32s ease-in-out infinite alternate;
 }
 .app:after{
   background:
@@ -37,7 +44,8 @@
     linear-gradient(180deg,rgba(175,235,218,.035),transparent 24%,rgba(7,20,34,.10));
 }
 @keyframes realm-fireflies{
-  to{background-position:320px 280px,-410px 360px,370px -310px,-460px 390px,0 0}
+  from{transform:translate3d(-5px,-3px,0)}
+  to{transform:translate3d(5px,3px,0)}
 }
 .app .sidebar{
   background:linear-gradient(180deg,rgba(16,43,55,.98),rgba(13,34,49,.98) 58%,rgba(20,37,56,.98));
@@ -378,6 +386,19 @@
   #rpgView .adv-panel,#rpgView .adv-mission,#rpgView .adv-boss-card{border-radius:13px}
 }
 @media(prefers-reduced-motion:reduce){
-  .app:before{animation:none}
+  .app:before{animation:none;transform:none;will-change:auto}
   .app .realm-hero-rune{animation:none}
+}
+
+/* Suspende animações CSS de todo o aplicativo fora de foco, sem alterar estados ou layout. */
+.app.is-page-hidden *,
+.app.is-page-hidden *:before,
+.app.is-page-hidden *:after{
+  animation-play-state:paused!important;
+}
+
+/* Também evita manter a camada decorativa em composição enquanto a aba está oculta. */
+.app.is-page-hidden:before{
+  animation-play-state:paused;
+  will-change:auto;
 }

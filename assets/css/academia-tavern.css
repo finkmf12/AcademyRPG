@@ -51,7 +51,8 @@
 @keyframes tvnSpin{to{transform:rotate(360deg)}}
 #rpgView .tvn-load-older{display:block;margin:0 auto 17px;padding:7px 12px;border:1px solid #475a71;border-radius:20px;background:#1a2b40;color:#b8c7d7;font-size:10px}
 #rpgView .tvn-load-older:hover{border-color:#b08e58;color:#f0d9a5}
-#rpgView .tvn-message{display:flex;align-items:flex-start;gap:10px;margin:0 0 14px;animation:tvnMessageIn .18s ease-out both}
+#rpgView .tvn-message{display:flex;align-items:flex-start;gap:10px;margin:0 0 14px}
+#rpgView .tvn-message.is-new{animation:tvnMessageIn .18s ease-out both}
 @keyframes tvnMessageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 #rpgView .tvn-message-avatar{flex:none;width:34px;height:34px;display:grid;place-items:center;border:1px solid #41546c;border-radius:10px;background:linear-gradient(145deg,#26384d,#172538);font-size:18px}
 #rpgView .tvn-message-main{flex:1;min-width:0}
@@ -143,22 +144,18 @@
   background:linear-gradient(112deg,#563714 0%,#a97427 24%,#f2d17e 47%,#8d5c1f 70%,#4b3016 100%);
   background-size:220% 100%;box-shadow:0 0 6px rgba(255,194,77,.52),0 0 15px rgba(255,185,62,.24),inset 0 1px rgba(255,248,210,.45);
   text-shadow:0 1px 2px rgba(50,25,4,.95),0 0 7px rgba(255,238,171,.48);
-  animation:tvnOwnerGlow 3.2s ease-in-out infinite
+  /* O acabamento dourado permanece estático para evitar repintura contínua por mensagem. */
 }
 #rpgView .tvn-owner-tag:before{
   content:"";position:absolute;z-index:-1;top:-40%;bottom:-40%;left:-55%;width:34%;
-  transform:skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,235,.8),transparent);
+  transform:translateX(-160%) skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,235,.8),transparent);
   animation:tvnOwnerShine 3.8s ease-in-out infinite
 }
 #rpgView .tvn-owner-tag>span{font-size:8px;color:#fff3bb;text-shadow:0 0 7px #fff0a5}
-@keyframes tvnOwnerGlow{
-  0%,100%{background-position:0% 50%;box-shadow:0 0 5px rgba(255,194,77,.42),0 0 12px rgba(255,185,62,.18),inset 0 1px rgba(255,248,210,.4)}
-  50%{background-position:100% 50%;box-shadow:0 0 9px rgba(255,216,116,.76),0 0 20px rgba(255,185,62,.36),inset 0 1px rgba(255,255,225,.7)}
-}
 @keyframes tvnOwnerShine{
-  0%,32%{left:-55%;opacity:0}
+  0%,32%{transform:translateX(-160%) skewX(-22deg);opacity:0}
   46%{opacity:.9}
-  62%,100%{left:130%;opacity:0}
+  62%,100%{transform:translateX(680%) skewX(-22deg);opacity:0}
 }
 @media(prefers-reduced-motion:reduce){
   #rpgView .tvn-owner-tag,#rpgView .tvn-owner-tag:before{animation:none}

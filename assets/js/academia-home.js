@@ -86,8 +86,18 @@
     }
   }
   const observer=new MutationObserver(()=>{if($('app')?.style.display==='block')update();});
-  const start=()=>{const app=$('app');if(app)observer.observe(app,{attributes:true,attributeFilter:['style']});update();};
+  const syncPageVisibility=()=>{
+    const app=$('app');
+    if(app)app.classList.toggle('is-page-hidden',document.hidden);
+  };
+  const start=()=>{
+    const app=$('app');
+    if(app)observer.observe(app,{attributes:true,attributeFilter:['style']});
+    syncPageVisibility();
+    update();
+  };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+  document.addEventListener('visibilitychange',syncPageVisibility);
   document.addEventListener('academia-avatar-changed',update);
   window.addEventListener('focus',()=>{if($('app')?.style.display==='block')update();});
 })();

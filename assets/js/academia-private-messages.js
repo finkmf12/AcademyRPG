@@ -104,7 +104,9 @@
         console.warn('Mensagens privadas · imagem anexada:', error.message);
       }
     }));
-    if (friendId && state.selected === friendId && isPrivateOpen()) renderConversation();
+    if (friendId && state.selected === friendId && isPrivateOpen()) {
+      (messages || []).forEach(refreshMessageAttachment);
+    }
   }
 
   function imageMarkup(message) {
@@ -228,6 +230,34 @@
     });
   }
 
+  function renderPrivateMessage(message, isNew) {
+    const own = message.sender_id === state.user.id;
+    const sender = own ? 'Você' : friendName(selectedFriend());
+    return '<article class="tvn-message ' + (own ? 'is-own ' : '') + (isNew ? 'is-new' : '') + '" data-private-message-id="' + esc(message.id) + '">' +
+      '<div class="tvn-message-avatar">' + esc(own ? (window.AcademiaCtx?.user?.user_metadata?.avatar_url ? '🧙' : '✦') : (selectedFriend()?.avatar || '🧙')) + '</div>' +
+      '<div class="tvn-message-main"><div class="tvn-message-meta"><b>' + esc(sender) + '</b><time>' + formatTime(message.created_at) + '</time></div>' +
+      (message.content ? '<div class="tvn-message-bubble">' + formatContent(message.content) + '</div>' : '') +
+      '<div class="tvn-message-attachment" data-private-message-attachment>' + imageMarkup(message) + '</div></div></article>';
+  }
+
+  function refreshMessageAttachment(message) {
+    const feed = $('tvnPrivateFeed');
+    if (!feed) return;
+    const article = feed.querySelector('[data-private-message-id="' + CSS.escape(String(message.id)) + '"]');
+    const slot = article && article.querySelector('[data-private-message-attachment]');
+    if (slot) slot.innerHTML = imageMarkup(message);
+  }
+
+  function appendPrivateMessage(message) {
+    const feed = $('tvnPrivateFeed');
+    if (!feed) return false;
+    const empty = feed.querySelector('.tvn-empty');
+    if (empty) empty.remove();
+    feed.insertAdjacentHTML('beforeend', renderPrivateMessage(message, true));
+    feed.scrollTop = feed.scrollHeight;
+    return true;
+  }
+
   function renderConversation() {
     const feed = $('tvnPrivateFeed');
     if (!feed) return;
@@ -235,14 +265,7 @@
       feed.innerHTML = '<div class="tvn-empty"><div class="tvn-empty-mark">✉</div><b>Uma nova conversa começa aqui.</b><p>Envie a primeira mensagem para seu companheiro.</p></div>';
       return;
     }
-    feed.innerHTML = state.messages.map(message => {
-      const own = message.sender_id === state.user.id;
-      const sender = own ? 'Você' : friendName(selectedFriend());
-      return '<article class="tvn-message ' + (own ? 'is-own' : '') + '" data-private-message-id="' + esc(message.id) + '">' +
-        '<div class="tvn-message-avatar">' + esc(own ? (window.AcademiaCtx?.user?.user_metadata?.avatar_url ? '🧙' : '✦') : (selectedFriend()?.avatar || '🧙')) + '</div>' +
-        '<div class="tvn-message-main"><div class="tvn-message-meta"><b>' + esc(sender) + '</b><time>' + formatTime(message.created_at) + '</time></div>' +
-        (message.content ? '<div class="tvn-message-bubble">' + formatContent(message.content) + '</div>' : '') + imageMarkup(message) + '</div></article>';
-    }).join('');
+    feed.innerHTML = state.messages.map(message => renderPrivateMessage(message, false)).join('');
     feed.scrollTop = feed.scrollHeight;
   }
 
@@ -296,13 +319,15 @@
       if (error) throw error;
       const message = data;
       if (message && !state.messages.some(row => String(row.id) === String(message.id))) {
+        const previousLast = state.messages[state.messages.length - 1];
         state.messages.push(message);
         state.messages.sort((a,b) => new Date(a.created_at)-new Date(b.created_at));
+        if (!previousLast || new Date(message.created_at) >= new Date(previousLast.created_at)) appendPrivateMessage(message);
+        else renderConversation();
       }
       input.value = '';
       releaseSelectedImage();
       updatePrivateCounter();
-      renderConversation();
       if (message?.attachment_path) resolveMessageImages([message], friend.user_id);
       await refreshLatest();
     } catch (error) {
@@ -338,9 +363,11 @@
     const other = message.sender_id === state.user.id ? message.recipient_id : message.sender_id;
     if (state.selected === other && isPrivateOpen()) {
       if (!state.messages.some(row => String(row.id) === String(message.id))) {
+        const previousLast = state.messages[state.messages.length - 1];
         state.messages.push(message);
         state.messages.sort((a,b) => new Date(a.created_at)-new Date(b.created_at));
-        renderConversation();
+        if (!previousLast || new Date(message.created_at) >= new Date(previousLast.created_at)) appendPrivateMessage(message);
+        else renderConversation();
         if (message.attachment_path) resolveMessageImages([message], other);
       }
       if (message.recipient_id === state.user.id) {
