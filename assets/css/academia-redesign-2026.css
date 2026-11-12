@@ -1,0 +1,1074 @@
+/* =========================================================
+   ACADEMIA RPG · REDESIGN 2026
+   Identidade: floresta encantada · noturno arcano
+   Camada visual isolada: não altera lógica, dados ou navegação.
+   ========================================================= */
+
+:root {
+  color-scheme: dark;
+  --arc-bg: #070d1b;
+  --arc-bg-2: #0b1426;
+  --arc-surface: rgba(16, 27, 49, .88);
+  --arc-surface-solid: #101b31;
+  --arc-surface-2: rgba(21, 36, 64, .92);
+  --arc-surface-3: rgba(27, 45, 76, .92);
+  --arc-line: rgba(125, 153, 195, .22);
+  --arc-line-strong: rgba(157, 131, 235, .38);
+  --arc-text: #f1f4ff;
+  --arc-muted: #a7b4cc;
+  --arc-faint: #7888a5;
+  --arc-violet: #9c83eb;
+  --arc-blue: #7bc2eb;
+  --arc-gold: #e2c58b;
+  --arc-mint: #8ee1c2;
+  --arc-pink: #d79bea;
+  --arc-radius-sm: 10px;
+  --arc-radius-md: 16px;
+  --arc-radius-lg: 22px;
+  --arc-shadow: 0 18px 48px rgba(0, 0, 0, .28);
+  --arc-shadow-soft: 0 10px 28px rgba(0, 0, 0, .18);
+  --arc-display: "Cinzel Decorative", Georgia, serif;
+  --arc-serif: "Cormorant Garamond", Georgia, serif;
+  --arc-ui: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.app {
+  --bg: var(--arc-bg);
+  --panel: var(--arc-surface-solid);
+  --panel2: #152440;
+  --gold: var(--arc-gold);
+  --gold2: #f0dcae;
+  --text: var(--arc-text);
+  --muted: var(--arc-muted);
+  --line: #304361;
+  --blue: var(--arc-blue);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  min-height: 100vh;
+  color: var(--arc-text);
+  background:
+    linear-gradient(180deg, rgba(5, 11, 23, .76), rgba(6, 13, 26, .82)),
+    url("../../1337879.png") center center / cover fixed,
+    radial-gradient(ellipse at 72% 4%, #32275c 0, transparent 35%),
+    #070d1b;
+  font-family: var(--arc-ui);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.app::before,
+.app::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.app::before {
+  opacity: .72;
+  background-image:
+    radial-gradient(1.5px 1.5px at 11% 18%, rgba(204, 218, 255, .76) 50%, transparent 100%),
+    radial-gradient(2px 2px at 74% 27%, rgba(180, 154, 255, .66) 50%, transparent 100%),
+    radial-gradient(1px 1px at 89% 69%, rgba(142, 205, 255, .66) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 37% 82%, rgba(240, 211, 160, .5) 50%, transparent 100%);
+  background-size: 340px 300px, 440px 370px, 380px 330px, 480px 400px;
+  animation: academy-fireflies 34s linear infinite;
+}
+
+.app::after {
+  background:
+    linear-gradient(90deg, rgba(4, 9, 20, .28), transparent 21%, transparent 79%, rgba(4, 9, 20, .22)),
+    linear-gradient(180deg, rgba(7, 13, 27, .08), transparent 35%, rgba(5, 10, 22, .35));
+  backdrop-filter: blur(1px) saturate(.86);
+  -webkit-backdrop-filter: blur(1px) saturate(.86);
+}
+
+@keyframes academy-fireflies {
+  to {
+    background-position: 340px 300px, -440px 370px, 380px -330px, -480px 400px;
+  }
+}
+
+.app button,
+.app input,
+.app select,
+.app textarea {
+  font-family: var(--arc-ui);
+}
+
+.app button {
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background-color .2s ease,
+    color .2s ease,
+    box-shadow .2s ease;
+}
+
+.app button:focus-visible,
+.app a:focus-visible,
+.app input:focus-visible,
+.app select:focus-visible,
+.app textarea:focus-visible {
+  outline: 2px solid var(--arc-blue);
+  outline-offset: 3px;
+}
+
+/* Navegação principal */
+.app .sidebar {
+  width: 274px;
+  padding: 25px 17px 18px;
+  background:
+    linear-gradient(180deg, rgba(10, 19, 37, .97), rgba(8, 15, 29, .97)),
+    url("../../1337879.png") 26% center / auto 100%;
+  border-right: 1px solid rgba(139, 160, 204, .2);
+  box-shadow: 16px 0 48px rgba(0, 0, 0, .26);
+  backdrop-filter: blur(18px) saturate(.9);
+  -webkit-backdrop-filter: blur(18px) saturate(.9);
+  scrollbar-width: thin;
+  scrollbar-color: #46567a transparent;
+}
+
+.app .brand {
+  gap: 13px;
+  padding: 4px 8px 22px;
+  border-bottom: 1px solid rgba(130, 159, 211, .2);
+}
+
+.app .brand-mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  transform: none;
+  border: 1px solid rgba(226, 197, 139, .78);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(91, 126, 190, .22), rgba(157, 119, 230, .15));
+  box-shadow: 0 0 22px rgba(112, 145, 226, .18), inset 0 0 16px rgba(226, 197, 139, .08);
+  color: #f0dcae;
+  font-size: 20px;
+}
+
+.app .brand-mark span {
+  transform: none;
+}
+
+.app .brand strong {
+  color: #f3e9d5;
+  font-family: var(--arc-display);
+  font-size: 14px;
+  letter-spacing: .35px;
+}
+
+.app .brand small {
+  color: #96a9ca;
+  font-size: 9px;
+  letter-spacing: 1.8px;
+}
+
+.app .nav-label {
+  margin: 24px 10px 9px;
+  color: #7183a5;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2.1px;
+}
+
+.app .nav,
+.app .rpgnav {
+  display: grid;
+  gap: 4px;
+}
+
+.app .nav button,
+.app .rpgnav button {
+  min-height: 42px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  gap: 11px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #b7c4da;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.app .nav button .ico,
+.app .rpgnav button .ico {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  min-width: 22px;
+  color: #8ea3c7;
+  font-size: 16px;
+}
+
+.app .nav button:hover,
+.app .rpgnav button:hover {
+  transform: translateX(2px);
+  border-color: rgba(137, 164, 210, .2);
+  background: rgba(69, 93, 137, .16);
+  color: #f0e5ff;
+}
+
+.app .nav button.active,
+.app .nav button[aria-current="page"],
+.app .rpgnav button.active,
+.app .rpgnav button[aria-current="page"] {
+  border-color: rgba(156, 131, 235, .42);
+  background: linear-gradient(105deg, rgba(117, 94, 185, .28), rgba(60, 91, 143, .18));
+  box-shadow: inset 3px 0 0 var(--arc-violet), 0 7px 18px rgba(0, 0, 0, .12);
+  color: #f1eaff;
+}
+
+.app .nav button.active .ico,
+.app .rpgnav button.active .ico {
+  color: #c3b0ff;
+}
+
+.app .xpmini {
+  margin-top: 18px;
+  border: 1px solid rgba(130, 159, 211, .2);
+  border-radius: 13px;
+  background: rgba(15, 27, 49, .72);
+  box-shadow: var(--arc-shadow-soft);
+}
+
+.app .side-bottom {
+  margin-top: auto;
+  padding: 17px 8px 0;
+  border-top: 1px solid rgba(130, 159, 211, .18);
+  color: #8d9fbb;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* Área principal e cabeçalho */
+.app .main {
+  max-width: none;
+  min-width: 0;
+  margin-left: 274px;
+  padding: 30px clamp(22px, 3.6vw, 56px) 60px;
+}
+
+.app .topbar {
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 27px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(126, 153, 195, .14);
+}
+
+.app .kicker {
+  color: #b9a6ef;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 2.5px;
+}
+
+.app .topbar h2 {
+  margin: 6px 0 3px;
+  color: #f2f0ff;
+  font-family: var(--arc-serif);
+  font-size: clamp(27px, 2.6vw, 36px);
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+.app .topbar .sub {
+  color: #a9b8d1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.app .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app .user-pill {
+  min-height: 40px;
+  padding: 6px 9px 6px 14px;
+  gap: 10px;
+  border: 1px solid rgba(129, 155, 198, .23);
+  border-radius: 12px;
+  background: rgba(13, 24, 44, .78);
+  color: #cbd7e8;
+  font-size: 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .12);
+}
+
+.app #logoutBtn {
+  margin-left: 2px !important;
+  border-left-color: rgba(129, 155, 198, .22) !important;
+  color: #e2c58b !important;
+  font-size: 10px;
+}
+
+.app .notifications-bell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(129, 155, 198, .23);
+  border-radius: 12px;
+  background: rgba(13, 24, 44, .8);
+  color: #d6c9f6;
+}
+
+.app .notifications-bell:hover {
+  border-color: rgba(156, 131, 235, .56);
+  background: rgba(42, 49, 83, .88);
+  transform: translateY(-2px);
+}
+
+.app .notifications-panel {
+  border: 1px solid rgba(146, 157, 206, .36);
+  border-radius: 17px;
+  background: rgba(11, 20, 38, .97);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Hero do reino */
+.app .realm-hero {
+  min-height: 275px;
+  margin: 0 0 20px;
+  padding: 36px clamp(24px, 3vw, 44px);
+  border: 1px solid rgba(145, 130, 207, .48);
+  border-radius: var(--arc-radius-lg);
+  background:
+    linear-gradient(90deg, rgba(5, 12, 27, .94) 0%, rgba(8, 17, 36, .83) 43%, rgba(15, 20, 44, .36) 100%),
+    radial-gradient(ellipse at 78% 42%, rgba(148, 121, 232, .24), transparent 38%),
+    url("../../1337879.png") center 47% / cover;
+  box-shadow: var(--arc-shadow), inset 0 1px rgba(255, 255, 255, .08);
+}
+
+.app .realm-hero::before {
+  background:
+    linear-gradient(90deg, rgba(5, 12, 27, .9) 0%, rgba(8, 17, 36, .52) 54%, transparent 100%),
+    linear-gradient(180deg, transparent 45%, rgba(5, 11, 24, .45));
+}
+
+.app .realm-hero::after {
+  opacity: .7;
+  background:
+    radial-gradient(1.5px 1.5px at 17% 28%, #d9d1ff 50%, transparent 100%),
+    radial-gradient(2px 2px at 72% 21%, #bba9ff 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 89% 62%, #9edaff 50%, transparent 100%);
+  background-size: 230px 180px, 310px 260px, 280px 230px;
+}
+
+.app .realm-hero-content {
+  max-width: 640px;
+}
+
+.app .realm-eyebrow,
+.app .home-news-heading > div > small {
+  color: #d2c2ff;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 2.7px;
+}
+
+.app .realm-hero h3 {
+  max-width: 600px;
+  margin: 13px 0 10px;
+  color: #f6f1ff;
+  font-family: var(--arc-display);
+  font-size: clamp(27px, 3vw, 39px);
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, .75);
+}
+
+.app .realm-hero p {
+  max-width: 500px;
+  color: #c3cde0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.app .realm-hero-actions {
+  gap: 18px;
+  margin-top: 23px;
+}
+
+.app .realm-hero-actions button {
+  min-height: 43px;
+  padding: 11px 18px;
+  border: 1px solid rgba(245, 221, 167, .82);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f0dcae, #c49a5f);
+  color: #201a2b;
+  font-size: 11px;
+  font-weight: 850;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .25), inset 0 1px rgba(255, 255, 255, .35);
+}
+
+.app .realm-hero-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 13px 28px rgba(0, 0, 0, .3);
+}
+
+.app .realm-online {
+  color: #bac7dd;
+  font-size: 9px;
+}
+
+.app .realm-hero-rune {
+  right: 7%;
+  color: rgba(205, 188, 255, .3);
+  text-shadow: 0 0 40px rgba(156, 131, 235, .28);
+}
+
+/* Cartão do personagem e resumo de progresso */
+.app .home-player-grid {
+  gap: 15px;
+  margin: 18px 0 29px;
+}
+
+.app .home-player-card-legend {
+  min-height: 174px;
+  border: 1px solid rgba(226, 197, 139, .42);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 7% 50%, rgba(156, 131, 235, .2), transparent 26%),
+    linear-gradient(120deg, rgba(22, 33, 65, .96), rgba(18, 32, 58, .94) 58%, rgba(36, 33, 69, .94));
+  box-shadow: 0 15px 38px rgba(0, 0, 0, .23), inset 0 1px rgba(255, 255, 255, .08);
+}
+
+.app .home-player-portrait {
+  border: 1px solid rgba(226, 197, 139, .62);
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 42%, rgba(159, 142, 222, .27), rgba(14, 25, 48, .65) 72%);
+  box-shadow: 0 0 32px rgba(156, 131, 235, .13), inset 0 0 22px rgba(255, 255, 255, .06);
+}
+
+.app .home-player-info > small {
+  color: #d5c5f8;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 2.2px;
+}
+
+.app .home-player-info h3 {
+  color: #fff5df;
+  font-family: var(--arc-serif);
+  font-size: clamp(22px, 2.1vw, 27px);
+  font-weight: 700;
+}
+
+.app .home-player-info p,
+.app .home-player-meta {
+  color: #c0cce0;
+  font-size: 10px;
+}
+
+.app .home-xp-track {
+  background: rgba(7, 13, 28, .72);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .5);
+}
+
+.app .home-xp-track i {
+  background: linear-gradient(90deg, #7c68ce, #b6a0ff 58%, #82c6eb);
+  box-shadow: 0 0 13px rgba(156, 131, 235, .4);
+}
+
+.app .home-profile-link {
+  color: #eddaa9;
+  font-size: 10px;
+}
+
+.app .home-daily-card {
+  border: 1px solid rgba(126, 153, 195, .24);
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(123, 194, 235, .1), transparent 42%),
+    rgba(15, 27, 48, .9);
+  box-shadow: var(--arc-shadow-soft);
+}
+
+.app .home-daily-card small {
+  color: #b8a5ef;
+  font-size: 8px;
+  letter-spacing: 1.9px;
+}
+
+.app .home-daily-card h3 {
+  color: #f2e8d4;
+  font-family: var(--arc-serif);
+  font-size: 21px;
+}
+
+.app .home-daily-card p {
+  color: #aebbd2;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.app .home-daily-card button {
+  color: #e2c58b;
+  font-size: 10px;
+}
+
+/* Destinos e secções de descoberta */
+.app .section-head {
+  align-items: end;
+  margin: 28px 0 14px;
+}
+
+.app .section-head h3 {
+  color: #f2efff;
+  font-family: var(--arc-serif);
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.app .section-head > span {
+  color: #8e9fbd;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1.8px;
+}
+
+.app .home-quick-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.app .home-quick-card {
+  min-height: 158px;
+  padding: 18px 18px 16px;
+  overflow: hidden;
+  border: 1px solid rgba(126, 153, 195, .22);
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(156, 131, 235, .12), transparent 42%),
+    rgba(15, 27, 49, .88);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .16);
+  text-align: left;
+}
+
+.app .home-quick-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(156, 131, 235, .52);
+  background:
+    radial-gradient(circle at 100% 0, rgba(156, 131, 235, .21), transparent 48%),
+    rgba(20, 34, 61, .96);
+  box-shadow: 0 17px 34px rgba(0, 0, 0, .24);
+}
+
+.app .home-quick-card > span:first-child {
+  display: inline-grid;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+  place-items: center;
+  border: 1px solid rgba(160, 143, 226, .36);
+  border-radius: 11px;
+  background: rgba(101, 84, 157, .2);
+  color: #d4c4ff;
+  font-size: 19px;
+}
+
+.app .home-quick-card b {
+  display: block;
+  color: #f2efff;
+  font-family: var(--arc-serif);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.app .home-quick-card small {
+  display: block;
+  margin-top: 5px;
+  color: #9eacc5;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.app .home-quick-card i {
+  display: block;
+  margin-top: 13px;
+  color: #d8c79e;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .25px;
+}
+
+/* Painéis do mundo: ranking, missões e mapa */
+.app .home-world-grid {
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.app .home-world-panel,
+.app .realm-map-panel {
+  border: 1px solid rgba(126, 153, 195, .22);
+  border-radius: 17px;
+  background:
+    radial-gradient(ellipse at 100% 0, rgba(156, 131, 235, .09), transparent 48%),
+    rgba(13, 24, 44, .88);
+  box-shadow: var(--arc-shadow-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.app .home-world-heading small,
+.app .realm-map-heading small {
+  color: #b4a0e9;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 2px;
+}
+
+.app .home-world-heading h3,
+.app .realm-map-heading h3 {
+  color: #f1edff;
+  font-family: var(--arc-serif);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.app .home-world-heading button {
+  color: #e2c58b;
+  font-size: 9px;
+}
+
+.app .realm-map-panel {
+  margin-top: 18px;
+  padding: 22px;
+  border-color: rgba(141, 127, 198, .34);
+  background:
+    linear-gradient(180deg, rgba(10, 20, 38, .82), rgba(8, 17, 33, .93)),
+    url("../../1337879.png") center 58% / cover;
+}
+
+.app .realm-map-heading p {
+  color: #aab8d0;
+  font-size: 10px;
+}
+
+.app .realm-map {
+  border: 1px solid rgba(133, 151, 194, .22);
+  border-radius: 15px;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(103, 96, 172, .18), transparent 60%),
+    linear-gradient(135deg, rgba(17, 30, 54, .64), rgba(15, 29, 49, .55));
+}
+
+.app .realm-location {
+  border: 1px solid rgba(145, 159, 211, .42);
+  border-radius: 13px;
+  background: rgba(10, 19, 37, .9);
+  color: #efeaff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .26);
+  backdrop-filter: blur(10px);
+}
+
+.app .realm-location:hover {
+  transform: translateY(-3px);
+  border-color: #b7a2f0;
+  background: rgba(35, 40, 73, .96);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, .34);
+}
+
+.app .realm-location b {
+  font-family: var(--arc-serif);
+  font-size: 15px;
+}
+
+.app .realm-location small {
+  color: #9eacc5;
+}
+
+/* Biblioteca e páginas de conteúdo */
+.app #library {
+  color: var(--arc-text);
+}
+
+.app #library .panel,
+.app #library .stat,
+.app #rpgView .panel,
+.app #rpgView .stat {
+  border: 1px solid rgba(126, 153, 195, .22);
+  border-radius: 16px;
+  background: rgba(13, 24, 44, .9);
+  box-shadow: var(--arc-shadow-soft);
+}
+
+.app .search,
+.app #library input[type="search"],
+.app #library input[type="text"],
+.app #rpgView input,
+.app #rpgView select,
+.app #rpgView textarea {
+  border: 1px solid rgba(126, 153, 195, .29);
+  border-radius: 10px;
+  background: rgba(7, 15, 30, .8);
+  color: var(--arc-text);
+}
+
+.app .search::placeholder,
+.app #rpgView input::placeholder,
+.app #rpgView textarea::placeholder {
+  color: #7888a5;
+}
+
+.app .file-row {
+  border: 1px solid rgba(126, 153, 195, .18);
+  border-radius: 12px;
+  background: rgba(11, 21, 40, .82);
+}
+
+.app .file-row:hover {
+  border-color: rgba(156, 131, 235, .42);
+  background: rgba(19, 31, 55, .94);
+}
+
+.app .file-icon {
+  border: 1px solid rgba(134, 154, 199, .18);
+  background: rgba(40, 55, 88, .62);
+  color: #c5b5fa;
+}
+
+.app .file-info strong {
+  color: #eef1ff;
+}
+
+.app .file-info small {
+  color: #8f9fbb;
+}
+
+.app .file-actions button {
+  border: 1px solid rgba(126, 153, 195, .28);
+  border-radius: 8px;
+  background: rgba(25, 39, 65, .82);
+  color: #d2dced;
+}
+
+.app .file-actions button:hover {
+  border-color: rgba(156, 131, 235, .55);
+  color: #fff;
+}
+
+.app .upload-label,
+.app .primary {
+  border: 1px solid rgba(245, 221, 167, .68);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #efdbad, #c89e65);
+  color: #20192a;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
+}
+
+.app .secondary {
+  border: 1px solid rgba(135, 158, 201, .3);
+  border-radius: 10px;
+  background: rgba(26, 43, 72, .9);
+  color: #e1e8f7;
+}
+
+.app .upload-label:hover,
+.app .primary:hover,
+.app .secondary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+/* Views dinâmicas e módulos do jogo */
+.app #rpgView {
+  color: var(--arc-text);
+}
+
+.app #rpgView h1,
+.app #rpgView h2,
+.app #rpgView h3,
+.app #rpgView h4 {
+  color: #f0efff;
+  font-family: var(--arc-serif);
+}
+
+.app #rpgView p,
+.app #rpgView small,
+.app #rpgView label {
+  color: inherit;
+}
+
+.app #rpgView button:not(.google-login):not(.guest-login) {
+  border-radius: 10px;
+}
+
+.app #rpgView button:hover {
+  filter: brightness(1.08);
+}
+
+.app #rpgView [class*="panel"],
+.app #rpgView [class*="card"],
+.app #rpgView [class*="surface"] {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.app .toast {
+  border: 1px solid rgba(148, 172, 219, .48);
+  border-radius: 13px;
+  background: rgba(17, 30, 54, .97);
+  color: #f0f3ff;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .36);
+}
+
+/* Entrada / login */
+.login {
+  background:
+    linear-gradient(180deg, rgba(5, 11, 23, .23), rgba(5, 11, 23, .62)),
+    url("./1337879.png") center center / cover no-repeat,
+    #101b31;
+}
+
+.login::before {
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(9, 16, 35, .24), rgba(5, 11, 23, .72) 78%),
+    linear-gradient(0deg, rgba(4, 9, 20, .42), transparent 48%);
+}
+
+.brand-plaque {
+  border-color: rgba(190, 169, 238, .72);
+  background: linear-gradient(180deg, rgba(18, 29, 57, .93), rgba(8, 15, 31, .96));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .48), inset 0 0 24px rgba(151, 130, 224, .11);
+}
+
+.brand-plaque h1 {
+  color: #f0dcae;
+  font-family: var(--arc-display);
+  letter-spacing: .4px;
+}
+
+.brand-plaque p {
+  color: #cdbdf5;
+  font-family: var(--arc-serif);
+  font-size: clamp(14px, 2vw, 20px);
+  letter-spacing: 1.8px;
+}
+
+.login-card {
+  border-color: rgba(148, 133, 199, .52);
+  border-radius: 18px;
+  background: rgba(8, 16, 32, .84);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, .5), inset 0 0 30px rgba(137, 117, 214, .07);
+  backdrop-filter: blur(15px) saturate(.9);
+  -webkit-backdrop-filter: blur(15px) saturate(.9);
+}
+
+.login-card .login-lead {
+  color: #e2e5f4;
+  font-size: 14px;
+}
+
+.google-login {
+  border-radius: 12px;
+}
+
+.chatgpt-login,
+.guest-login {
+  border-color: rgba(148, 133, 199, .5);
+  border-radius: 12px;
+  background: rgba(20, 31, 56, .92);
+  color: #eee9ff;
+}
+
+.guest-login {
+  background: linear-gradient(135deg, rgba(156, 131, 235, .22), rgba(17, 30, 54, .95));
+  color: #e5d8ff;
+}
+
+.login-categories {
+  border-color: rgba(148, 133, 199, .5);
+  border-radius: 13px;
+  background: rgba(8, 16, 32, .84);
+  color: #ddd2f7;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.login-categories span + span {
+  border-left-color: rgba(148, 133, 199, .36);
+}
+
+.category-icon {
+  color: #9cc9ed;
+}
+
+.login-footer {
+  color: #f0dcae;
+  font-family: var(--arc-serif);
+  font-size: 19px;
+}
+
+.author-credit {
+  border-color: rgba(148, 133, 199, .3);
+  background: rgba(7, 13, 27, .76);
+  color: #b9c4da;
+}
+
+.author-credit strong {
+  color: #f0dcae;
+}
+
+/* Responsividade: navegação em faixa no mobile, conteúdo sem cortes */
+@media (max-width: 1100px) {
+  .app .sidebar { width: 246px; }
+  .app .main { margin-left: 246px; }
+  .app .home-quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .app .realm-hero-rune { right: 3%; opacity: .58; }
+}
+
+@media (max-width: 760px) {
+  .app {
+    overflow: clip;
+    background-attachment: scroll;
+    background-position: center top;
+  }
+
+  .app .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    width: 100%;
+    height: auto;
+    max-height: 44vh;
+    overflow-y: auto;
+    padding: 12px 13px 10px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(139, 160, 204, .24);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+  }
+
+  .app .brand {
+    padding: 0 4px 10px;
+  }
+
+  .app .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 10px;
+  }
+
+  .app .brand strong { font-size: 12px; }
+  .app .brand small { font-size: 8px; }
+
+  .app .nav-label,
+  .app .side-bottom,
+  .app .xpmini {
+    display: none;
+  }
+
+  .app .nav,
+  .app .rpgnav {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 0 2px;
+    scrollbar-width: thin;
+  }
+
+  .app .nav button,
+  .app .rpgnav button {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 36px;
+    max-width: 210px;
+    padding: 8px 11px;
+    border-radius: 9px;
+    white-space: nowrap;
+    font-size: 10px;
+  }
+
+  .app .main {
+    margin-left: 0;
+    padding: 20px 15px 42px;
+  }
+
+  .app .topbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 19px;
+    padding-bottom: 14px;
+  }
+
+  .app .topbar h2 { font-size: 27px; }
+  .app .topbar-actions { margin-left: auto; }
+  .app .user-pill { display: none; }
+
+  .app .realm-hero {
+    min-height: 246px;
+    padding: 26px 22px;
+    background-attachment: scroll;
+    background-position: 60% center;
+  }
+
+  .app .realm-hero h3 { max-width: 470px; font-size: 28px; }
+  .app .realm-hero p { max-width: 390px; }
+  .app .realm-hero-rune { right: -3%; width: 130px; height: 130px; font-size: 100px; }
+
+  .app .home-player-grid { grid-template-columns: 1fr; }
+  .app .home-quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .app .home-world-grid { grid-template-columns: 1fr; }
+  .app .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .app .main { padding: 17px 12px 34px; }
+  .app .topbar { gap: 12px; }
+  .app .topbar h2 { font-size: 23px; }
+  .app .topbar .sub { font-size: 10px; }
+  .app .topbar-actions { gap: 7px; }
+  .app .realm-hero { min-height: 230px; padding: 22px 17px; }
+  .app .realm-hero h3 { font-size: 24px; }
+  .app .realm-eyebrow { font-size: 8px; letter-spacing: 1.8px; }
+  .app .realm-hero-actions { gap: 10px; }
+  .app .realm-hero-actions button { padding: 10px 12px; font-size: 10px; }
+  .app .realm-online { font-size: 8px; }
+  .app .home-quick-grid { gap: 8px; }
+  .app .home-quick-card { min-height: 145px; padding: 13px; }
+  .app .home-quick-card b { font-size: 16px; }
+  .app .home-quick-card small { font-size: 9px; }
+  .app .home-player-card-legend { padding: 14px; }
+  .app .home-player-portrait { flex-basis: 86px; width: 86px; height: 106px; }
+  .app .home-world-panel { padding: 14px; }
+  .app .realm-map-panel { padding: 14px; }
+  .app .login-categories span { font-size: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app::before { animation: none; }
+  .app *,
+  .app *::before,
+  .app *::after,
+  .login *,
+  .login *::before,
+  .login *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .app .sidebar,
+  .app .home-world-panel,
+  .app .realm-map-panel,
+  .login-card,
+  .login-categories {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
