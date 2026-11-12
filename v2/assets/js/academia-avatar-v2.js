@@ -582,7 +582,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
   }
   async function load(){
     const c=C();
-    if(!c||c.guest||!c.user){S.guest=true;S.catalog=[];S.owned=[];return;}
+    if(!c||c.guest||!c.user){S.guest=true;S.catalog=[];S.owned=[];S.appearance={};S.balance=0;S.playerClass='mago';S.background=null;return;}
     S.guest=false;S.error=null;
     const sb=c.supabase;
     // A sincronização de recompensas é complementar: se falhar, a loja e o inventário ainda devem abrir.
