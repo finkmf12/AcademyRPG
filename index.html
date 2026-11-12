@@ -453,6 +453,7 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 <link rel="stylesheet" href="./assets/css/academia-frosted-wallpaper.css?v=20261111-frosted-wallpaper-v1">
 
 <link rel="stylesheet" href="./assets/css/academia-redesign-2026.css?v=20261112-stage3-v1">
+<link rel="stylesheet" href="./assets/css/academia-performance.css?v=20261112-performance-v1">
 </head>
 <body>
 <section class="login" id="login" aria-label="Tela inicial da Academia RPG">
@@ -626,6 +627,7 @@ function toast(message) { const el=$('toast'); el.textContent=message; el.style.
 function showLogin() { $('login').style.display='flex'; $('app').style.display='none'; }
 function enterApp() {
   $('login').style.display='none'; $('app').style.display='block';
+  scheduleAcademiaModules();
   $('userEmail').textContent = guestMode ? 'Convidado · neste navegador' : (authUser?.email || 'Conta Google conectada');
   const notice = guestMode
     ? 'Modo convidado: os arquivos ficam salvos somente neste navegador e neste dispositivo. Para sincronizar entre dispositivos, entre com Google.'
@@ -772,15 +774,43 @@ async function initialize(){
 window.AcademiaCtx={get supabase(){return supabase},get user(){return authUser},get guest(){return guestMode},toast};
 initialize().catch(error=>{console.error(error);toast('Falha ao iniciar. Confira a configuração do Supabase.');});
 </script>
-<!-- O Ateliê deve ser registrado antes do módulo de XP, que consulta window.AcademiaAvatar. -->
-<script type="module" src="./assets/js/academia-avatar.js?v=20261112-hair-sidefix-v1"></script>
-<script type="module" src="./assets/js/academia-notifications.js?v=20261111-notification-center-v1"></script>
-<script type="module" src="./assets/js/academia-xp.js?v=20261111-hero-creator-v1"></script>
-<script type="module" src="./assets/js/academia-achievements.js?v=20261111-achievement-rewards-v2"></script>
-<script type="module" src="./assets/js/academia-adventure.js?v=20261111-guild-arcane-expansion-v1"></script>
-<script type="module" src="./assets/js/academia-feedback.js?v=20261111-feedback"></script>
-<script type="module" src="./assets/js/academia-home.js?v=20261111-legendary-dashboard"></script>
-<script type="module" src="./assets/js/academia-tavern.js?v=20261111-chat-images-v1"></script>
-<script type="module" src="./assets/js/academia-private-messages.js?v=20261111-chat-images-v1"></script>
-<script type="module" src="./assets/js/academia-visitation.js?v=20261112-player-spaces-v1"></script>
+<script>
+/* Carrega os módulos pesados do RPG somente depois que o usuário entra.
+   O login permanece leve; o Ateliê é carregado antes do módulo de XP. */
+let academiaModulesPromise = null;
+let academiaModulesScheduled = false;
+function loadAcademiaModules() {
+  if (academiaModulesPromise) return academiaModulesPromise;
+  academiaModulesPromise = (async () => {
+    await import('./assets/js/academia-avatar.js?v=20261112-hair-sidefix-v1');
+    await Promise.all([
+      import('./assets/js/academia-notifications.js?v=20261111-notification-center-v1'),
+      import('./assets/js/academia-xp.js?v=20261111-hero-creator-v1'),
+      import('./assets/js/academia-achievements.js?v=20261111-achievement-rewards-v2'),
+      import('./assets/js/academia-adventure.js?v=20261111-guild-arcane-expansion-v1'),
+      import('./assets/js/academia-feedback.js?v=20261111-feedback'),
+      import('./assets/js/academia-home.js?v=20261111-legendary-dashboard'),
+      import('./assets/js/academia-tavern.js?v=20261111-chat-images-v1'),
+      import('./assets/js/academia-private-messages.js?v=20261111-chat-images-v1'),
+      import('./assets/js/academia-visitation.js?v=20261112-player-spaces-v1')
+    ]);
+  })().catch(error => {
+    academiaModulesPromise = null;
+    academiaModulesScheduled = false;
+    console.error('Falha ao carregar os módulos da Academia RPG:', error);
+    toast('Alguns recursos estão demorando para carregar. Atualize a página para tentar novamente.');
+  });
+  return academiaModulesPromise;
+}
+function scheduleAcademiaModules() {
+  if (academiaModulesScheduled || academiaModulesPromise) return;
+  academiaModulesScheduled = true;
+  const start = () => loadAcademiaModules();
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(start, { timeout: 1200 });
+  } else {
+    window.setTimeout(start, 350);
+  }
+}
+</script>
 </body></html>
