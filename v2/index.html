@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=4">
-  <link rel="stylesheet" href="./assets/css/academia-avatar-v2.css?v=3">
+  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=5">
+  <link rel="stylesheet" href="./assets/css/academia-avatar-v2.css?v=4">
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div><div class="stars" aria-hidden="true"></div>
@@ -70,7 +70,24 @@
           <div class="section-heading lower-heading"><div><p class="eyebrow">TERRITÓRIOS</p><h3>Escolha seu próximo destino</h3></div><span class="muted small">4 regiões para explorar</span></div>
           <div class="realm-grid"><button class="realm-card realm-code" data-page="biblioteca"><span class="realm-symbol">⌘</span><small>REGIÃO I</small><b>Programação</b><span>Desvende a lógica por trás dos sistemas.</span><i>Explorar →</i></button><button class="realm-card realm-data" data-page="biblioteca"><span class="realm-symbol">▤</span><small>REGIÃO II</small><b>Banco de dados</b><span>Organize informações e descubra conexões.</span><i>Explorar →</i></button><button class="realm-card realm-model" data-page="biblioteca"><span class="realm-symbol">◇</span><small>REGIÃO III</small><b>Modelagem</b><span>Projete estruturas para grandes ideias.</span><i>Explorar →</i></button><button class="realm-card realm-tech" data-page="mapa"><span class="realm-symbol">✧</span><small>REGIÃO IV</small><b>Tecnologia</b><span>Explore o universo da inovação.</span><i>Explorar →</i></button></div>
         </section>
-        <section id="page-personagem" class="page"><div class="character-intro"><div><p class="eyebrow">SUA IDENTIDADE NO REINO</p><h2>Crie seu <em>aventureiro.</em></h2><p>Defina seu nome, escolha sua classe e personalize cada detalhe da aparência.</p></div><div class="character-seal">♙<small>HERÓI<br>DA ACADEMIA</small></div></div><section class="character-identity"><div class="identity-heading"><span>01 · FICHA DO AVENTUREIRO</span><small>Informações públicas do personagem</small></div><div class="identity-fields"><label>Nome do aventureiro<input id="character-name" type="text" minlength="3" maxlength="20" placeholder="Ex.: Guardião Arcano" autocomplete="off"></label><label>Classe<select id="character-class"><option value="guerreiro">Guerreiro</option><option value="mago">Mago</option><option value="arqueiro">Arqueiro</option><option value="assassino">Assassino</option></select></label><button id="save-character" class="identity-save" type="button">Salvar ficha <span>→</span></button></div><p id="character-status" class="identity-status" role="status"></p></section><div class="creator-section-title"><span>02 · APARÊNCIA</span><h3>Ateliê de personalização</h3><p>Pré-visualize seu herói, ajuste rosto, cabelo e detalhes, e salve quando estiver satisfeito.</p></div><div id="rpgView" class="character-atelier"></div></section>
+        <section id="page-personagem" class="page"><div class="character-intro"><div><p class="eyebrow">SUA IDENTIDADE NO REINO</p><h2>Crie seu <em>aventureiro.</em></h2><p>Defina seu nome, escolha sua classe e personalize cada detalhe da aparência.</p></div><div class="character-seal">♙<small>HERÓI<br>DA ACADEMIA</small></div></div><section class="character-overview" aria-label="Resumo do personagem">
+  <div class="character-showcase-card">
+    <div class="character-showcase-top"><span>✦ SEU AVENTUREIRO</span><small id="character-level-badge">NÍVEL 1</small></div>
+    <div id="character-visual-preview" class="character-visual-preview"><span>✧</span></div>
+    <div class="character-showcase-name"><b id="character-display-name">Aventureiro</b><small id="character-display-class">Mago · Academia RPG</small></div>
+    <div class="character-xp-block"><div><span>PROGRESSO DE EXPERIÊNCIA</span><b id="character-xp-label">0 XP</b></div><i><span id="character-xp-fill"></span></i></div>
+  </div>
+  <div class="character-overview-side">
+    <div class="character-stat-grid">
+      <article class="character-stat"><small>NÍVEL ATUAL</small><b id="character-stat-level">1</b><span>Patamar do aventureiro</span></article>
+      <article class="character-stat"><small>EXPERIÊNCIA TOTAL</small><b id="character-stat-xp">0</b><span>XP acumulados</span></article>
+      <article class="character-stat"><small>MOEDAS</small><b id="character-stat-coins">0</b><span>Saldo disponível</span></article>
+      <article class="character-stat"><small>COLEÇÃO</small><b id="character-stat-items">0</b><span>Itens desbloqueados</span></article>
+    </div>
+    <section class="character-loadout"><div class="character-loadout-heading"><div><span>02 · EQUIPAMENTO ATIVO</span><h3>Seu conjunto atual</h3></div><button type="button" data-page="atelier">Gerenciar no Ateliê <i>→</i></button></div><div id="character-equipped-list" class="character-equipped-list"><div class="character-loadout-empty">Carregando seus equipamentos…</div></div></section>
+  </div>
+</section>
+<section class="character-identity"><div class="identity-heading"><span>01 · FICHA DO AVENTUREIRO</span><small>Informações públicas do personagem</small></div><div class="identity-fields"><label>Nome do aventureiro<input id="character-name" type="text" minlength="3" maxlength="20" placeholder="Ex.: Guardião Arcano" autocomplete="off"></label><label>Classe<select id="character-class"><option value="guerreiro">Guerreiro</option><option value="mago">Mago</option><option value="arqueiro">Arqueiro</option><option value="assassino">Assassino</option></select></label><button id="save-character" class="identity-save" type="button">Salvar ficha <span>→</span></button></div><p id="character-status" class="identity-status" role="status"></p></section><div class="creator-section-title"><span>02 · APARÊNCIA</span><h3>Ateliê de personalização</h3><p>Pré-visualize seu herói, ajuste rosto, cabelo e detalhes, e salve quando estiver satisfeito.</p></div><div id="rpgView" class="character-atelier"></div></section>
         <section id="page-atelier" class="page"><div id="atelierView" class="character-atelier"></div></section>
         <section id="page-biblioteca" class="page"><div class="library-intro"><div><p class="eyebrow">ARQUIVO DO AVENTUREIRO</p><h2>Biblioteca do <em>reino.</em></h2><p>Seus materiais de estudo, organizados por território e sincronizados com sua conta.</p></div><div class="library-count"><b id="library-total">0</b><small>ARQUIVOS<br>NA NUVEM</small></div></div><div class="library-subjects"><button class="library-subject active" data-subject="programacao"><span>⌘</span><small>TERRITÓRIO I</small><b>Programação</b><i>Projetos, códigos e exercícios</i></button><button class="library-subject" data-subject="banco"><span>▤</span><small>TERRITÓRIO II</small><b>Banco de Dados</b><i>SQL, consultas e anotações</i></button><button class="library-subject" data-subject="modelagem"><span>◇</span><small>TERRITÓRIO III</small><b>Modelagem</b><i>Diagramas, requisitos e documentação</i></button></div><section class="library-vault"><div class="vault-heading"><div><span>COFRE PESSOAL</span><h3 id="library-subject-title">Programação</h3><p id="library-subject-description">Projetos, códigos, exercícios e materiais da disciplina.</p></div><label class="vault-upload">＋ Adicionar arquivos<input id="library-upload" type="file" multiple></label></div><div class="vault-toolbar"><label class="vault-search"><span>⌕</span><input id="library-search" type="search" placeholder="Buscar nos seus arquivos..."></label><span id="library-sync-state" class="vault-sync">◈ Sincronização privada</span></div><div id="library-file-list" class="library-file-list"><div class="library-loading">Preparando seu cofre de conhecimento…</div></div></section></section>
         <section id="page-generic" class="page"><div class="generic-hero"><p class="eyebrow" id="generic-kicker">ACADEMIA RPG · 2.0</p><h2 id="generic-title">Seu próximo capítulo.</h2><p id="generic-description">Este território está sendo preparado para sua jornada.</p><span class="generic-rune">✧</span></div><div class="generic-content"><div class="generic-icon" id="generic-icon">✦</div><div><h3 id="generic-card-title">Um novo espaço está tomando forma.</h3><p id="generic-card-description">A nova Academia está sendo construída por etapas, mantendo seus dados e sua conta protegidos.</p></div></div></section>
@@ -78,7 +95,7 @@
     </main>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
-  <script defer src="./assets/js/academia-avatar-v2.js?v=3"></script>
-  <script type="module" src="./assets/js/academy-v2.js?v=4"></script>
+  <script defer src="./assets/js/academia-avatar-v2.js?v=4"></script>
+  <script type="module" src="./assets/js/academy-v2.js?v=5"></script>
 </body>
 </html>
