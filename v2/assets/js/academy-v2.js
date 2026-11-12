@@ -146,7 +146,7 @@ async function uploadLibraryFiles(list){
  let uploaded=0;
  try{
   for(const file of Array.from(list||[])){
-   const safeName=file.name.normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-zA-Z0-9._() -]/g,'_').replace(/\\s+/g,'_').slice(-110)||'arquivo';
+   const safeName=file.name.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._() -]/g,'_').replace(/\s+/g,'_').slice(-110)||'arquivo';
    const objectPath=sessionUser.id+'/'+librarySubject+'/'+crypto.randomUUID()+'-'+safeName;
    const {error:storageError}=await supabase.storage.from('study-files').upload(objectPath,file,{cacheControl:'3600',upsert:false,contentType:file.type||'application/octet-stream'});
    if(storageError){notify('Falha ao enviar '+file.name+': '+storageError.message);continue;}
