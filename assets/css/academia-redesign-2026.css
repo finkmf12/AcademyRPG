@@ -2530,3 +2530,202 @@
   .app #rpgView .pf-stat-card>span{width:27px;height:27px}
   .app #rpgView .pf-stat-card>strong{font-size:16px}
 }
+
+
+/* =========================================================
+   ETAPA 3 · COMUNIDADE SOCIAL
+   Taverna, guildas, mensagens privadas e visitação.
+   Camada estritamente visual: mantém IDs, estados e eventos.
+   ========================================================= */
+
+/* Taverna — salão acolhedor com arte de ambiente */
+#rpgView .tvn-page{max-width:1260px;padding-top:5px}
+#rpgView .tvn-hero{
+  min-height:224px;
+  border:1px solid rgba(192,164,224,.42);
+  border-radius:20px;
+  background:
+    linear-gradient(90deg,rgba(7,13,27,.94) 0%,rgba(10,17,32,.82) 48%,rgba(13,18,33,.42) 100%),
+    linear-gradient(0deg,rgba(7,12,23,.55),rgba(7,12,23,.08)),
+    url("https://cdn.prod.website-files.com/623c638db44cf48bda21c5e1/62600a42f450426a286b3843_lilian-montmartin-xuhai-tavern20.jpg") center 48%/cover no-repeat;
+  box-shadow:0 22px 54px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.08);
+}
+#rpgView .tvn-hero:before{border-color:rgba(223,202,255,.22)}
+#rpgView .tvn-hero:after{border-color:rgba(196,165,245,.18);box-shadow:0 0 0 26px rgba(196,165,245,.06),0 0 0 60px rgba(196,165,245,.035),0 0 0 100px rgba(196,165,245,.02)}
+#rpgView .tvn-eyebrow{color:#d8c1f7}
+#rpgView .tvn-eyebrow>span{background:#c9a9f4;box-shadow:0 0 12px #b995ef}
+#rpgView .tvn-hero h3{color:#f4eaff;text-shadow:0 3px 18px #080b18}
+#rpgView .tvn-hero p{color:#d2d5e5;text-shadow:0 2px 10px #080b18}
+#rpgView .tvn-hero-art{border-color:#c5a7ed80;background:radial-gradient(circle,#42345d 0%,#1c2540 66%,#111a30 100%);box-shadow:0 0 0 9px #c5a7ed12,0 0 40px #9f7bdc35,inset 0 0 30px #d4b4ff22}
+#rpgView .tvn-hero-rune{border-color:#ddc5ff99;color:#ead9ff;text-shadow:0 0 22px #c7a1ff}
+#rpgView .tvn-hero-art>span,#rpgView .tvn-hero-art>b{color:#e4ccff;text-shadow:0 0 15px #c9a6ff}
+#rpgView .tvn-tab{border-color:rgba(132,151,196,.3);border-radius:13px;background:linear-gradient(135deg,rgba(17,29,52,.94),rgba(13,22,41,.96));box-shadow:inset 0 1px rgba(255,255,255,.035)}
+#rpgView .tvn-tab.is-active{border-color:#aa8bdc;background:linear-gradient(125deg,rgba(55,44,83,.97),rgba(27,37,63,.98));box-shadow:inset 0 0 0 1px #d7baff20,0 10px 25px #0003}
+#rpgView .tvn-tab-icon{border-color:#806ca8;background:#242344;color:#e1caff}
+#rpgView .tvn-tab b{color:#f0e7ff}
+#rpgView .tvn-tab em,#rpgView .tvn-tab.is-active em{border-color:#8d78b6;color:#d7c5f4}
+#rpgView .tvn-chat-card,#rpgView .tvn-side-card{border-color:rgba(127,151,196,.27);border-radius:15px;background:linear-gradient(155deg,rgba(19,31,55,.96),rgba(10,19,36,.97));box-shadow:0 16px 38px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.035)}
+#rpgView .tvn-chat-head{border-bottom-color:rgba(137,156,198,.22);background:linear-gradient(110deg,rgba(31,42,69,.98),rgba(18,29,51,.98))}
+#rpgView .tvn-channel-mark{border-color:#8270ac;background:linear-gradient(145deg,#342e55,#1b2741);color:#e1caff;box-shadow:0 0 22px #a987df18}
+#rpgView .tvn-channel-title h3{color:#f0e8ff}
+#rpgView .tvn-channel-title p{color:#aab8d1}
+#rpgView .tvn-channel-status{border-color:#456b62;background:#142d2a;color:#a9e0c6}
+#rpgView .tvn-feed{background:radial-gradient(ellipse at 50% 0%,rgba(100,82,151,.10),transparent 54%),linear-gradient(180deg,#0b1528,#0a1425)}
+#rpgView .tvn-message{padding:12px 11px;border-bottom-color:rgba(129,151,193,.12)}
+#rpgView .tvn-message-avatar{border-color:#586a91;background:linear-gradient(145deg,#293c5e,#172640);box-shadow:0 5px 14px #0003}
+#rpgView .tvn-message-bubble{border:1px solid rgba(125,149,195,.2);border-radius:4px 13px 13px 13px;background:linear-gradient(145deg,#1b2b49,#14223a);color:#e4eafa;box-shadow:0 6px 18px #0002}
+#rpgView .tvn-message.is-own .tvn-message-bubble{border-color:rgba(157,126,212,.34);border-radius:13px 4px 13px 13px;background:linear-gradient(145deg,#332c52,#222743);color:#f0e8ff}
+#rpgView .tvn-message-meta b{color:#d8c6f6}
+#rpgView .tvn-message-meta time{color:#8192b0}
+#rpgView .tvn-composer{border-top-color:rgba(137,156,198,.2);background:linear-gradient(180deg,#101d34,#0d192d)}
+#rpgView .tvn-emoji-row button{border-color:#344565;background:#1b2b49;color:#e2d5fa}
+#rpgView .tvn-compose-row textarea{border-color:#3c4e70;background:#091528;color:#f0f3ff}
+#rpgView .tvn-compose-row textarea:focus{border-color:#a68bd8;box-shadow:0 0 0 3px #a68bd81c}
+#rpgView .tvn-send{border:1px solid #b49add;background:linear-gradient(135deg,#b69ce5,#8c72c5);color:#151329;box-shadow:0 7px 18px #8d70c533}
+#rpgView .tvn-send:hover{background:linear-gradient(135deg,#c8b2f1,#a087d9)}
+#rpgView .tvn-side-heading h4{color:#eee5ff}
+#rpgView .tvn-side-heading small{color:#bca4e6}
+#rpgView .tvn-side-spark{color:#d9c1ff}
+#rpgView .tvn-online-total strong{color:#c8b2f0}
+#rpgView .tvn-online-person{border-color:rgba(126,150,194,.2);background:#14223a}
+#rpgView .tvn-rules-card li{color:#b9c5d9}
+#rpgView .tvn-rules-foot{border-top-color:rgba(132,151,193,.18);color:#a99bc8}
+
+/* Guildas — salão de bandeiras, brasões e companhias */
+#rpgView .adv-guild-hero{
+  min-height:190px;
+  border-color:rgba(192,160,220,.38);
+  background:
+    linear-gradient(90deg,rgba(8,14,28,.96),rgba(12,18,34,.86) 56%,rgba(18,17,35,.52)),
+    linear-gradient(0deg,rgba(8,13,26,.38),transparent),
+    url("https://cdna.artstation.com/p/assets/images/images/031/442/336/large/nikita-bufatin-.jpg?1603650721") center 48%/cover no-repeat;
+  box-shadow:0 20px 48px #0005,inset 0 1px #fff1;
+}
+#rpgView .adv-guild-hero:after{border-color:#d4b7f22a;box-shadow:0 0 0 26px #b895e00a,0 0 0 60px #b895e008,0 0 0 100px #b895e005}
+#rpgView .adv-guild-hero .adv-kicker{color:#d6baf4}
+#rpgView .adv-guild-hero h3{color:#f4eaff;text-shadow:0 3px 18px #080b18}
+#rpgView .adv-guild-hero p{color:#d0d6e7;text-shadow:0 2px 10px #080b18}
+#rpgView .adv-guild-hero .adv-hero-mark{border-color:#b69bdc;background:radial-gradient(circle,#49375f,#1b2340 72%);color:#e6d3ff;box-shadow:0 0 32px #b08be633}
+#rpgView .adv-guild-tabs{gap:9px;margin:0 0 17px;padding:7px;border:1px solid rgba(130,148,190,.2);border-radius:13px;background:rgba(10,18,34,.8)}
+#rpgView .adv-guild-tabs button{border-color:transparent;border-radius:9px;background:transparent;color:#aebbd3}
+#rpgView .adv-guild-tabs button.active{border-color:#8c75b7;background:linear-gradient(135deg,#3b3159,#202b47);color:#eadfff;box-shadow:inset 0 1px #fff2}
+#rpgView .adv-guild-directory .adv-guild-row{border-color:rgba(135,154,199,.24);border-radius:14px;background:linear-gradient(145deg,rgba(24,37,63,.97),rgba(12,22,41,.98));box-shadow:0 9px 22px #0002}
+#rpgView .adv-guild-directory .adv-guild-row:hover{border-color:#b59bde;box-shadow:0 12px 28px #0004,0 0 0 1px #b59bde22}
+#rpgView .adv-guild-directory .adv-guild-crest{border-color:#b79bdc;border-radius:12px;background:linear-gradient(145deg,#3b3159,#1a2742);color:#eadbff;box-shadow:inset 0 0 20px #b99be21c,0 7px 16px #0003}
+#rpgView .adv-guild-info b{color:#eee5ff}
+#rpgView .adv-guild-info small,#rpgView .adv-guild-info span{color:#aab8d2}
+#rpgView .adv-guild-flag-side{filter:drop-shadow(0 8px 16px #0006)}
+#rpgView .adv-flag{border-color:#c8a9e8;box-shadow:0 8px 24px #0007,inset 0 0 0 2px #0b1425aa}
+#rpgView .adv-flag-editor-mark{border-color:#8d79b4;background:#222844;color:#e1caff}
+#rpgView .adv-flag-preview-wrap{border-color:#51436f;background:linear-gradient(145deg,#171d35,#0d172b)}
+#rpgView .adv-flag-controls select,#rpgView .adv-flag-controls input{border-color:#455579;background:#0b162b;color:#e9e8fa}
+#rpgView .adv-member{border-color:rgba(127,149,192,.2);border-radius:11px;background:linear-gradient(120deg,#172641,#101d33)}
+#rpgView .adv-member .adv-rank-avatar{border-color:#65749b;background:#253453}
+#rpgView .adv-member b{color:#eee8fb}
+#rpgView .adv-member>strong{color:#d7c0fa}
+#rpgView .adv-guild-forms .adv-panel{border-color:rgba(133,151,194,.23);background:linear-gradient(145deg,rgba(20,32,55,.97),rgba(11,20,37,.98))}
+
+/* Mensagens privadas — ambiente mais íntimo e legível */
+#rpgView .tvn-private-layout{grid-template-columns:minmax(245px,320px) minmax(0,1fr);gap:16px;min-height:650px}
+#rpgView .tvn-private-list-card{border-color:rgba(145,132,202,.3);border-radius:16px;background:linear-gradient(160deg,#182541,#101a31);box-shadow:0 16px 36px #0004}
+#rpgView .tvn-private-list-heading{border-bottom-color:#3b3b65;background:linear-gradient(120deg,#302c50,#1b2944)}
+#rpgView .tvn-private-list-heading small{color:#c8b2ef}
+#rpgView .tvn-private-list-heading h3{color:#f0e8ff}
+#rpgView .tvn-private-list-heading p{color:#aab8d2}
+#rpgView .tvn-private-friend{border-radius:11px}
+#rpgView .tvn-private-friend:hover{border-color:#8274b4;background:#242b4a}
+#rpgView .tvn-private-friend.is-selected{border-color:#b59bde;background:linear-gradient(115deg,#3c315c,#202b48);box-shadow:inset 0 0 0 1px #d8c0ff1c,0 7px 18px #0003}
+#rpgView .tvn-private-avatar{border-color:#756aa1;background:linear-gradient(145deg,#39345d,#1b2945);box-shadow:0 5px 14px #0003}
+#rpgView .tvn-private-friend-copy b{color:#eee8ff}
+#rpgView .tvn-private-friend-copy small{color:#9caac7}
+#rpgView .tvn-private-friend>em{background:#9364b8;color:#fff}
+#rpgView .tvn-private-chat-card{border-color:rgba(142,132,197,.3);border-radius:16px;background:linear-gradient(160deg,#17233d,#0d182d)}
+#rpgView .tvn-private-chat-head{background:linear-gradient(110deg,#302d50,#192742)}
+#rpgView .tvn-private-lock{border-color:#657e8a;background:#172f38;color:#b4e3e5}
+#rpgView #tvnPrivateFeed{background:radial-gradient(ellipse at 50% 0%,#7e68b014,transparent 58%),linear-gradient(180deg,#0c172c,#0a1427)}
+#rpgView .tvn-private-no-selection>div{border-color:#a48bcf;background:#8d70c51c;color:#dfcaff;box-shadow:0 0 28px #a98bd52b}
+#rpgView .tvn-private-no-selection h3{color:#eee7ff}
+#rpgView .tvn-private-no-selection p{color:#a8b5cf}
+
+/* Visitação — ficha de personagem e vitrine */
+#rpgView .space-toolbar{margin-bottom:18px}
+#rpgView .space-privacy-indicator{border-color:rgba(130,157,202,.32);background:rgba(12,23,42,.88);color:#c1cce0}
+#rpgView .space-profile-hero{
+  grid-template-columns:minmax(220px,300px) minmax(0,1fr);
+  gap:30px;
+  padding:28px;
+  border-color:rgba(134,157,204,.34);
+  border-radius:20px;
+  background:
+    radial-gradient(ellipse at 12% 52%,rgba(117,105,183,.28),transparent 48%),
+    linear-gradient(110deg,rgba(13,24,45,.97),rgba(13,22,41,.94) 58%,rgba(29,24,49,.88));
+  box-shadow:0 20px 50px #0005,inset 0 1px #fff1;
+}
+#rpgView .space-profile-hero:after{border-color:#c5a9ed28;box-shadow:0 0 0 28px #b79be20a,0 0 0 58px #b79be207}
+#rpgView .space-profile-art{
+  height:320px;
+  border-color:rgba(154,151,216,.45);
+  border-radius:16px;
+  background:
+    linear-gradient(180deg,rgba(10,17,34,.20),rgba(8,15,29,.58)),
+    url("../../1337879.png") center 55%/cover no-repeat,
+    radial-gradient(ellipse at 50% 72%,#8bb6e82c,transparent 54%),#111d32;
+  box-shadow:inset 0 0 45px #0a1028aa,0 12px 28px #0004;
+}
+#rpgView .space-art-orbit{border-color:#d5c4ff55;box-shadow:0 0 0 16px #c8d8f00c,0 0 42px #a98ce944}
+#rpgView .space-character{filter:drop-shadow(0 14px 18px #000b) drop-shadow(0 0 14px #a98ce944)}
+#rpgView .space-profile-info h2{color:#f0e8ff;text-shadow:0 3px 20px #0007}
+#rpgView .space-profile-tags span{border-color:#665b8e;background:linear-gradient(120deg,#292b4b,#1a2943);color:#e1d6fa}
+#rpgView .space-profile-info>p{color:#bac6dc}
+#rpgView .space-profile-stats>div{border-color:rgba(137,155,201,.28);border-radius:11px;background:rgba(9,19,37,.76)}
+#rpgView .space-profile-stats b{color:#d9c3ff}
+#rpgView .space-profile-stats small{color:#a0aec9}
+#rpgView .space-content-grid,#rpgView .space-owner-grid{gap:17px}
+#rpgView .space-showcase,#rpgView .space-achievements,#rpgView .space-guestbook,#rpgView .space-settings,#rpgView .space-visitors{border-color:rgba(131,152,196,.25);border-radius:15px;background:linear-gradient(150deg,rgba(19,31,54,.97),rgba(10,19,36,.98));box-shadow:0 12px 30px #0003}
+#rpgView .space-section-heading h3{color:#eee6ff}
+#rpgView .space-section-heading p{color:#aab8d1}
+#rpgView .space-heading-icon{color:#d5bdf7}
+#rpgView .space-item-card{border-color:#49577b;border-radius:12px;background:linear-gradient(145deg,#202c4b,#121f38)}
+#rpgView .space-item-card>span{color:#d9c3ff}
+#rpgView .space-item-card b{color:#eef0ff}
+#rpgView .space-item-card small{color:#b6a6d8}
+#rpgView .space-achievement-chip{border-color:#75639b;background:linear-gradient(135deg,#302a4d,#1c2941);color:#e4d5ff}
+#rpgView .space-guestbook-form{border-color:#455477;border-radius:12px;background:#0d1930}
+#rpgView .space-guestbook-form textarea{border-color:#48577a;background:#09152a;color:#edf0ff}
+#rpgView .space-message{border-color:rgba(129,151,196,.22);border-radius:11px;background:linear-gradient(120deg,#172641,#101d34)}
+#rpgView .space-message-avatar{background:#303458;color:#e0d2ff}
+#rpgView .space-message-meta b{color:#d9c3ff}
+#rpgView .space-message-body p{color:#d0d8e9}
+#rpgView .space-visitor{border-color:rgba(129,151,196,.2);border-radius:10px;background:#14223a}
+#rpgView .space-visitor b{color:#e2e8f7}
+#rpgView .space-visitor time{color:#9aa9c4}
+#rpgView .space-settings-form select{border-color:#46577a;background:#0c1830;color:#edf0ff}
+#rpgView .space-toggle-label{color:#c4cce0}
+#rpgView .space-toggle-label input{accent-color:#a98bd8}
+
+/* Responsividade e movimento reduzido */
+@media(max-width:900px){
+  #rpgView .tvn-private-layout{grid-template-columns:minmax(210px,260px) minmax(0,1fr)}
+  #rpgView .space-profile-hero{grid-template-columns:minmax(190px,250px) minmax(0,1fr);gap:20px;padding:20px}
+}
+@media(max-width:760px){
+  #rpgView .space-profile-hero{grid-template-columns:1fr}
+  #rpgView .space-profile-art{height:260px}
+  #rpgView .space-content-grid,#rpgView .space-owner-grid{grid-template-columns:1fr}
+  #rpgView .tvn-private-layout{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  #rpgView .tvn-hero{min-height:190px;background-position:58% center}
+  #rpgView .tvn-hero-copy{max-width:100%}
+  #rpgView .tvn-hero h3{font-size:25px}
+  #rpgView .tvn-hero-art{width:76px;height:76px}
+  #rpgView .tvn-private-friends{grid-template-columns:1fr}
+  #rpgView .adv-guild-directory-tools{align-items:stretch;flex-direction:column}
+  #rpgView .adv-guild-directory-tools input{max-width:none}
+  #rpgView .space-profile-hero{padding:15px}
+  #rpgView .space-profile-art{height:230px}
+}
+@media(prefers-reduced-motion:reduce){
+  #rpgView .tvn-hero-art>i{animation:none}
+  #rpgView .tvn-tab,#rpgView .tvn-message,#rpgView .adv-guild-directory .adv-guild-row{transition:none}
+}
