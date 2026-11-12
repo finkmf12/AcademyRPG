@@ -362,7 +362,7 @@
     return '<div class="tvn-message-image-status">' + (message.attachment_error ? 'Imagem indisponível para esta conta.' : 'Carregando imagem anexada...') + '</div>';
   }
 
-  function renderMessage(message) {
+  function renderMessage(message, isNew) {
     const own = !!(state.user && message.user_id === state.user.id);
     const canDelete = own || state.teacher;
     const name = nameMarkup(message.sender_name || 'Aventureiro', message.sender_appearance || {});
@@ -372,11 +372,29 @@
     const classLabel = message.sender_class
       ? '<span class="tvn-class-label">' + escapeHtml(message.sender_class) + '</span>'
       : '';
-    return '<article class="tvn-message ' + (own ? 'is-own' : '') + '" data-message-id="' + escapeHtml(message.id) + '">' +
+    return '<article class="tvn-message ' + (own ? 'is-own ' : '') + (isNew ? 'is-new' : '') + '" data-message-id="' + escapeHtml(message.id) + '">' +
       '<div class="tvn-message-avatar">' + escapeHtml(message.sender_avatar || '🧙') + '</div>' +
       '<div class="tvn-message-main"><div class="tvn-message-meta"><b>' + name + '</b>' + ownerBadge + classLabel + '<time>' + formatTime(message.created_at) + '</time>' +
       (canDelete ? '<button type="button" class="tvn-message-delete" data-tvn-delete="' + escapeHtml(message.id) + '" title="Excluir mensagem" aria-label="Excluir mensagem">×</button>' : '') +
-      '</div>' + (message.content ? '<div class="tvn-message-bubble">' + formatMessage(message.content) + '</div>' : '') + imageMarkup(message) + '</div></article>';
+      '</div>' + (message.content ? '<div class="tvn-message-bubble">' + formatMessage(message.content) + '</div>' : '') +
+      '<div class="tvn-message-attachment" data-message-attachment>' + imageMarkup(message) + '</div></div></article>';
+  }
+
+  function appendMessageToFeed(message) {
+    const feed = $('tvnFeed');
+    if (!feed) return false;
+    const empty = feed.querySelector('.tvn-empty');
+    if (empty) empty.remove();
+    feed.insertAdjacentHTML('beforeend', renderMessage(message, true));
+    return true;
+  }
+
+  function refreshMessageAttachment(message) {
+    const feed = $('tvnFeed');
+    if (!feed) return;
+    const article = feed.querySelector('[data-message-id="' + CSS.escape(String(message.id)) + '"]');
+    const slot = article && article.querySelector('[data-message-attachment]');
+    if (slot) slot.innerHTML = imageMarkup(message);
   }
 
   function renderMessages(options) {
@@ -390,7 +408,7 @@
     if (!state.messages.length) {
       html += '<div class="tvn-empty"><div class="tvn-empty-mark">✧</div><b>O salão está tranquilo.</b><p>Seja o primeiro a iniciar uma conversa por aqui.</p></div>';
     } else {
-      html += state.messages.map(renderMessage).join('');
+      html += state.messages.map(message => renderMessage(message)).join('');
     }
     feed.innerHTML = html;
     const jump = $('tvnJumpBottom');
@@ -508,12 +526,18 @@
     if (!message || state.messages.some(item => String(item.id) === String(message.id))) return;
     const feed = $('tvnFeed');
     const nearBottom = !feed || feed.scrollHeight - feed.scrollTop - feed.clientHeight < 110;
+    const previousLast = state.messages[state.messages.length - 1];
     state.messages.push(message);
     state.messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-    renderMessages({ toBottom: nearBottom || message.user_id === (state.user && state.user.id) });
+    const isNewest = !previousLast || new Date(message.created_at) >= new Date(previousLast.created_at);
+    if (isNewest && appendMessageToFeed(message)) {
+      if (nearBottom || message.user_id === (state.user && state.user.id)) feed.scrollTop = feed.scrollHeight;
+    } else {
+      renderMessages({ toBottom: nearBottom || message.user_id === (state.user && state.user.id) });
+    }
     const channelAtReceive = currentChannelKey();
     resolveMessageImages([message]).then(() => {
-      if (state.pageOpen && channelAtReceive === currentChannelKey() && state.messages.some(item => String(item.id) === String(message.id))) renderMessages();
+      if (state.pageOpen && channelAtReceive === currentChannelKey() && state.messages.some(item => String(item.id) === String(message.id))) refreshMessageAttachment(message);
     });
     if (!nearBottom && message.user_id !== (state.user && state.user.id)) {
       state.unseen += 1;
@@ -570,11 +594,16 @@
       const { data, error } = await state.client.rpc('send_tavern_message', args);
       if (error) throw error;
       if (data && !state.messages.some(item => String(item.id) === String(data.id))) {
+        const previousLast = state.messages[state.messages.length - 1];
         state.messages.push(data);
         state.messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-        renderMessages({ toBottom: true });
+        if (!previousLast || new Date(data.created_at) >= new Date(previousLast.created_at)) {
+          appendMessageToFeed(data);
+          const feed = $('tvnFeed');
+          if (feed) feed.scrollTop = feed.scrollHeight;
+        } else renderMessages({ toBottom: true });
         resolveMessageImages([data]).then(() => {
-          if (state.pageOpen && state.messages.some(item => String(item.id) === String(data.id))) renderMessages();
+          if (state.pageOpen && state.messages.some(item => String(item.id) === String(data.id))) refreshMessageAttachment(data);
         });
       }
       input.value = '';
