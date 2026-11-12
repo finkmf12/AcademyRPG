@@ -526,7 +526,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     return '<div class="arc-creator-field"><b>'+esc(field.label)+'</b><div class="arc-creator-choices">'+field.opts.map(o=>'<button type="button" class="arc-creator-choice '+(draft[field.key]===o[0]?'active':'')+'" data-creator-field="'+field.key+'" data-creator-value="'+o[0]+'" aria-pressed="'+(draft[field.key]===o[0]?'true':'false')+'">'+(o[2]?'<i style="--swatch:'+o[2]+'"></i>':'')+esc(o[1])+'</button>').join('')+'</div></div>';
   }
   function renderCreator(){
-    const root=$('rpgView');if(!root)return;
+    const root=document.querySelector('.page.active #rpgView, .page.active #atelierView');if(!root)return;
     if(!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);
     const current=Object.assign({},S.appearance||{},S.creatorDraft);
     const previewAppearance=S.hideArmorPreview?Object.assign({},current,{hat:'',outfit:'',shoulders:'',cloak:'',mask:''}):current;
@@ -645,7 +645,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     return '<article class="arc-item-card arc-rarity-'+(RARITY[x.rarity]||'common')+(premium?' arc-premium-card':'')+(x.slot==='title'?' arc-title-item-card':'')+(x.slot==='aura'?' arc-aura-item-card':'')+(x.slot==='pet'?' arc-pet-item-card':'')+'"><div class="arc-item-visual">'+visual+'</div><div class="arc-item-copy"><div class="arc-item-top"><span>'+esc(x.id.startsWith('wings-')?'Asas':(SLOT_NAME[x.slot]||x.slot))+'</span><b>'+esc(x.rarity)+'</b></div><h4>'+esc(x.name)+'</h4><p>'+esc(x.description)+'</p><div class="arc-item-bottom">'+action+'</div><div class="arc-item-actions"><button class="arc-preview-btn '+(S.previewId===x.id?'active':'')+'" data-avatar-action="preview" data-id="'+esc(x.id)+'">'+(S.previewId===x.id?'Em prévia':'Experimentar')+'</button>'+main+'</div></div></article>';
   }
   function renderBackgroundGallery(){
-    const root=$('rpgView');if(!root)return;
+    const root=document.querySelector('.page.active #rpgView, .page.active #atelierView');if(!root)return;
     const previewId=S.backgroundPreviewId||S.background;
     const selected=S.backgroundCatalog.find(x=>x.id===previewId)||S.backgroundCatalog[0];
     const cards=S.backgroundCatalog.map(x=>{
@@ -659,7 +659,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     root.innerHTML='<section class="atelier-v2 atelier-backgrounds"><header class="atelier-v2-header"><div class="atelier-v2-title"><span class="arc-eyebrow">CENÁRIOS · AMBIENTES · DIMENSÕES</span><h2>Galeria de <em>mundos</em></h2><p>Escolha o cenário que vai acompanhar seu aventureiro. Cada fundo tem uma atmosfera própria.</p></div><div class="atelier-v2-wallet"><span class="atelier-coin-glyph">◈</span><div><small>SEU SALDO</small><b>'+Number(S.balance).toLocaleString('pt-BR')+' <i>Coins</i></b></div></div></header><section class="atelier-bg-showcase"><div class="atelier-bg-stage">'+backgroundMarkup(preview,'stage')+'<div class="atelier-bg-stage-glow"></div>'+render(S.appearance||{},'preview',S.playerClass)+'<div class="atelier-bg-stage-caption"><small>'+((S.background===preview)?'CENÁRIO EQUIPADO':'PRÉ-VISUALIZAÇÃO')+'</small><b>'+esc(selected?.name||'Floresta Encantada')+'</b></div></div><div class="atelier-bg-stage-info"><span>✦ AMBIENTE SELECIONADO</span><h3>'+esc(selected?.name||'Escolha um cenário')+'</h3><p>'+esc(selected?.description||'Explore a coleção de cenários.')+'</p><div class="atelier-bg-balance"><small>VALOR</small><b>'+Number(selected?.price||0).toLocaleString('pt-BR')+' Coins</b></div><button class="atelier-bg-action '+(S.ownedBackgrounds.some(v=>v.item_id===selected?.id)?'equipped':'buy')+'" data-avatar-action="'+(S.ownedBackgrounds.some(v=>v.item_id===selected?.id)?'equip-background':'buy-background')+'" data-id="'+esc(selected?.id||'')+'">'+(S.background===selected?.id?'Este cenário já está equipado':S.ownedBackgrounds.some(v=>v.item_id===selected?.id)?'Equipar este cenário':'Desbloquear cenário')+'</button><button class="atelier-bg-preview" data-avatar-action="reset-background-preview">Voltar ao cenário equipado</button></div></section><div class="atelier-v2-collection-head"><div><span class="arc-eyebrow">COLEÇÃO VISUAL</span><h3>Todos os cenários</h3><p>Fundos ilustrados para transformar a apresentação do seu personagem.</p></div><div class="atelier-v2-collection-count"><b>'+S.backgroundCatalog.length+'</b><small>MUNDOS<br>DISPONÍVEIS</small></div></div><div class="atelier-bg-grid">'+(cards||'<div class="arc-empty">Nenhum cenário disponível no momento.</div>')+'</div></section>';
   }
   function renderAtelier(){
-    const root=$('rpgView');if(!root)return;
+    const root=document.querySelector('.page.active #rpgView, .page.active #atelierView');if(!root)return;
     if(S.guest){root.innerHTML='<section class="atelier-v2-guest"><div><span class="arc-eyebrow">ATELIÊ ARCANO</span><h3>Vista a sua próxima lenda.</h3><p>Entre com sua conta para desbloquear visuais, guardar combinações e sincronizar seu inventário.</p></div>'+render({},'preview','mago')+'</section><div class="rpg-note">O modo visitante pode explorar o Ateliê, mas não pode comprar ou salvar equipamentos.</div>';return;}
     if(S.error){root.innerHTML='<div class="panel"><b>Não foi possível abrir o Ateliê Arcano.</b><p class="sub">'+esc(S.error)+'</p><button class="secondary" data-avatar-action="reload">Tentar novamente</button></div>';return;}
     if(S.tab==='backgrounds'){renderBackgroundGallery();return;}
@@ -711,11 +711,11 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       '</section>';
   }
   async function open(initialTab='shop'){
-    S.tab=initialTab==='creator'?'creator':'shop';S.filter='all';S.previewId=null;S.error=null;
+    S.tab=initialTab==='creator'?'creator':initialTab==='backgrounds'?'backgrounds':'shop';S.filter='all';S.previewId=null;S.error=null;
     if(S.tab==='creator')S.creatorDraft=normalizeCreator(S.appearance);
     renderAtelier();
     try{await load();S.creatorDraft=normalizeCreator(S.appearance);}catch(e){S.error=e.message||String(e);console.error('Ateliê Arcano:',e);}
-    if(document.querySelector('[data-rpg="atelier"].active'))renderAtelier();
+    if(document.querySelector('.page.active #rpgView, .page.active #atelierView'))renderAtelier();
   }
   const openCreator=()=>open('creator');
   async function action(button){
@@ -786,23 +786,20 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       finally{S.busy=false;renderAtelier();}
     }
   }
-  const root=$('rpgView');
-  if(root){
-    root.addEventListener('click',e=>{
-      const b=e.target.closest('[data-avatar-action],[data-avatar-tab],[data-avatar-filter],[data-creator-field]');
-      if(!b)return;
-      if(b.dataset.creatorField){
-        if(S.busy)return;
-        const field=CREATOR_FIELDS.find(x=>x.key===b.dataset.creatorField);
-        if(!field||!field.opts.some(x=>x[0]===b.dataset.creatorValue))return;
-        if(!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);
-        S.creatorDraft[field.key]=b.dataset.creatorValue;renderCreator();return;
-      }
-      if(b.dataset.avatarTab){S.tab=b.dataset.avatarTab;S.filter='all';S.previewId=null;if(S.tab==='creator'&&!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);renderAtelier();return;}
-      if(b.dataset.avatarFilter){S.filter=b.dataset.avatarFilter;renderAtelier();return;}
-      action(b).catch(e=>{console.error(e);toast('Não foi possível concluir esta ação.');});
-    });
-  }
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-avatar-action],[data-avatar-tab],[data-avatar-filter],[data-creator-field]');
+    if(!b)return;
+    if(b.dataset.creatorField){
+      if(S.busy)return;
+      const field=CREATOR_FIELDS.find(x=>x.key===b.dataset.creatorField);
+      if(!field||!field.opts.some(x=>x[0]===b.dataset.creatorValue))return;
+      if(!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);
+      S.creatorDraft[field.key]=b.dataset.creatorValue;renderCreator();return;
+    }
+    if(b.dataset.avatarTab){S.tab=b.dataset.avatarTab;S.filter='all';S.previewId=null;if(S.tab==='creator'&&!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);renderAtelier();return;}
+    if(b.dataset.avatarFilter){S.filter=b.dataset.avatarFilter;renderAtelier();return;}
+    action(b).catch(e=>{console.error(e);toast('Não foi possível concluir esta ação.');});
+  });
   document.addEventListener('academia-avatar-changed',e=>{if(e.detail?.appearance)S.appearance=e.detail.appearance;});
   document.addEventListener('academia-background-changed',e=>{S.background=e.detail?.background||null;if(document.querySelector('[data-rpg="atelier"].active'))renderAtelier();});
   window.AcademiaAvatar={render,open,openCreator,renderAtelier,titleMarkup,nameMarkup,backgroundMarkup};
