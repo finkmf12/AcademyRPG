@@ -256,7 +256,7 @@
       head+='<path d="'+top+'" fill="'+hairColor+'" stroke="'+hairStroke+'" stroke-width="4"/>';
     }
     head+='<path d="M65 70 Q82 72 99 56 Q115 70 135 72" fill="none" stroke="'+hairLight+'" stroke-width="3.5" opacity=".72"/>';
-    if(hairstyle!=='shaved'&&hairstyle!=='curly')head+='<path d="M61 82 Q55 105 65 118 M139 82 Q145 105 135 118" fill="none" stroke="'+hairColor+'" stroke-width="10" stroke-linecap="round"/>';
+    if(hairstyle!=='shaved'&&hairstyle!=='curly')head+='<path d="M61 82 Q57 91 65 99 M139 82 Q143 91 135 99" fill="none" stroke="'+hairColor+'" stroke-width="7" stroke-linecap="round"/>';
     const iris=({brown:'#2a3044',hazel:'#80613e',green:'#4c9a70',blue:'#4d83c4',gray:'#7d8799',violet:'#9465bd',amber:'#c58a38',red:'#a74350'})[eyeColorKey]||'#2a3044';
     const eyes=eyeStyle==='almond'
       ?'<path d="M73 88 Q81 78 89 88 Q81 97 73 88Z M111 88 Q119 78 127 88 Q119 97 111 88Z" fill="'+iris+'"/>'
