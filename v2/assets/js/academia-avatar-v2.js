@@ -717,6 +717,31 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     if(act==='reload'){S.error=null;await open();return;}
     if(act==='toggle-armor-preview'){S.hideArmorPreview=!S.hideArmorPreview;renderCreator();return;}
     if(act==='discard-appearance'){S.creatorDraft=normalizeCreator(S.appearance);renderCreator();return;}
+    if(act==='preview-background'){S.backgroundPreviewId=id;renderBackgroundGallery();return;}
+    if(act==='reset-background-preview'){S.backgroundPreviewId=null;renderBackgroundGallery();return;}
+    if(act==='buy-background'||act==='equip-background'){
+      if(S.guest){toast('Entre com Google para desbloquear e equipar cenários.');return;}
+      if(!id)return;
+      S.busy=true;button.disabled=true;
+      try{
+        if(act==='buy-background'){
+          const {data,error}=await C().supabase.rpc('market_buy_item',{p_item_id:id});
+          if(error)throw error;
+          if(!data?.ok){toast(data?.reason==='insufficient'?'Coins insuficientes para este cenário.':'Este cenário já está na sua coleção.');}
+          else{toast('Cenário desbloqueado! Ele já está na sua coleção.');S.backgroundPreviewId=id;}
+        }else{
+          const {data,error}=await C().supabase.rpc('market_equip_item',{p_item_id:id,p_equipped:true});
+          if(error)throw error;
+          if(data===false)throw new Error('O servidor não confirmou a troca do cenário.');
+          S.backgroundPreviewId=null;
+          toast('Novo cenário equipado no seu personagem!');
+        }
+        await load();
+        document.dispatchEvent(new CustomEvent('academia-background-changed',{detail:{background:S.background}}));
+      }catch(e){toast('Não foi possível concluir: '+(e.message||e));}
+      finally{S.busy=false;renderBackgroundGallery();}
+      return;
+    }
     if(act==='save-appearance'){
       if(S.guest){toast('Entre com sua conta para salvar a aparência.');return;}
       S.busy=true;renderCreator();
