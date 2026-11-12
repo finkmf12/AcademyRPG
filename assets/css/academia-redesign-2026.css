@@ -2392,3 +2392,141 @@
   .app #library .file-row,.app #library .upload-label,
   .app #rpgView .mk-item,.app #rpgView .arc-item-card{transition:none}
 }
+
+
+/* Perfil: estrutura explícita para a ficha e seus blocos de progresso */
+.app #rpgView .pf-legend{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(245px,.65fr);
+  align-items:stretch;
+}
+.app #rpgView .pf-legend-main{
+  display:flex;
+  align-items:center;
+  min-width:0;
+}
+.app #rpgView .pf-legend-portrait{
+  position:relative;
+  width:clamp(132px,16vw,190px);
+  min-width:132px;
+  min-height:190px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+}
+.app #rpgView .pf-legend-portrait>.arc-avatar{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:185px;
+  height:185px;
+}
+.app #rpgView .pf-legend-info{min-width:0}
+.app #rpgView .pf-legend-info h3{overflow-wrap:anywhere}
+.app #rpgView .pf-legend-title{margin:7px 0}
+.app #rpgView .pf-legend-side{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:12px;
+  min-width:0;
+  padding:18px;
+}
+.app #rpgView .pf-level-numbers{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:10px;
+}
+.app #rpgView .pf-level-track{height:10px;overflow:hidden;border-radius:20px}
+.app #rpgView .pf-level-track i{display:block;height:100%;border-radius:inherit;transition:width .35s ease}
+.app #rpgView .pf-next-level{font-size:10px;line-height:1.6}
+.app #rpgView .pf-stat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.app #rpgView .pf-stat-card{
+  min-width:0;
+  min-height:105px;
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  grid-template-rows:auto 1fr;
+  align-items:center;
+  column-gap:10px;
+  row-gap:5px;
+  padding:15px;
+}
+.app #rpgView .pf-stat-card>span{
+  grid-column:1;
+  grid-row:1 / span 2;
+  width:32px;height:32px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(169,184,212,.2);
+  border-radius:9px;
+  background:rgba(102,139,180,.12);
+  color:#d7d3f1;
+  font-size:17px;
+}
+.app #rpgView .pf-stat-card>small{align-self:end;font-size:9px;letter-spacing:.4px}
+.app #rpgView .pf-stat-card>strong{
+  align-self:start;
+  overflow-wrap:anywhere;
+  color:#e8d3a6;
+  font:700 19px Georgia,serif;
+}
+.app #rpgView .pf-overview-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+  margin-top:14px;
+}
+.app #rpgView .pf-overview-panel{
+  min-width:0;
+  padding:17px;
+  border:1px solid rgba(135,158,190,.2);
+  border-radius:13px;
+  background:linear-gradient(145deg,rgba(16,31,50,.9),rgba(9,19,34,.94));
+}
+.app #rpgView .pf-overview-panel h4{
+  margin:0 0 12px;
+  color:#e8dfcb;
+  font:600 15px Georgia,serif;
+}
+.app #rpgView .pf-overview-list{display:grid;gap:8px}
+.app #rpgView .pf-overview-row{
+  min-width:0;
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  padding:9px 0;
+  border-bottom:1px solid rgba(137,157,190,.12);
+}
+.app #rpgView .pf-overview-row:last-child{border-bottom:0}
+.app #rpgView .pf-overview-row>span{
+  width:27px;height:27px;
+  display:grid;place-items:center;
+  border:1px solid rgba(142,163,199,.18);
+  border-radius:8px;
+  background:rgba(83,120,162,.12);
+}
+.app #rpgView .pf-overview-row>div{min-width:0;display:grid;gap:3px}
+.app #rpgView .pf-overview-row b{color:#dfe8f5;font-size:10px;overflow-wrap:anywhere}
+.app #rpgView .pf-overview-row small{color:#879bb6;font-size:9px}
+.app #rpgView .pf-overview-row .xp-plus{font-size:10px}
+.app #rpgView .pf-overview-empty{padding:17px 5px;color:#91a4bd;font-size:10px;line-height:1.6}
+@media(max-width:900px){
+  .app #rpgView .pf-legend{grid-template-columns:1fr}
+  .app #rpgView .pf-legend-side{margin-top:4px}
+}
+@media(max-width:680px){
+  .app #rpgView .pf-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .app #rpgView .pf-overview-grid{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+  .app #rpgView .pf-stat-card{min-height:90px;padding:11px;grid-template-columns:28px minmax(0,1fr);column-gap:7px}
+  .app #rpgView .pf-stat-card>span{width:27px;height:27px}
+  .app #rpgView .pf-stat-card>strong{font-size:16px}
+}
