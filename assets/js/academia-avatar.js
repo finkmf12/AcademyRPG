@@ -4,7 +4,7 @@
   'use strict';
   const C=()=>window.AcademiaCtx, $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const S={catalog:[],owned:[],appearance:{},creatorDraft:null,background:null,balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
+  const S={catalog:[],owned:[],appearance:{},creatorDraft:null,hideArmorPreview:false,background:null,balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
     ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
     ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],['weapon','Armas'],
@@ -529,6 +529,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     const root=$('rpgView');if(!root)return;
     if(!S.creatorDraft)S.creatorDraft=normalizeCreator(S.appearance);
     const current=Object.assign({},S.appearance||{},S.creatorDraft);
+    const previewAppearance=S.hideArmorPreview?Object.assign({},current,{hat:'',outfit:'',shoulders:'',cloak:'',mask:''}):current;
     const groups=[
       {title:'Identidade e rosto',keys:['gender','skinTone','faceShape']},
       {title:'Cabelos',keys:['hairstyle','hairColor']},
@@ -537,7 +538,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     ];
     const fields=groups.map(group=>'<section class="arc-creator-group"><h4>'+group.title+'</h4>'+CREATOR_FIELDS.filter(f=>group.keys.includes(f.key)).map(f=>creatorField(f,S.creatorDraft)).join('')+'</section>').join('');
     root.innerHTML='<section class="arc-creator-head"><div><span class="arc-eyebrow">PERSONALIZAÇÃO LIVRE</span><h3>Criador de Heróis</h3><p>Monte seu rosto do seu jeito. A prévia é imediata e seus equipamentos continuam intactos.</p></div><div class="arc-creator-actions"><button type="button" class="arc-button arc-button-soft" data-avatar-action="discard-appearance">Descartar</button><button type="button" class="arc-button" data-avatar-action="save-appearance" '+(S.busy?'disabled':'')+'>'+(S.busy?'Salvando...':'Salvar aparência')+'</button></div></section>'+
-    '<div class="arc-creator-layout"><aside class="arc-creator-preview"><div class="arc-creator-stage">'+backgroundMarkup(S.background,'stage')+'<div class="arc-stage-glow"></div>'+render(current,'preview',S.playerClass)+titleMarkup(current,'stage')+'</div><b>Prévia do seu herói</b><small>As alterações aparecem aqui antes de salvar.</small><button type="button" class="arc-tab" data-avatar-tab="shop">← Voltar ao Ateliê Arcano</button></aside><div class="arc-creator-fields">'+fields+'</div></div>'+
+    '<div class="arc-creator-layout"><aside class="arc-creator-preview"><div class="arc-creator-stage">'+backgroundMarkup(S.background,'stage')+'<div class="arc-stage-glow"></div>'+render(previewAppearance,'preview',S.playerClass)+titleMarkup(current,'stage')+'</div><b>Prévia do seu herói</b><small>As alterações aparecem aqui antes de salvar.</small><button type="button" class="arc-tab" data-avatar-tab="shop">← Voltar ao Ateliê Arcano</button></aside><div class="arc-creator-fields">'+fields+'</div></div>'+
     '<p class="arc-footnote">Capacetes, elmos, armaduras, máscaras, asas, capas, armas, auras, pets e demais itens do Ateliê não são removidos nem alterados.</p>';
   }
 
@@ -682,6 +683,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
     if(act==='preview'){S.previewId=S.previewId===id?null:id;renderAtelier();return;}
     if(act==='cancel-preview'){S.previewId=null;renderAtelier();return;}
     if(act==='reload'){S.error=null;await open();return;}
+    if(act==='toggle-armor-preview'){S.hideArmorPreview=!S.hideArmorPreview;renderCreator();return;}
     if(act==='discard-appearance'){S.creatorDraft=normalizeCreator(S.appearance);renderCreator();return;}
     if(act==='save-appearance'){
       if(S.guest){toast('Entre com sua conta para salvar a aparência.');return;}
