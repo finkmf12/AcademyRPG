@@ -45,6 +45,26 @@ async function loadProfile(){
  syncContext();
  if(window.AcademiaAvatar&&$('home-avatar'))$('home-avatar').innerHTML=window.AcademiaAvatar.render(profileData.appearance||{},'mini',profileData.class||'mago');
 }
+function renderCharacterOverview(){
+ const root=$('character-visual-preview');if(!root)return;
+ const snapshot=window.AcademiaAvatar?.getSnapshot?.();
+ const xp=Number(profileData?.total_xp||0),level=levelFromXp(xp),coins=Number(snapshot?.balance??$('home-total-coins')?.textContent?.replace(/\\D/g,'')??0);
+ const name=profileData?.adventurer_name||displayName(sessionUser);
+ const playerClass=profileData?.class||'mago';
+ $('character-display-name').textContent=name;
+ $('character-display-class').textContent=playerClass[0].toUpperCase()+playerClass.slice(1)+' · Academia RPG';
+ $('character-level-badge').textContent='NÍVEL '+level;
+ $('character-stat-level').textContent=level;
+ $('character-stat-xp').textContent=xp.toLocaleString('pt-BR');
+ $('character-stat-coins').textContent=coins.toLocaleString('pt-BR');
+ $('character-xp-label').textContent=xp.toLocaleString('pt-BR')+' XP';
+ $('character-xp-fill').style.width=Math.min(100,xp%100)+'%';
+ $('character-stat-items').textContent=Number(snapshot?.ownedCount||0).toLocaleString('pt-BR');
+ root.innerHTML=window.AcademiaAvatar?.render(snapshot?.appearance||profileData?.appearance||{},'profile',playerClass)||'<span>✧</span>';
+ const equipped=$('character-equipped-list');
+ const rows=snapshot?.equipped||[];
+ equipped.innerHTML=rows.length?rows.map(x=>'<article class="character-equipped-item"><span class="character-equipped-icon">'+escapeText(x.icon||'✦')+'</span><div><b>'+escapeText(x.name)+'</b><small>'+escapeText(x.label)+'</small></div><span class="character-equipped-state">ATIVO</span></article>').join(''):'<div class="character-loadout-empty"><b>Nenhum equipamento especial ativo.</b><span>Visite o Ateliê para montar seu conjunto.</span></div>';
+}
 function showApp(user,isGuest=false){
  sessionUser=user;guest=isGuest;
  $('login-screen').hidden=true;$('app-shell').hidden=false;
@@ -75,7 +95,7 @@ async function navigate(page){
   $('page-personagem').classList.add('active');
   if(sessionUser){try{await loadProfile();}catch(error){$('character-status').textContent='Não foi possível carregar a ficha: '+error.message;}}
   syncContext();
-  if(window.AcademiaAvatar)window.AcademiaAvatar.openCreator();
+  if(window.AcademiaAvatar){await window.AcademiaAvatar.openCreator();renderCharacterOverview();}
   else $('rpgView').innerHTML='<div class="identity-status">O criador de personagem ainda está carregando. Tente novamente em instantes.</div>';
  }else if(page==='atelier'){
   $('page-atelier').classList.add('active');
@@ -116,7 +136,7 @@ $('save-character').addEventListener('click',async()=>{
   profileData={...(profileData||{}),adventurer_name:name,class:playerClass};
   $('sidebar-name').textContent=name;$('home-name').textContent=name;$('home-class').textContent=playerClass[0].toUpperCase()+playerClass.slice(1);
   syncContext();output.textContent='Ficha salva e sincronizada com sua conta.';
-  if(window.AcademiaAvatar)await window.AcademiaAvatar.openCreator();
+  if(window.AcademiaAvatar){await window.AcademiaAvatar.openCreator();renderCharacterOverview();}
  }catch(error){output.textContent='Não foi possível salvar: '+(error.message||'erro inesperado');}
  finally{button.disabled=false;}
 });
