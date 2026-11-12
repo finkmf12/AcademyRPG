@@ -6,6 +6,7 @@ let supabase,sessionUser=null,guest=false,toastTimer,profileData=null;
 const titles={
  inicio:['VISÃO GERAL','O Reino aguarda por você.','Acompanhe sua jornada e escolha seu próximo destino.','✧'],
  personagem:['PERSONAGEM','Seu herói, suas escolhas.','Defina sua identidade e construa a aparência do seu aventureiro.','♙'],
+ atelier:['ATELIÊ ARCANO','Vista sua próxima lenda.','Armaduras, asas, capas, efeitos e cenários ilustrados para seu aventureiro.','✦'],
  mapa:['MAPA DO REINO','Territórios além do horizonte.','Explore as regiões de Programação, Banco de Dados, Modelagem e Tecnologia.','⌖'],
  biblioteca:['BIBLIOTECA','Seu conhecimento, sempre ao alcance.','Uma nova biblioteca organizada por disciplinas, com seus arquivos sincronizados.','▤'],
  treinamento:['TREINAMENTO','A prática fortalece o aventureiro.','Quizzes, simulados e desafios para transformar estudo em experiência.','⚔'],
@@ -75,7 +76,12 @@ async function navigate(page){
   if(sessionUser){try{await loadProfile();}catch(error){$('character-status').textContent='Não foi possível carregar a ficha: '+error.message;}}
   syncContext();
   if(window.AcademiaAvatar)window.AcademiaAvatar.openCreator();
-  else $('rpgView').innerHTML='<div class="identity-status">O ateliê ainda está carregando. Tente novamente em instantes.</div>';
+  else $('rpgView').innerHTML='<div class="identity-status">O criador de personagem ainda está carregando. Tente novamente em instantes.</div>';
+ }else if(page==='atelier'){
+  $('page-atelier').classList.add('active');
+  syncContext();
+  if(window.AcademiaAvatar)await window.AcademiaAvatar.open('shop');
+  else $('atelierView').innerHTML='<div class="identity-status">O Ateliê Arcano ainda está carregando. Tente novamente em instantes.</div>';
  }else{
   $('page-generic').classList.add('active');
   $('generic-kicker').textContent='ACADEMIA RPG · 2.0 / '+data[0];
