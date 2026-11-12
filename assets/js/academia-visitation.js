@@ -88,7 +88,7 @@
     catch(error){if(root)root.innerHTML='<div class="adv-panel space-error"><b>Não foi possível abrir este espaço.</b><p>'+esc(error.message||'Tente novamente.')+'</p><button type="button" class="adv-btn adv-btn-soft" data-space-back>Voltar para amigos</button></div>';toast(error.message||'Não foi possível abrir o espaço.');}
     finally{state.busy=false;}
   }
-  async function refreshSpace(){if(state.target)await openSpace(state.target);}
+  async function refreshSpace(){if(!state.target)return;const data=await rpc('get_player_space',{p_target:state.target});state.data=data;renderSpace(data);}
   async function handleClick(event){
     const visit=event.target.closest('[data-visit-player]');
     const self=event.target.closest('[data-visit-self]');
