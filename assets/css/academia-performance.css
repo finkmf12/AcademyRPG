@@ -1,0 +1,85 @@
+/* Academia RPG — perfil de desempenho
+   Mantém a identidade visual, mas remove efeitos contínuos e filtros caros. */
+html { scroll-behavior: auto !important; }
+
+.login-card,
+.login .brand-emblem,
+.app .sidebar,
+.app .notifications-panel,
+.app .home-world-panel,
+.app .realm-map-panel,
+.app .realm-location,
+.app .home-daily-card,
+.app .home-player-card-legend {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.login-card {
+  background: rgba(8, 17, 29, .94) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .28) !important;
+}
+
+.login .brand-emblem {
+  filter: none !important;
+}
+
+.app {
+  background-attachment: scroll !important;
+}
+
+.app::before {
+  display: none !important;
+  animation: none !important;
+}
+
+.app::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.app .sidebar {
+  background-attachment: scroll !important;
+  box-shadow: 6px 0 18px rgba(0, 0, 0, .18) !important;
+}
+
+.app .home-world-panel,
+.app .realm-map-panel,
+.app .realm-location,
+.app .notifications-panel {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .16) !important;
+}
+
+/* Nenhum elemento decorativo deve ficar animando em segundo plano. */
+.app *,
+.app *::before,
+.app *::after,
+.login *,
+.login *::before,
+.login *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Evita movimentos e efeitos de hover que forçam novas composições. */
+.app button:hover,
+.app .subject-card:hover,
+.app .home-quick-card:hover,
+.app .realm-location:hover,
+.app .realm-hero-actions button:hover,
+.app .notifications-bell:hover {
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Respeita também usuários que ativaram redução de movimento no sistema. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
