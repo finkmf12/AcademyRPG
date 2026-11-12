@@ -1187,3 +1187,47 @@
 .arc-creator-preview>.arc-creator-armor-toggle{border-color:#a994ed;background:linear-gradient(110deg,#42366d,#242e53);color:#f1eaff}
 .arc-creator-actions .arc-button:not(.arc-button-soft){border:1px solid #c1a5ff;background:linear-gradient(110deg,#7656bf,#a58bfa);color:#fff;box-shadow:0 5px 18px #8c6bff30}
 .arc-creator-actions .arc-button-soft{border-color:rgba(165,151,220,.35);background:rgba(17,24,47,.7);color:#c4cce1}
+
+/* Galeria de cenários: fundos com paisagem em tela cheia, não miniaturas quadradas */
+.atelier-v2-tabs .arc-tab{min-width:120px}
+.atelier-backgrounds .atelier-bg-showcase{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,.72fr);gap:14px;margin:4px 0 24px}
+.atelier-bg-stage{position:relative;isolation:isolate;min-height:390px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(171,150,245,.38);border-radius:16px;background:linear-gradient(140deg,#18274a,#0b1228);box-shadow:0 18px 40px #0005}
+.atelier-bg-stage>.arc-bg-scene{z-index:0}
+.atelier-bg-stage>.arc-bg-scene svg{filter:saturate(1.3) contrast(1.08)}
+.atelier-bg-stage:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(4,8,20,.04),transparent 48%,rgba(4,8,20,.5));pointer-events:none}
+.atelier-bg-stage>.arc-avatar{position:relative;z-index:2;width:min(70%,330px);height:330px;object-fit:contain;filter:drop-shadow(0 12px 17px #000a) drop-shadow(0 0 14px #9c7aff44)}
+.atelier-bg-stage-glow{position:absolute;z-index:1;left:15%;right:15%;bottom:6%;height:25%;border-radius:50%;background:radial-gradient(ellipse,#8d6fff55,transparent 70%);filter:blur(18px)}
+.atelier-bg-stage-caption{position:absolute;z-index:4;left:20px;bottom:18px;display:grid;gap:5px}
+.atelier-bg-stage-caption small{color:#d3c3ff;font-size:7px;font-weight:900;letter-spacing:1.8px}
+.atelier-bg-stage-caption b{color:#fff;font:600 18px Georgia,serif;text-shadow:0 2px 10px #000}
+.atelier-bg-stage-info{display:flex;flex-direction:column;justify-content:center;padding:22px;border:1px solid rgba(228,194,124,.3);border-radius:15px;background:radial-gradient(ellipse at 80% 5%,rgba(153,111,232,.18),transparent 55%),linear-gradient(150deg,#262447,#10182f 75%);box-shadow:0 16px 35px #0004}
+.atelier-bg-stage-info>span{color:#c9b7ff;font-size:7px;font-weight:900;letter-spacing:1.8px}
+.atelier-bg-stage-info h3{margin:11px 0 7px;color:#f4edff;font:600 23px Georgia,serif}
+.atelier-bg-stage-info p{margin:0;color:#aab6d0;font-size:10px;line-height:1.7}
+.atelier-bg-balance{display:flex;align-items:center;justify-content:space-between;margin:20px 0 13px;padding:11px 0;border-top:1px solid #a99ae52b;border-bottom:1px solid #a99ae52b}
+.atelier-bg-balance small{color:#91a0c0;font-size:7px;letter-spacing:1.6px;font-weight:900}
+.atelier-bg-balance b{color:#f2d18b;font-size:14px}
+.atelier-bg-action,.atelier-bg-preview{min-height:38px;border-radius:8px;font-size:9px;font-weight:900}
+.atelier-bg-action{border:1px solid #e7c77a;background:linear-gradient(110deg,#bd873b,#f1d28b);color:#24182c}
+.atelier-bg-action.equipped{border-color:#7bd8b6;background:linear-gradient(110deg,#245c55,#7bd8b6);color:#092825}
+.atelier-bg-preview{margin-top:8px;border:1px solid rgba(169,151,236,.35);background:rgba(111,91,177,.14);color:#ded5ff}
+.atelier-bg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.atelier-bg-card{min-width:0;overflow:hidden;border:1px solid rgba(155,143,218,.22);border-radius:12px;background:linear-gradient(155deg,#1b2546,#0b1329);box-shadow:0 9px 24px #0003;transition:transform .2s,border-color .2s,box-shadow .2s}
+.atelier-bg-card:hover,.atelier-bg-card.previewing{transform:translateY(-3px);border-color:rgba(180,157,255,.6);box-shadow:0 15px 30px #0005,0 0 18px #a98cff1e}
+.atelier-bg-art{position:relative;display:block;width:100%;height:142px;padding:0;overflow:hidden;border:0;background:#101a34;text-align:left;cursor:pointer}
+.atelier-bg-art .arc-bg-scene{position:absolute;inset:0}
+.atelier-bg-art .arc-bg-scene svg{width:100%;height:100%;transition:transform .4s;filter:saturate(1.25)}
+.atelier-bg-art:hover .arc-bg-scene svg{transform:scale(1.07)}
+.atelier-bg-art:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,rgba(5,9,22,.7))}
+.atelier-bg-art>span{position:absolute;z-index:2;right:9px;bottom:8px;color:#f2eaff;font-size:7px;letter-spacing:.5px}
+.atelier-bg-copy{padding:11px}
+.atelier-bg-copy>div:first-child{display:grid;gap:5px}
+.atelier-bg-copy small{color:#bba8ff;font-size:6px;font-weight:900;letter-spacing:1.4px}
+.atelier-bg-copy b{color:#f0edff;font:600 13px Georgia,serif}
+.atelier-bg-copy p{min-height:34px;margin:0;color:#91a0bf;font-size:8px;line-height:1.55}
+.atelier-bg-card-actions{display:grid;grid-template-columns:.7fr 1.3fr;gap:6px;margin-top:10px}
+.atelier-bg-card-actions button{min-width:0;padding:5px 6px;min-height:31px;font-size:7px}
+.atelier-bg-card-actions .atelier-bg-preview{margin:0}
+.atelier-bg-card-actions .atelier-bg-action{font-size:7px}
+@media(max-width:900px){.atelier-bg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.atelier-backgrounds .atelier-bg-showcase{grid-template-columns:1fr}.atelier-bg-stage-info{padding:18px}}
+@media(max-width:540px){.atelier-bg-stage{min-height:310px}.atelier-bg-stage>.arc-avatar{height:260px}.atelier-bg-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.atelier-bg-art{height:110px}.atelier-bg-copy{padding:8px}.atelier-bg-copy b{font-size:11px}.atelier-bg-copy p{font-size:7px;min-height:46px}.atelier-bg-card-actions{grid-template-columns:1fr}.atelier-bg-card-actions button{min-height:29px}.atelier-v2-tabs .arc-tab{min-width:calc(50% - 5px);flex:1 1 calc(50% - 5px)}}
