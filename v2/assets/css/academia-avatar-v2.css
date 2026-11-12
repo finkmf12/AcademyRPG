@@ -1238,3 +1238,14 @@
 .atelier-v2-catalog .arc-new-skin .arc-item-top{flex-wrap:wrap}
 .atelier-v2-catalog .arc-item-new-tag{padding:4px 6px;border:1px solid rgba(226,195,126,.55);border-radius:20px;background:linear-gradient(90deg,#6c4a29,#b28b4d);color:#fff0c2;font-size:6px;font-style:normal;font-weight:900;letter-spacing:1px}
 .atelier-v2-catalog .arc-new-skin:hover{border-color:#c6a9ff;box-shadow:0 16px 34px #0006,0 0 22px #aa8cff25}
+
+/* Artes conceituais originais da coleção nova — sprite 3 × 2 */
+.arc-skin-art-sprite{width:100%;height:auto;aspect-ratio:4/3;max-height:205px;background-image:url('../skins/atelier-skin-sprite.webp');background-size:300% 200%;background-repeat:no-repeat;filter:drop-shadow(0 8px 12px #0008) drop-shadow(0 0 12px rgba(165,135,255,.28))}
+.arc-skin-art-armor-astral-tempest{background-position:0 0}
+.arc-skin-art-armor-crystal-seraph{background-position:50% 0}
+.arc-skin-art-armor-bloodmoon-regent{background-position:100% 0}
+.arc-skin-art-armor-verdant-warden{background-position:0 100%}
+.arc-skin-art-armor-abyssal-king{background-position:50% 100%}
+.arc-skin-art-armor-chrono-archon{background-position:100% 100%}
+.atelier-feature-art .arc-skin-art-sprite{width:min(100%,300px);max-height:190px;aspect-ratio:4/3}
+.atelier-v2-catalog .arc-item-visual .arc-skin-art-sprite{width:min(100%,205px);max-height:180px;aspect-ratio:4/3}
