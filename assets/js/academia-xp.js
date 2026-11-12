@@ -156,7 +156,7 @@ async function init() {
   mini(); if (isOpen) render();
 }
 
-function openRpg(v) {
+function openRpg(v, options = {}) {
   view = v; isOpen = true;
   if (v === 'perfil') tab = 'visao';
   $('home').style.display = 'none'; $('library').style.display = 'none'; $('rpgView').style.display = 'block';
@@ -170,7 +170,7 @@ function openRpg(v) {
     return;
   }
   if (v === 'atelier') {
-    if (window.AcademiaAvatar) window.AcademiaAvatar.open();
+    if (window.AcademiaAvatar) (options.creator ? window.AcademiaAvatar.openCreator() : window.AcademiaAvatar.open());
     else $('rpgView').innerHTML = '<div class="panel"><div class="empty">O Ateliê Arcano não foi carregado. Atualize a página.</div></div>';
     return;
   }
@@ -491,7 +491,7 @@ function renderPerfil() {
           '<h3>' + nameMarkup + '</h3><div class="pf-legend-title">' + titleMarkup + '</div>' +
           '<div class="pf-legend-meta">' + classInfo.icon + ' ' + esc(classInfo.name) + ' · Nível ' + fmt(i.L) +
           '<br>' + fmt(i.xp) + ' XP acumulados · ' + fmt(S.wallet) + ' Coins</div>' +
-          '<div class="pf-legend-actions"><button class="secondary" data-act="atelier">Personalizar visual</button>' + editButton + '</div>' +
+          '<div class="pf-legend-actions"><button class="secondary" data-act="creator">Editar aparência</button>' + editButton + '</div>' +
         '</div></div>' +
       '<aside class="pf-legend-side"><small>PROGRESSO PARA O PRÓXIMO NÍVEL</small>' +
         '<div class="pf-level-numbers"><span>Nível ' + fmt(i.L) + '</span><strong>' + i.pct + '%</strong><span>Nível ' + fmt(i.L + 1) + '</span></div>' +
@@ -544,6 +544,7 @@ $('rpgView').addEventListener('click', e => {
   else if (a === 'next') next();
   else if (a === 'exit') { quiz = null; resultHtml = null; render(); }
   else if (a === 'atelier') openRpg('atelier');
+  else if (a === 'creator') openRpg('atelier', {creator:true});
   else if (a === 'avatar') setAvatar(b.dataset.v);
   else if (a === 'class') { pickClass = b.dataset.v; document.querySelectorAll('.cls').forEach(x => x.classList.toggle('on', x === b)); }
   else if (a === 'editchar') { editing = true; pickClass = S.p.class; render(); }
