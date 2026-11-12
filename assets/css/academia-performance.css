@@ -71,3 +71,26 @@ html.academia-low-power .app .home-player-card-legend::after {
     transition: none !important;
   }
 }
+
+
+/* Ajustes extras para máquinas escolares e navegadores com recursos limitados. */
+html.academia-low-power .app::before,
+html.academia-low-power .app::after,
+html.academia-low-power .app .realm-hero-rune,
+html.academia-low-power .app .arc-stage-glow,
+html.academia-low-power .app .arc-stage::before,
+html.academia-low-power .app .arc-stage::after,
+html.academia-low-power .app .tvn-hero-art > i,
+html.academia-low-power .app .adv-flag-guild-effect-aurora,
+html.academia-low-power .app .adv-flag-guild-effect-flame {
+  animation: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+
+html.academia-low-power .app .home-quick-card:hover,
+html.academia-low-power .app .realm-location:hover,
+html.academia-low-power .app .subject-card:hover {
+  box-shadow: none !important;
+  transform: none !important;
+}
