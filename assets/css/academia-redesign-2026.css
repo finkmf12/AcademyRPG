@@ -1,0 +1,2731 @@
+/* =========================================================
+   ACADEMIA RPG · REDESIGN 2026
+   Identidade: floresta encantada · noturno arcano
+   Camada visual isolada: não altera lógica, dados ou navegação.
+   ========================================================= */
+
+:root {
+  color-scheme: dark;
+  --arc-bg: #070d1b;
+  --arc-bg-2: #0b1426;
+  --arc-surface: rgba(16, 27, 49, .88);
+  --arc-surface-solid: #101b31;
+  --arc-surface-2: rgba(21, 36, 64, .92);
+  --arc-surface-3: rgba(27, 45, 76, .92);
+  --arc-line: rgba(125, 153, 195, .22);
+  --arc-line-strong: rgba(157, 131, 235, .38);
+  --arc-text: #f1f4ff;
+  --arc-muted: #a7b4cc;
+  --arc-faint: #7888a5;
+  --arc-violet: #9c83eb;
+  --arc-blue: #7bc2eb;
+  --arc-gold: #e2c58b;
+  --arc-mint: #8ee1c2;
+  --arc-pink: #d79bea;
+  --arc-radius-sm: 10px;
+  --arc-radius-md: 16px;
+  --arc-radius-lg: 22px;
+  --arc-shadow: 0 18px 48px rgba(0, 0, 0, .28);
+  --arc-shadow-soft: 0 10px 28px rgba(0, 0, 0, .18);
+  --arc-display: "Cinzel Decorative", Georgia, serif;
+  --arc-serif: "Cormorant Garamond", Georgia, serif;
+  --arc-ui: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.app {
+  --bg: var(--arc-bg);
+  --panel: var(--arc-surface-solid);
+  --panel2: #152440;
+  --gold: var(--arc-gold);
+  --gold2: #f0dcae;
+  --text: var(--arc-text);
+  --muted: var(--arc-muted);
+  --line: #304361;
+  --blue: var(--arc-blue);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  min-height: 100vh;
+  color: var(--arc-text);
+  background:
+    linear-gradient(180deg, rgba(5, 11, 23, .76), rgba(6, 13, 26, .82)),
+    url("../../1337879.png") center center / cover fixed,
+    radial-gradient(ellipse at 72% 4%, #32275c 0, transparent 35%),
+    #070d1b;
+  font-family: var(--arc-ui);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.app::before,
+.app::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.app::before {
+  opacity: .72;
+  background-image:
+    radial-gradient(1.5px 1.5px at 11% 18%, rgba(204, 218, 255, .76) 50%, transparent 100%),
+    radial-gradient(2px 2px at 74% 27%, rgba(180, 154, 255, .66) 50%, transparent 100%),
+    radial-gradient(1px 1px at 89% 69%, rgba(142, 205, 255, .66) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 37% 82%, rgba(240, 211, 160, .5) 50%, transparent 100%);
+  background-size: 340px 300px, 440px 370px, 380px 330px, 480px 400px;
+  animation: academy-fireflies 34s linear infinite;
+}
+
+.app::after {
+  background:
+    linear-gradient(90deg, rgba(4, 9, 20, .28), transparent 21%, transparent 79%, rgba(4, 9, 20, .22)),
+    linear-gradient(180deg, rgba(7, 13, 27, .08), transparent 35%, rgba(5, 10, 22, .35));
+  backdrop-filter: blur(1px) saturate(.86);
+  -webkit-backdrop-filter: blur(1px) saturate(.86);
+}
+
+@keyframes academy-fireflies {
+  to {
+    background-position: 340px 300px, -440px 370px, 380px -330px, -480px 400px;
+  }
+}
+
+.app button,
+.app input,
+.app select,
+.app textarea {
+  font-family: var(--arc-ui);
+}
+
+.app button {
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background-color .2s ease,
+    color .2s ease,
+    box-shadow .2s ease;
+}
+
+.app button:focus-visible,
+.app a:focus-visible,
+.app input:focus-visible,
+.app select:focus-visible,
+.app textarea:focus-visible {
+  outline: 2px solid var(--arc-blue);
+  outline-offset: 3px;
+}
+
+/* Navegação principal */
+.app .sidebar {
+  width: 274px;
+  padding: 25px 17px 18px;
+  background:
+    linear-gradient(180deg, rgba(10, 19, 37, .97), rgba(8, 15, 29, .97)),
+    url("../../1337879.png") 26% center / auto 100%;
+  border-right: 1px solid rgba(139, 160, 204, .2);
+  box-shadow: 16px 0 48px rgba(0, 0, 0, .26);
+  backdrop-filter: blur(18px) saturate(.9);
+  -webkit-backdrop-filter: blur(18px) saturate(.9);
+  scrollbar-width: thin;
+  scrollbar-color: #46567a transparent;
+}
+
+.app .brand {
+  gap: 13px;
+  padding: 4px 8px 22px;
+  border-bottom: 1px solid rgba(130, 159, 211, .2);
+}
+
+.app .brand-mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  transform: none;
+  border: 1px solid rgba(226, 197, 139, .78);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(91, 126, 190, .22), rgba(157, 119, 230, .15));
+  box-shadow: 0 0 22px rgba(112, 145, 226, .18), inset 0 0 16px rgba(226, 197, 139, .08);
+  color: #f0dcae;
+  font-size: 20px;
+}
+
+.app .brand-mark span {
+  transform: none;
+}
+
+.app .brand strong {
+  color: #f3e9d5;
+  font-family: var(--arc-display);
+  font-size: 14px;
+  letter-spacing: .35px;
+}
+
+.app .brand small {
+  color: #96a9ca;
+  font-size: 9px;
+  letter-spacing: 1.8px;
+}
+
+.app .nav-label {
+  margin: 24px 10px 9px;
+  color: #7183a5;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2.1px;
+}
+
+.app .nav,
+.app .rpgnav {
+  display: grid;
+  gap: 4px;
+}
+
+.app .nav button,
+.app .rpgnav button {
+  min-height: 42px;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  gap: 11px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #b7c4da;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.app .nav button .ico,
+.app .rpgnav button .ico {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  min-width: 22px;
+  color: #8ea3c7;
+  font-size: 16px;
+}
+
+.app .nav button:hover,
+.app .rpgnav button:hover {
+  transform: translateX(2px);
+  border-color: rgba(137, 164, 210, .2);
+  background: rgba(69, 93, 137, .16);
+  color: #f0e5ff;
+}
+
+.app .nav button.active,
+.app .nav button[aria-current="page"],
+.app .rpgnav button.active,
+.app .rpgnav button[aria-current="page"] {
+  border-color: rgba(156, 131, 235, .42);
+  background: linear-gradient(105deg, rgba(117, 94, 185, .28), rgba(60, 91, 143, .18));
+  box-shadow: inset 3px 0 0 var(--arc-violet), 0 7px 18px rgba(0, 0, 0, .12);
+  color: #f1eaff;
+}
+
+.app .nav button.active .ico,
+.app .rpgnav button.active .ico {
+  color: #c3b0ff;
+}
+
+.app .xpmini {
+  margin-top: 18px;
+  border: 1px solid rgba(130, 159, 211, .2);
+  border-radius: 13px;
+  background: rgba(15, 27, 49, .72);
+  box-shadow: var(--arc-shadow-soft);
+}
+
+.app .side-bottom {
+  margin-top: auto;
+  padding: 17px 8px 0;
+  border-top: 1px solid rgba(130, 159, 211, .18);
+  color: #8d9fbb;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* Área principal e cabeçalho */
+.app .main {
+  max-width: none;
+  min-width: 0;
+  margin-left: 274px;
+  padding: 30px clamp(22px, 3.6vw, 56px) 60px;
+}
+
+.app .topbar {
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 27px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(126, 153, 195, .14);
+}
+
+.app .kicker {
+  color: #b9a6ef;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 2.5px;
+}
+
+.app .topbar h2 {
+  margin: 6px 0 3px;
+  color: #f2f0ff;
+  font-family: var(--arc-serif);
+  font-size: clamp(27px, 2.6vw, 36px);
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+.app .topbar .sub {
+  color: #a9b8d1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.app .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app .user-pill {
+  min-height: 40px;
+  padding: 6px 9px 6px 14px;
+  gap: 10px;
+  border: 1px solid rgba(129, 155, 198, .23);
+  border-radius: 12px;
+  background: rgba(13, 24, 44, .78);
+  color: #cbd7e8;
+  font-size: 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .12);
+}
+
+.app #logoutBtn {
+  margin-left: 2px !important;
+  border-left-color: rgba(129, 155, 198, .22) !important;
+  color: #e2c58b !important;
+  font-size: 10px;
+}
+
+.app .notifications-bell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(129, 155, 198, .23);
+  border-radius: 12px;
+  background: rgba(13, 24, 44, .8);
+  color: #d6c9f6;
+}
+
+.app .notifications-bell:hover {
+  border-color: rgba(156, 131, 235, .56);
+  background: rgba(42, 49, 83, .88);
+  transform: translateY(-2px);
+}
+
+.app .notifications-panel {
+  border: 1px solid rgba(146, 157, 206, .36);
+  border-radius: 17px;
+  background: rgba(11, 20, 38, .97);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Hero do reino */
+.app .realm-hero {
+  min-height: 275px;
+  margin: 0 0 20px;
+  padding: 36px clamp(24px, 3vw, 44px);
+  border: 1px solid rgba(145, 130, 207, .48);
+  border-radius: var(--arc-radius-lg);
+  background:
+    linear-gradient(90deg, rgba(5, 12, 27, .94) 0%, rgba(8, 17, 36, .83) 43%, rgba(15, 20, 44, .36) 100%),
+    radial-gradient(ellipse at 78% 42%, rgba(148, 121, 232, .24), transparent 38%),
+    url("../../1337879.png") center 47% / cover;
+  box-shadow: var(--arc-shadow), inset 0 1px rgba(255, 255, 255, .08);
+}
+
+.app .realm-hero::before {
+  background:
+    linear-gradient(90deg, rgba(5, 12, 27, .9) 0%, rgba(8, 17, 36, .52) 54%, transparent 100%),
+    linear-gradient(180deg, transparent 45%, rgba(5, 11, 24, .45));
+}
+
+.app .realm-hero::after {
+  opacity: .7;
+  background:
+    radial-gradient(1.5px 1.5px at 17% 28%, #d9d1ff 50%, transparent 100%),
+    radial-gradient(2px 2px at 72% 21%, #bba9ff 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 89% 62%, #9edaff 50%, transparent 100%);
+  background-size: 230px 180px, 310px 260px, 280px 230px;
+}
+
+.app .realm-hero-content {
+  max-width: 640px;
+}
+
+.app .realm-eyebrow,
+.app .home-news-heading > div > small {
+  color: #d2c2ff;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 2.7px;
+}
+
+.app .realm-hero h3 {
+  max-width: 600px;
+  margin: 13px 0 10px;
+  color: #f6f1ff;
+  font-family: var(--arc-display);
+  font-size: clamp(27px, 3vw, 39px);
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, .75);
+}
+
+.app .realm-hero p {
+  max-width: 500px;
+  color: #c3cde0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.app .realm-hero-actions {
+  gap: 18px;
+  margin-top: 23px;
+}
+
+.app .realm-hero-actions button {
+  min-height: 43px;
+  padding: 11px 18px;
+  border: 1px solid rgba(245, 221, 167, .82);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f0dcae, #c49a5f);
+  color: #201a2b;
+  font-size: 11px;
+  font-weight: 850;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .25), inset 0 1px rgba(255, 255, 255, .35);
+}
+
+.app .realm-hero-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 13px 28px rgba(0, 0, 0, .3);
+}
+
+.app .realm-online {
+  color: #bac7dd;
+  font-size: 9px;
+}
+
+.app .realm-hero-rune {
+  right: 7%;
+  color: rgba(205, 188, 255, .3);
+  text-shadow: 0 0 40px rgba(156, 131, 235, .28);
+}
+
+/* Cartão do personagem e resumo de progresso */
+.app .home-player-grid {
+  gap: 15px;
+  margin: 18px 0 29px;
+}
+
+.app .home-player-card-legend {
+  min-height: 174px;
+  border: 1px solid rgba(226, 197, 139, .42);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 7% 50%, rgba(156, 131, 235, .2), transparent 26%),
+    linear-gradient(120deg, rgba(22, 33, 65, .96), rgba(18, 32, 58, .94) 58%, rgba(36, 33, 69, .94));
+  box-shadow: 0 15px 38px rgba(0, 0, 0, .23), inset 0 1px rgba(255, 255, 255, .08);
+}
+
+.app .home-player-portrait {
+  border: 1px solid rgba(226, 197, 139, .62);
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 42%, rgba(159, 142, 222, .27), rgba(14, 25, 48, .65) 72%);
+  box-shadow: 0 0 32px rgba(156, 131, 235, .13), inset 0 0 22px rgba(255, 255, 255, .06);
+}
+
+.app .home-player-info > small {
+  color: #d5c5f8;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 2.2px;
+}
+
+.app .home-player-info h3 {
+  color: #fff5df;
+  font-family: var(--arc-serif);
+  font-size: clamp(22px, 2.1vw, 27px);
+  font-weight: 700;
+}
+
+.app .home-player-info p,
+.app .home-player-meta {
+  color: #c0cce0;
+  font-size: 10px;
+}
+
+.app .home-xp-track {
+  background: rgba(7, 13, 28, .72);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .5);
+}
+
+.app .home-xp-track i {
+  background: linear-gradient(90deg, #7c68ce, #b6a0ff 58%, #82c6eb);
+  box-shadow: 0 0 13px rgba(156, 131, 235, .4);
+}
+
+.app .home-profile-link {
+  color: #eddaa9;
+  font-size: 10px;
+}
+
+.app .home-daily-card {
+  border: 1px solid rgba(126, 153, 195, .24);
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(123, 194, 235, .1), transparent 42%),
+    rgba(15, 27, 48, .9);
+  box-shadow: var(--arc-shadow-soft);
+}
+
+.app .home-daily-card small {
+  color: #b8a5ef;
+  font-size: 8px;
+  letter-spacing: 1.9px;
+}
+
+.app .home-daily-card h3 {
+  color: #f2e8d4;
+  font-family: var(--arc-serif);
+  font-size: 21px;
+}
+
+.app .home-daily-card p {
+  color: #aebbd2;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.app .home-daily-card button {
+  color: #e2c58b;
+  font-size: 10px;
+}
+
+/* Destinos e secções de descoberta */
+.app .section-head {
+  align-items: end;
+  margin: 28px 0 14px;
+}
+
+.app .section-head h3 {
+  color: #f2efff;
+  font-family: var(--arc-serif);
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.app .section-head > span {
+  color: #8e9fbd;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1.8px;
+}
+
+.app .home-quick-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.app .home-quick-card {
+  min-height: 158px;
+  padding: 18px 18px 16px;
+  overflow: hidden;
+  border: 1px solid rgba(126, 153, 195, .22);
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(156, 131, 235, .12), transparent 42%),
+    rgba(15, 27, 49, .88);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .16);
+  text-align: left;
+}
+
+.app .home-quick-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(156, 131, 235, .52);
+  background:
+    radial-gradient(circle at 100% 0, rgba(156, 131, 235, .21), transparent 48%),
+    rgba(20, 34, 61, .96);
+  box-shadow: 0 17px 34px rgba(0, 0, 0, .24);
+}
+
+.app .home-quick-card > span:first-child {
+  display: inline-grid;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+  place-items: center;
+  border: 1px solid rgba(160, 143, 226, .36);
+  border-radius: 11px;
+  background: rgba(101, 84, 157, .2);
+  color: #d4c4ff;
+  font-size: 19px;
+}
+
+.app .home-quick-card b {
+  display: block;
+  color: #f2efff;
+  font-family: var(--arc-serif);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.app .home-quick-card small {
+  display: block;
+  margin-top: 5px;
+  color: #9eacc5;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.app .home-quick-card i {
+  display: block;
+  margin-top: 13px;
+  color: #d8c79e;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .25px;
+}
+
+/* Painéis do mundo: ranking, missões e mapa */
+.app .home-world-grid {
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.app .home-world-panel,
+.app .realm-map-panel {
+  border: 1px solid rgba(126, 153, 195, .22);
+  border-radius: 17px;
+  background:
+    radial-gradient(ellipse at 100% 0, rgba(156, 131, 235, .09), transparent 48%),
+    rgba(13, 24, 44, .88);
+  box-shadow: var(--arc-shadow-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.app .home-world-heading small,
+.app .realm-map-heading small {
+  color: #b4a0e9;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 2px;
+}
+
+.app .home-world-heading h3,
+.app .realm-map-heading h3 {
+  color: #f1edff;
+  font-family: var(--arc-serif);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.app .home-world-heading button {
+  color: #e2c58b;
+  font-size: 9px;
+}
+
+.app .realm-map-panel {
+  margin-top: 18px;
+  padding: 22px;
+  border-color: rgba(141, 127, 198, .34);
+  background:
+    linear-gradient(180deg, rgba(10, 20, 38, .82), rgba(8, 17, 33, .93)),
+    url("../../1337879.png") center 58% / cover;
+}
+
+.app .realm-map-heading p {
+  color: #aab8d0;
+  font-size: 10px;
+}
+
+.app .realm-map {
+  border: 1px solid rgba(133, 151, 194, .22);
+  border-radius: 15px;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(103, 96, 172, .18), transparent 60%),
+    linear-gradient(135deg, rgba(17, 30, 54, .64), rgba(15, 29, 49, .55));
+}
+
+.app .realm-location {
+  border: 1px solid rgba(145, 159, 211, .42);
+  border-radius: 13px;
+  background: rgba(10, 19, 37, .9);
+  color: #efeaff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .26);
+  backdrop-filter: blur(10px);
+}
+
+.app .realm-location:hover {
+  transform: translateY(-3px);
+  border-color: #b7a2f0;
+  background: rgba(35, 40, 73, .96);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, .34);
+}
+
+.app .realm-location b {
+  font-family: var(--arc-serif);
+  font-size: 15px;
+}
+
+.app .realm-location small {
+  color: #9eacc5;
+}
+
+/* Biblioteca e páginas de conteúdo */
+.app #library {
+  color: var(--arc-text);
+}
+
+.app #library .panel,
+.app #library .stat,
+.app #rpgView .panel,
+.app #rpgView .stat {
+  border: 1px solid rgba(126, 153, 195, .22);
+  border-radius: 16px;
+  background: rgba(13, 24, 44, .9);
+  box-shadow: var(--arc-shadow-soft);
+}
+
+.app .search,
+.app #library input[type="search"],
+.app #library input[type="text"],
+.app #rpgView input,
+.app #rpgView select,
+.app #rpgView textarea {
+  border: 1px solid rgba(126, 153, 195, .29);
+  border-radius: 10px;
+  background: rgba(7, 15, 30, .8);
+  color: var(--arc-text);
+}
+
+.app .search::placeholder,
+.app #rpgView input::placeholder,
+.app #rpgView textarea::placeholder {
+  color: #7888a5;
+}
+
+.app .file-row {
+  border: 1px solid rgba(126, 153, 195, .18);
+  border-radius: 12px;
+  background: rgba(11, 21, 40, .82);
+}
+
+.app .file-row:hover {
+  border-color: rgba(156, 131, 235, .42);
+  background: rgba(19, 31, 55, .94);
+}
+
+.app .file-icon {
+  border: 1px solid rgba(134, 154, 199, .18);
+  background: rgba(40, 55, 88, .62);
+  color: #c5b5fa;
+}
+
+.app .file-info strong {
+  color: #eef1ff;
+}
+
+.app .file-info small {
+  color: #8f9fbb;
+}
+
+.app .file-actions button {
+  border: 1px solid rgba(126, 153, 195, .28);
+  border-radius: 8px;
+  background: rgba(25, 39, 65, .82);
+  color: #d2dced;
+}
+
+.app .file-actions button:hover {
+  border-color: rgba(156, 131, 235, .55);
+  color: #fff;
+}
+
+.app .upload-label,
+.app .primary {
+  border: 1px solid rgba(245, 221, 167, .68);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #efdbad, #c89e65);
+  color: #20192a;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
+}
+
+.app .secondary {
+  border: 1px solid rgba(135, 158, 201, .3);
+  border-radius: 10px;
+  background: rgba(26, 43, 72, .9);
+  color: #e1e8f7;
+}
+
+.app .upload-label:hover,
+.app .primary:hover,
+.app .secondary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+/* Views dinâmicas e módulos do jogo */
+.app #rpgView {
+  color: var(--arc-text);
+}
+
+.app #rpgView h1,
+.app #rpgView h2,
+.app #rpgView h3,
+.app #rpgView h4 {
+  color: #f0efff;
+  font-family: var(--arc-serif);
+}
+
+.app #rpgView p,
+.app #rpgView small,
+.app #rpgView label {
+  color: inherit;
+}
+
+.app #rpgView button:not(.google-login):not(.guest-login) {
+  border-radius: 10px;
+}
+
+.app #rpgView button:hover {
+  filter: brightness(1.08);
+}
+
+.app #rpgView [class*="panel"],
+.app #rpgView [class*="card"],
+.app #rpgView [class*="surface"] {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.app .toast {
+  border: 1px solid rgba(148, 172, 219, .48);
+  border-radius: 13px;
+  background: rgba(17, 30, 54, .97);
+  color: #f0f3ff;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .36);
+}
+
+/* Entrada / login */
+.login {
+  background:
+    linear-gradient(180deg, rgba(5, 11, 23, .23), rgba(5, 11, 23, .62)),
+    url("../../1337879.png") center center / cover no-repeat,
+    #101b31;
+}
+
+.login::before {
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(9, 16, 35, .24), rgba(5, 11, 23, .72) 78%),
+    linear-gradient(0deg, rgba(4, 9, 20, .42), transparent 48%);
+}
+
+.brand-plaque {
+  border-color: rgba(190, 169, 238, .72);
+  background: linear-gradient(180deg, rgba(18, 29, 57, .93), rgba(8, 15, 31, .96));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .48), inset 0 0 24px rgba(151, 130, 224, .11);
+}
+
+.brand-plaque h1 {
+  color: #f0dcae;
+  font-family: var(--arc-display);
+  letter-spacing: .4px;
+}
+
+.brand-plaque p {
+  color: #cdbdf5;
+  font-family: var(--arc-serif);
+  font-size: clamp(14px, 2vw, 20px);
+  letter-spacing: 1.8px;
+}
+
+.login-card {
+  border-color: rgba(148, 133, 199, .52);
+  border-radius: 18px;
+  background: rgba(8, 16, 32, .84);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, .5), inset 0 0 30px rgba(137, 117, 214, .07);
+  backdrop-filter: blur(15px) saturate(.9);
+  -webkit-backdrop-filter: blur(15px) saturate(.9);
+}
+
+.login-card .login-lead {
+  color: #e2e5f4;
+  font-size: 14px;
+}
+
+.google-login {
+  border-radius: 12px;
+}
+
+.chatgpt-login,
+.guest-login {
+  border-color: rgba(148, 133, 199, .5);
+  border-radius: 12px;
+  background: rgba(20, 31, 56, .92);
+  color: #eee9ff;
+}
+
+.guest-login {
+  background: linear-gradient(135deg, rgba(156, 131, 235, .22), rgba(17, 30, 54, .95));
+  color: #e5d8ff;
+}
+
+.login-categories {
+  border-color: rgba(148, 133, 199, .5);
+  border-radius: 13px;
+  background: rgba(8, 16, 32, .84);
+  color: #ddd2f7;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.login-categories span + span {
+  border-left-color: rgba(148, 133, 199, .36);
+}
+
+.category-icon {
+  color: #9cc9ed;
+}
+
+.login-footer {
+  color: #f0dcae;
+  font-family: var(--arc-serif);
+  font-size: 19px;
+}
+
+.author-credit {
+  border-color: rgba(148, 133, 199, .3);
+  background: rgba(7, 13, 27, .76);
+  color: #b9c4da;
+}
+
+.author-credit strong {
+  color: #f0dcae;
+}
+
+/* Responsividade: navegação em faixa no mobile, conteúdo sem cortes */
+@media (max-width: 1100px) {
+  .app .sidebar { width: 246px; }
+  .app .main { margin-left: 246px; }
+  .app .home-quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .app .realm-hero-rune { right: 3%; opacity: .58; }
+}
+
+@media (max-width: 760px) {
+  .app {
+    overflow: clip;
+    background-attachment: scroll;
+    background-position: center top;
+  }
+
+  .app .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    width: 100%;
+    height: auto;
+    max-height: 44vh;
+    overflow-y: auto;
+    padding: 12px 13px 10px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(139, 160, 204, .24);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+  }
+
+  .app .brand {
+    padding: 0 4px 10px;
+  }
+
+  .app .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 10px;
+  }
+
+  .app .brand strong { font-size: 12px; }
+  .app .brand small { font-size: 8px; }
+
+  .app .nav-label,
+  .app .side-bottom,
+  .app .xpmini {
+    display: none;
+  }
+
+  .app .nav,
+  .app .rpgnav {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 0 2px;
+    scrollbar-width: thin;
+  }
+
+  .app .nav button,
+  .app .rpgnav button {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 36px;
+    max-width: 210px;
+    padding: 8px 11px;
+    border-radius: 9px;
+    white-space: nowrap;
+    font-size: 10px;
+  }
+
+  .app .main {
+    margin-left: 0;
+    padding: 20px 15px 42px;
+  }
+
+  .app .topbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 19px;
+    padding-bottom: 14px;
+  }
+
+  .app .topbar h2 { font-size: 27px; }
+  .app .topbar-actions { margin-left: auto; }
+  .app .user-pill { display: none; }
+
+  .app .realm-hero {
+    min-height: 246px;
+    padding: 26px 22px;
+    background-attachment: scroll;
+    background-position: 60% center;
+  }
+
+  .app .realm-hero h3 { max-width: 470px; font-size: 28px; }
+  .app .realm-hero p { max-width: 390px; }
+  .app .realm-hero-rune { right: -3%; width: 130px; height: 130px; font-size: 100px; }
+
+  .app .home-player-grid { grid-template-columns: 1fr; }
+  .app .home-quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .app .home-world-grid { grid-template-columns: 1fr; }
+  .app .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .app .main { padding: 17px 12px 34px; }
+  .app .topbar { gap: 12px; }
+  .app .topbar h2 { font-size: 23px; }
+  .app .topbar .sub { font-size: 10px; }
+  .app .topbar-actions { gap: 7px; }
+  .app .realm-hero { min-height: 230px; padding: 22px 17px; }
+  .app .realm-hero h3 { font-size: 24px; }
+  .app .realm-eyebrow { font-size: 8px; letter-spacing: 1.8px; }
+  .app .realm-hero-actions { gap: 10px; }
+  .app .realm-hero-actions button { padding: 10px 12px; font-size: 10px; }
+  .app .realm-online { font-size: 8px; }
+  .app .home-quick-grid { gap: 8px; }
+  .app .home-quick-card { min-height: 145px; padding: 13px; }
+  .app .home-quick-card b { font-size: 16px; }
+  .app .home-quick-card small { font-size: 9px; }
+  .app .home-player-card-legend { padding: 14px; }
+  .app .home-player-portrait { flex-basis: 86px; width: 86px; height: 106px; }
+  .app .home-world-panel { padding: 14px; }
+  .app .realm-map-panel { padding: 14px; }
+  .app .login-categories span { font-size: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app::before { animation: none; }
+  .app *,
+  .app *::before,
+  .app *::after,
+  .login *,
+  .login *::before,
+  .login *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .app .sidebar,
+  .app .home-world-panel,
+  .app .realm-map-panel,
+  .login-card,
+  .login-categories {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Harmonização dos módulos RPG existentes
+   Reaproveita os componentes de jogo; apenas atualiza a pele.
+   --------------------------------------------------------- */
+:root {
+  --adv-gold: #e2c58b;
+  --adv-gold-bright: #f0dcae;
+  --adv-ink: #070d1b;
+  --adv-panel: #101b31;
+  --adv-panel-2: #152440;
+  --adv-line: #304361;
+  --adv-muted: #a7b4cc;
+  --adv-text: #f1f4ff;
+  --adv-green: #8ee1c2;
+  --adv-red: #d98d9b;
+  --ab-accent: #b9a5ef;
+}
+
+.app #rpgView .adv-hero,
+.app #rpgView .adv-story-hero,
+.app #rpgView .adv-story-fight-banner,
+.app #rpgView .adv-podium-hero,
+.app #rpgView .adv-flag-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 84% 25%, rgba(156, 131, 235, .18), transparent 36%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(22, 32, 62, .96) 58%, rgba(17, 42, 60, .96));
+  box-shadow: var(--arc-shadow-soft), inset 0 1px rgba(255, 255, 255, .06);
+}
+
+.app #rpgView .adv-panel,
+.app #rpgView .adv-mission,
+.app #rpgView .adv-boss-card,
+.app #rpgView .adv-question-panel,
+.app #rpgView .adv-hp-card,
+.app #rpgView .adv-table-wrap,
+.app #rpgView .adv-guild-forms,
+.app #rpgView .adv-fight-hud,
+.app #rpgView .adv-answer-list,
+.app #rpgView .adv-flag-panel {
+  border-color: rgba(126, 153, 195, .22);
+  background: linear-gradient(145deg, rgba(18, 31, 55, .96), rgba(12, 23, 43, .96));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+}
+
+.app #rpgView .adv-tabs button,
+.app #rpgView .adv-guild-tabs button,
+.app #rpgView .adv-teacher-tabs button {
+  border-color: rgba(126, 153, 195, .22);
+  background: rgba(18, 31, 54, .78);
+  color: #b9c7dc;
+}
+
+.app #rpgView .adv-tabs button.active,
+.app #rpgView .adv-guild-tabs button.active,
+.app #rpgView .adv-teacher-tabs button.active {
+  border-color: rgba(156, 131, 235, .58);
+  background: linear-gradient(110deg, rgba(112, 87, 177, .32), rgba(62, 97, 151, .2));
+  color: #eee8ff;
+  box-shadow: inset 0 0 0 1px rgba(156, 131, 235, .1);
+}
+
+.app #rpgView .adv-table th {
+  background: rgba(26, 42, 69, .94);
+  color: #c4b5ef;
+}
+
+.app #rpgView .adv-table td {
+  border-color: rgba(126, 153, 195, .14);
+  color: #c9d4e6;
+}
+
+.app #rpgView .adv-table tr:hover td {
+  background: rgba(90, 105, 153, .12);
+}
+
+/* Ateliê: câmara de personagem e catálogo */
+.app #rpgView .arc-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 82% 28%, rgba(156, 131, 235, .2), transparent 40%),
+    linear-gradient(130deg, rgba(12, 21, 42, .97), rgba(24, 31, 62, .96) 62%, rgba(15, 37, 53, .95));
+}
+
+.app #rpgView .arc-avatar-preview,
+.app #rpgView .arc-stage {
+  border-color: rgba(146, 132, 206, .42);
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(142, 125, 220, .18), transparent 48%),
+    linear-gradient(180deg, rgba(21, 34, 61, .96), rgba(8, 17, 33, .98));
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .26), inset 0 0 34px rgba(141, 127, 207, .06);
+}
+
+.app #rpgView .arc-stage:before,
+.app #rpgView .arc-stage-glow {
+  background: radial-gradient(circle, rgba(156, 131, 235, .23), transparent 70%);
+}
+
+.app #rpgView .arc-tabs,
+.app #rpgView .arc-side-nav {
+  border-color: rgba(126, 153, 195, .2);
+  background: rgba(12, 23, 43, .92);
+}
+
+.app #rpgView .arc-tab,
+.app #rpgView .arc-filter {
+  border-color: rgba(126, 153, 195, .18);
+  background: rgba(20, 34, 59, .82);
+  color: #b7c5db;
+}
+
+.app #rpgView .arc-tab.active,
+.app #rpgView .arc-filter.active {
+  border-color: rgba(156, 131, 235, .58);
+  background: linear-gradient(110deg, rgba(111, 87, 177, .3), rgba(57, 90, 143, .22));
+  color: #efe8ff;
+}
+
+.app #rpgView .arc-item-card,
+.app #rpgView .arc-premium-card,
+.app #rpgView .arc-title-card,
+.app #rpgView .arc-title-card-preview {
+  border-color: rgba(126, 153, 195, .24);
+  background: linear-gradient(145deg, rgba(21, 35, 62, .96), rgba(12, 23, 43, .96));
+  box-shadow: 0 10px 27px rgba(0, 0, 0, .18);
+}
+
+.app #rpgView .arc-item-card:hover,
+.app #rpgView .arc-premium-card:hover {
+  border-color: rgba(156, 131, 235, .56);
+  box-shadow: 0 17px 34px rgba(0, 0, 0, .28), 0 0 20px rgba(156, 131, 235, .08);
+}
+
+.app #rpgView .arc-button,
+.app #rpgView .arc-item-main {
+  border-color: rgba(226, 197, 139, .58);
+  background: linear-gradient(135deg, #efdbad, #c89e65);
+  color: #211b2a;
+}
+
+.app #rpgView .arc-button-soft,
+.app #rpgView .arc-preview-btn {
+  border-color: rgba(134, 157, 200, .3);
+  background: rgba(26, 43, 72, .9);
+  color: #e0e8f8;
+}
+
+.app #rpgView .arc-preview-btn.active {
+  border-color: rgba(156, 131, 235, .62);
+  background: rgba(86, 68, 143, .4);
+  color: #eee7ff;
+}
+
+/* Taverna, chat global e conversas privadas */
+.app #rpgView .tvn-page {
+  color: var(--arc-text);
+}
+
+.app #rpgView .tvn-hero {
+  border-color: rgba(156, 131, 235, .38);
+  background:
+    radial-gradient(ellipse at 83% 30%, rgba(156, 131, 235, .2), transparent 38%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(23, 31, 61, .96) 62%, rgba(15, 39, 55, .96));
+}
+
+.app #rpgView .tvn-chat-card,
+.app #rpgView .tvn-side-card,
+.app #rpgView .tvn-private-list-card,
+.app #rpgView .tvn-private-chat-card,
+.app #rpgView .tvn-rules-card,
+.app #rpgView .tvn-channel-card {
+  border-color: rgba(126, 153, 195, .22);
+  background: linear-gradient(145deg, rgba(17, 30, 54, .97), rgba(10, 21, 40, .97));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .2);
+}
+
+.app #rpgView .tvn-tabbar {
+  border-color: rgba(126, 153, 195, .22);
+  background: rgba(10, 20, 39, .86);
+}
+
+.app #rpgView .tvn-tab,
+.app #rpgView .tvn-private-friend {
+  border-color: rgba(126, 153, 195, .17);
+  background: rgba(20, 34, 58, .72);
+  color: #c1cde0;
+}
+
+.app #rpgView .tvn-tab.is-active,
+.app #rpgView .tvn-private-friend.is-selected {
+  border-color: rgba(156, 131, 235, .56);
+  background: linear-gradient(110deg, rgba(109, 86, 174, .3), rgba(53, 88, 143, .2));
+  color: #f0eaff;
+  box-shadow: inset 3px 0 0 var(--arc-violet);
+}
+
+.app #rpgView .tvn-chat-head,
+.app #rpgView .tvn-private-chat-head {
+  border-color: rgba(126, 153, 195, .18);
+  background: rgba(23, 38, 65, .94);
+}
+
+.app #rpgView .tvn-composer,
+.app #rpgView .tvn-private-chat-card .tvn-compose-row {
+  border-color: rgba(126, 153, 195, .26);
+  background: rgba(7, 16, 32, .84);
+}
+
+.app #rpgView .tvn-composer textarea,
+.app #rpgView .tvn-private-chat-card textarea {
+  color: var(--arc-text);
+}
+
+.app #rpgView .tvn-message,
+.app #rpgView .tvn-private-message {
+  border-color: rgba(126, 153, 195, .14);
+  background: rgba(19, 33, 57, .72);
+}
+
+.app #rpgView .tvn-message a,
+.app #rpgView .tvn-private-message a {
+  color: #a8d9fa;
+}
+
+/* Conquistas: o dourado indica raridade; o violeta dá unidade ao livro */
+.app #rpgView .ab-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 85% 30%, rgba(156, 131, 235, .18), transparent 38%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(21, 32, 61, .96));
+}
+
+.app #rpgView .ab-card {
+  border-color: rgba(126, 153, 195, .22);
+  background: linear-gradient(145deg, rgba(19, 33, 58, .96), rgba(11, 22, 41, .96));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .18);
+}
+
+.app #rpgView .ab-card:hover {
+  border-color: rgba(156, 131, 235, .5);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .26);
+}
+
+.app #rpgView .ab-filter,
+.app #rpgView .ab-category {
+  border-color: rgba(126, 153, 195, .23);
+  background: rgba(20, 34, 58, .82);
+  color: #c0cce0;
+}
+
+.app #rpgView .ab-filter.active,
+.app #rpgView .ab-category.active {
+  border-color: rgba(156, 131, 235, .55);
+  background: rgba(93, 74, 151, .34);
+  color: #eee7ff;
+}
+
+/* Espaços pessoais e visitação de personagens */
+.app #rpgView .space-profile-hero {
+  border-color: rgba(156, 131, 235, .4);
+  background:
+    radial-gradient(ellipse at 78% 28%, rgba(156, 131, 235, .19), transparent 40%),
+    linear-gradient(125deg, rgba(11, 21, 41, .98), rgba(22, 34, 63, .96));
+}
+
+.app #rpgView .space-item-card,
+.app #rpgView .space-guestbook,
+.app #rpgView .space-message,
+.app #rpgView .space-settings-form,
+.app #rpgView .space-visitor {
+  border-color: rgba(126, 153, 195, .21);
+  background: rgba(16, 29, 51, .91);
+}
+
+.app #rpgView .space-message-meta time,
+.app #rpgView .space-visitor time {
+  color: #8e9fbd;
+}
+
+.app #rpgView .space-guestbook-form textarea,
+.app #rpgView .space-settings-form select {
+  border-color: rgba(126, 153, 195, .27);
+  background: rgba(7, 15, 30, .84);
+  color: var(--arc-text);
+}
+
+/* Tabelas, inputs e botões comuns dos módulos dinâmicos */
+.app #rpgView table {
+  border-color: rgba(126, 153, 195, .18);
+  color: #d5deee;
+}
+
+.app #rpgView th {
+  color: #c7b7f2;
+}
+
+.app #rpgView td {
+  border-color: rgba(126, 153, 195, .14);
+}
+
+.app #rpgView input,
+.app #rpgView select,
+.app #rpgView textarea {
+  accent-color: var(--arc-violet);
+}
+
+.app #rpgView button:disabled {
+  filter: saturate(.65);
+  opacity: .58;
+}
+
+
+/* =========================================================
+   ETAPA 1 · PORTAL DE ENTRADA E CENTRO DE COMANDO
+   Reorganização visual real dos componentes existentes.
+   Mantém IDs, ações, autenticação e navegação intactos.
+   ========================================================= */
+
+.login {
+  min-height: 100svh;
+  padding: clamp(28px, 5vh, 64px) clamp(22px, 6vw, 92px);
+  align-items: center;
+  justify-content: flex-start;
+  background:
+    linear-gradient(90deg, rgba(4, 9, 22, .2) 0%, rgba(4, 9, 22, .35) 45%, rgba(4, 9, 22, .72) 100%),
+    url("../../1337879.png") center 46% / cover no-repeat,
+    #070d1b;
+}
+.login::before {
+  background:
+    linear-gradient(90deg, rgba(5, 10, 24, .16), rgba(5, 10, 24, .3) 44%, rgba(5, 10, 24, .78) 100%),
+    linear-gradient(0deg, rgba(4, 9, 20, .65), transparent 58%);
+}
+.login::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 18% 52%, rgba(103, 130, 205, .2), transparent 38%);
+}
+.login-layout {
+  width: min(1180px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(340px, .78fr);
+  grid-template-areas:
+    "brand card"
+    "motto card"
+    "categories card"
+    "footer card";
+  align-items: center;
+  justify-items: start;
+  column-gap: clamp(42px, 8vw, 112px);
+  row-gap: 18px;
+  margin: auto;
+}
+.login-brand {
+  grid-area: brand;
+  width: 100%;
+  max-width: 620px;
+  margin: 0;
+  text-align: left;
+}
+.brand-emblem {
+  width: 172px;
+  height: 148px;
+  margin: 0 0 -20px 2px;
+  transform: translateX(-5px);
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .58));
+}
+.brand-title-wrap {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  padding: 18px 25px 17px 23px;
+  border-left: 2px solid rgba(226, 197, 139, .85);
+  background: linear-gradient(90deg, rgba(9, 17, 36, .82), rgba(9, 17, 36, .22) 78%, transparent);
+}
+.brand-title-wrap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(390px, 85%);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(226, 197, 139, .75), transparent);
+}
+.brand-plaque {
+  border-radius: 0;
+  clip-path: none;
+}
+.brand-title-wrap h1 {
+  margin: 0;
+  color: #f5e8c9;
+  font-family: var(--arc-display);
+  font-size: clamp(38px, 5.4vw, 67px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: .015em;
+  text-shadow: 0 5px 24px rgba(0, 0, 0, .7);
+}
+.brand-title-wrap p {
+  margin: 10px 0 0;
+  color: #c7b9f4;
+  font-family: var(--arc-serif);
+  font-size: clamp(17px, 2vw, 23px);
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.brand-motto {
+  grid-area: motto;
+  max-width: 520px;
+  margin: 0;
+  color: #d3dced;
+  font-family: var(--arc-serif);
+  font-size: clamp(19px, 2vw, 25px);
+  line-height: 1.45;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .8);
+}
+.login-card {
+  grid-area: card;
+  width: 100%;
+  max-width: 430px;
+  justify-self: end;
+  margin: 0;
+  padding: 30px;
+  border: 1px solid rgba(163, 151, 220, .48);
+  border-radius: 20px;
+  background: linear-gradient(155deg, rgba(13, 23, 46, .94), rgba(7, 14, 29, .92));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .5), inset 0 1px rgba(255, 255, 255, .08);
+  backdrop-filter: blur(22px) saturate(.85);
+  -webkit-backdrop-filter: blur(22px) saturate(.85);
+  text-align: left;
+}
+.login-card::before {
+  content: "PORTAL DO AVENTUREIRO";
+  display: block;
+  margin-bottom: 18px;
+  color: #b8a8ec;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .22em;
+}
+.login-card .login-lead {
+  margin-bottom: 22px;
+  color: #f0ecfb;
+  font-family: var(--arc-serif);
+  font-size: 23px;
+  line-height: 1.3;
+}
+.login-card .google-login,
+.login-card .chatgpt-login,
+.login-card .guest-login {
+  min-height: 52px;
+  border-radius: 11px;
+  font-size: 13px;
+}
+.login-card .google-login {
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+}
+.login-card .login-divider {
+  margin: 17px 0;
+  color: #8999b8;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+}
+.login-card .chatgpt-login {
+  justify-content: center;
+  border-color: rgba(151, 139, 207, .42);
+  background: rgba(22, 34, 62, .78);
+}
+.login-card .guest-login {
+  margin-top: 9px;
+  border-color: rgba(226, 197, 139, .42);
+  background: linear-gradient(110deg, rgba(119, 95, 181, .24), rgba(24, 36, 63, .96));
+  color: #e9ddff;
+}
+.login-card .login-note {
+  margin-top: 17px !important;
+  color: #94a4c0 !important;
+  font-size: 10px !important;
+}
+.login-categories {
+  grid-area: categories;
+  width: min(580px, 100%);
+  margin: 8px 0 0;
+  padding: 16px 0;
+  border: 0;
+  border-top: 1px solid rgba(145, 163, 205, .28);
+  border-bottom: 1px solid rgba(145, 163, 205, .2);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.login-categories span {
+  color: #d1d9e9;
+  font-size: 10px;
+  line-height: 1.55;
+}
+.login-categories span + span {
+  border-left-color: rgba(145, 163, 205, .28);
+}
+.login-categories .category-icon {
+  color: #bca9f3;
+  font-size: 20px;
+}
+.login-footer {
+  grid-area: footer;
+  margin-top: 2px;
+  color: #e3d1a7;
+  font-family: var(--arc-serif);
+  font-size: 16px;
+  letter-spacing: .12em;
+}
+.author-credit {
+  right: clamp(18px, 4vw, 56px);
+  bottom: 18px;
+  left: auto;
+  border-radius: 30px;
+  padding: 8px 14px;
+  font-size: 9px;
+}
+
+/* Centro de comando: mais espaço para a jornada, menos aparência de painel genérico */
+.app .main {
+  padding-top: clamp(24px, 3vw, 42px);
+}
+.app .topbar {
+  margin-bottom: 30px;
+}
+.app .realm-hero {
+  min-height: 310px;
+  padding: clamp(34px, 4vw, 54px);
+  border-radius: 8px 22px 8px 22px;
+  background-position: center 48%;
+}
+.app .realm-hero-content {
+  position: relative;
+  z-index: 2;
+}
+.app .realm-hero h3 {
+  max-width: 570px;
+  font-size: clamp(30px, 3.5vw, 46px);
+  line-height: 1.12;
+}
+.app .realm-hero-actions button {
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid rgba(226, 197, 139, .7);
+  border-radius: 4px 13px 4px 13px;
+  background: linear-gradient(110deg, rgba(117, 94, 185, .82), rgba(50, 79, 126, .88));
+  box-shadow: 0 9px 25px rgba(0, 0, 0, .25), inset 0 1px rgba(255, 255, 255, .15);
+  color: #fff8e9;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+.app .realm-hero-actions button:hover {
+  transform: translateY(-2px);
+  border-color: #f0dcae;
+  box-shadow: 0 13px 30px rgba(0, 0, 0, .32), 0 0 22px rgba(156, 131, 235, .2);
+}
+.app .home-player-grid {
+  gap: 18px;
+  align-items: stretch;
+}
+.app .home-player-card-legend {
+  border-radius: 7px 18px 7px 18px;
+  background:
+    linear-gradient(110deg, rgba(16, 28, 54, .98), rgba(19, 31, 57, .94) 65%, rgba(39, 35, 72, .9)),
+    url("../../1337879.png") center / cover;
+}
+.app .home-daily-card {
+  border-radius: 18px 7px 18px 7px;
+}
+.app .section-head {
+  margin-top: 36px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(126, 153, 195, .18);
+}
+.app .home-quick-card {
+  border-radius: 5px 15px 5px 15px;
+}
+.app .home-quick-card > span:first-child {
+  color: #c5b2ff;
+  text-shadow: 0 0 18px rgba(156, 131, 235, .45);
+}
+
+@media (max-width: 900px) {
+  .login-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .85fr);
+    column-gap: 30px;
+  }
+  .brand-title-wrap h1 { font-size: clamp(34px, 5vw, 52px); }
+  .login-card { padding: 24px; }
+}
+@media (max-width: 680px) {
+  .login {
+    min-height: 100svh;
+    padding: 24px 17px 64px;
+    background-position: 43% center;
+  }
+  .login::before {
+    background: linear-gradient(180deg, rgba(5, 10, 24, .38), rgba(5, 10, 24, .76));
+  }
+  .login-layout {
+    width: min(480px, 100%);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "brand" "motto" "card" "categories" "footer";
+    justify-items: stretch;
+    gap: 15px;
+  }
+  .login-brand { text-align: center; }
+  .brand-emblem {
+    width: 118px;
+    height: 104px;
+    margin: 0 auto -12px;
+    transform: none;
+  }
+  .brand-title-wrap {
+    width: 100%;
+    padding: 12px 8px 14px;
+    border-left: 0;
+    border-bottom: 1px solid rgba(226, 197, 139, .42);
+    background: linear-gradient(180deg, transparent, rgba(8, 16, 33, .5));
+  }
+  .brand-title-wrap::after { left: 15%; width: 70%; }
+  .brand-title-wrap h1 { font-size: clamp(31px, 9vw, 43px); }
+  .brand-title-wrap p { font-size: 13px; }
+  .brand-motto {
+    max-width: 100%;
+    text-align: center;
+    font-size: 18px;
+  }
+  .login-card {
+    max-width: none;
+    justify-self: stretch;
+    padding: 23px 20px;
+  }
+  .login-categories {
+    width: 100%;
+    margin-top: 2px;
+    padding: 12px 0;
+  }
+  .login-categories span { font-size: 9px; }
+  .login-footer { text-align: center; font-size: 14px; }
+  .author-credit {
+    right: 50%;
+    bottom: 12px;
+    transform: translateX(50%);
+    white-space: nowrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app::before { animation: none; }
+  .app button { transition: none; }
+}
+
+
+/* =========================================================
+   ETAPA 2 · MÓDULOS INTERNOS
+   Biblioteca, Mercado Arcano, Ateliê e Perfil do Aventureiro.
+   Apenas apresentação: nenhuma regra de negócio é alterada.
+   ========================================================= */
+
+/* Biblioteca: arquivo de estudos com linguagem de arquivo arcano */
+.app #library{
+  display:block;
+  color:#e6edf8;
+}
+.app #library>.library-intro{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin:0 0 18px;
+}
+.app #library .panel{
+  position:relative;
+  overflow:hidden;
+  padding:clamp(16px,2.4vw,26px);
+  border:1px solid rgba(130,166,210,.24);
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 100% 0,rgba(99,145,205,.13),transparent 42%),
+    linear-gradient(145deg,rgba(15,29,49,.94),rgba(9,19,34,.96));
+  box-shadow:0 18px 44px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.035);
+}
+.app #library .panel:before{
+  content:"ARQUIVO PESSOAL  /  COLEÇÃO DE ESTUDOS";
+  display:block;
+  margin:0 0 13px;
+  color:#91acd0;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+.app #library .toolbar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0 0 18px;
+  padding:0 0 17px;
+  border-bottom:1px solid rgba(144,171,207,.15);
+}
+.app #library .search{
+  min-width:0;
+  min-height:44px;
+  padding:11px 15px;
+  border:1px solid rgba(134,165,207,.28);
+  border-radius:11px;
+  outline:none;
+  background:rgba(5,14,27,.72);
+  color:#edf4ff;
+  box-shadow:inset 0 1px 5px rgba(0,0,0,.18);
+}
+.app #library .search::placeholder{color:#7e94b2}
+.app #library .search:focus{
+  border-color:rgba(134,183,244,.7);
+  box-shadow:0 0 0 3px rgba(93,145,211,.13);
+}
+.app #library .upload-label{
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  flex:0 0 auto;
+  padding:10px 16px;
+  border:1px solid rgba(228,194,127,.48);
+  border-radius:11px;
+  background:linear-gradient(135deg,#d8bd83,#b58a50);
+  color:#1b1a20;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.25px;
+  box-shadow:0 7px 18px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.42);
+  transition:transform .2s,filter .2s,box-shadow .2s;
+}
+.app #library .upload-label:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.07);
+  box-shadow:0 10px 24px rgba(0,0,0,.24),0 0 20px rgba(216,184,120,.13);
+}
+.app #library .file-list{gap:9px}
+.app #library .file-row{
+  min-width:0;
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px 14px;
+  border:1px solid rgba(128,158,197,.16);
+  border-radius:12px;
+  background:linear-gradient(100deg,rgba(25,42,65,.76),rgba(14,27,46,.84));
+  transition:border-color .2s,transform .2s,background .2s;
+}
+.app #library .file-row:hover{
+  transform:translateX(2px);
+  border-color:rgba(133,178,232,.38);
+  background:linear-gradient(100deg,rgba(30,51,78,.88),rgba(17,32,53,.9));
+}
+.app #library .file-icon{
+  width:42px;height:42px;
+  flex:0 0 42px;
+  border:1px solid rgba(139,173,217,.22);
+  border-radius:11px;
+  background:linear-gradient(145deg,rgba(78,116,164,.24),rgba(102,87,155,.16));
+  color:#c8dcfa;
+}
+.app #library .file-info strong{color:#e8f0fc;font-size:12px}
+.app #library .file-info small{display:block;margin-top:4px;color:#8298b4;font-size:10px}
+.app #library .file-actions{flex:0 0 auto;gap:7px}
+.app #library .file-actions button{
+  min-height:34px;
+  padding:7px 11px;
+  border:1px solid rgba(125,161,207,.23);
+  border-radius:8px;
+  background:rgba(75,111,157,.13);
+  color:#c8dcf5;
+  font-weight:750;
+  transition:background .2s,border-color .2s;
+}
+.app #library .file-actions button:hover{
+  border-color:rgba(142,185,239,.48);
+  background:rgba(86,132,190,.23);
+}
+.app #library .file-actions button.delete{
+  border-color:rgba(194,119,133,.22);
+  background:rgba(117,43,62,.13);
+  color:#e2aab5;
+}
+.app #library .file-actions button.delete:hover{
+  border-color:rgba(221,133,151,.48);
+  background:rgba(139,51,72,.24);
+}
+.app #library .empty{
+  min-height:210px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  border:1px dashed rgba(129,163,207,.24);
+  border-radius:14px;
+  background:rgba(7,17,31,.28);
+  color:#93a9c5;
+  line-height:1.6;
+}
+.app #library .empty:before{
+  content:"⌘";
+  width:48px;height:48px;
+  display:grid;place-items:center;
+  border:1px solid rgba(137,172,219,.25);
+  border-radius:14px;
+  background:rgba(91,129,180,.12);
+  color:#b6d1f5;
+  font-size:24px;
+}
+.app #library .empty b{color:#dce9fa;font:600 17px Georgia,serif}
+
+/* Mercado Arcano: vitrine de relíquias com acentos de bronze e ametista */
+.app #rpgView .mk-hero{
+  position:relative;
+  overflow:hidden;
+  min-height:230px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:20px;
+  padding:clamp(22px,3vw,34px);
+  border:1px solid rgba(204,164,105,.38);
+  border-radius:20px;
+  background:
+    radial-gradient(ellipse at 83% 12%,rgba(160,116,201,.24),transparent 34%),
+    radial-gradient(ellipse at 6% 100%,rgba(186,137,76,.15),transparent 38%),
+    linear-gradient(118deg,#1d2035 0%,#25213a 54%,#171c31 100%);
+  box-shadow:0 20px 48px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.07);
+}
+.app #rpgView .mk-hero:before{
+  content:"✧";
+  position:absolute;
+  right:clamp(170px,20vw,270px);
+  top:50%;
+  transform:translateY(-55%);
+  color:rgba(227,199,145,.1);
+  font-size:clamp(100px,15vw,180px);
+  pointer-events:none;
+}
+.app #rpgView .mk-hero>div:first-child{position:relative;z-index:1;max-width:650px}
+.app #rpgView .mk-eyebrow{color:#d7b77e;letter-spacing:2.3px;font-size:9px;font-weight:900}
+.app #rpgView .mk-hero h3{
+  margin:9px 0 8px;
+  color:#f6e7c9;
+  font:600 clamp(24px,3vw,36px)/1.15 Georgia,serif;
+  letter-spacing:.1px;
+}
+.app #rpgView .mk-hero p{max-width:560px;color:#c0bfd2;font-size:12px;line-height:1.7}
+.app #rpgView .mk-rewards{display:flex;flex-wrap:wrap;gap:7px;margin-top:17px}
+.app #rpgView .mk-rewards span{
+  padding:7px 10px;
+  border:1px solid rgba(215,188,139,.17);
+  border-radius:8px;
+  background:rgba(7,12,25,.28);
+  color:#bcb8c9;
+  font-size:9px;
+}
+.app #rpgView .mk-rewards b{color:#f0d18f}
+.app #rpgView .mk-atelier-cta{
+  position:relative;z-index:2;
+  grid-column:2;grid-row:2;
+  align-self:end;
+  padding:11px 14px;
+  border:1px solid rgba(226,193,133,.38);
+  border-radius:10px;
+  background:rgba(7,12,24,.45);
+  color:#f0d7a7;
+  font-size:10px;font-weight:850;
+}
+.app #rpgView .mk-atelier-cta:hover{background:rgba(179,137,77,.2);border-color:rgba(232,200,143,.68)}
+.app #rpgView .mk-wallet{
+  position:relative;z-index:2;
+  grid-column:2;grid-row:1;
+  align-self:start;
+  min-width:172px;
+  padding:17px 19px;
+  border:1px solid rgba(229,193,126,.48);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(12,17,31,.86),rgba(33,26,43,.88));
+  box-shadow:0 12px 26px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.06);
+}
+.app #rpgView .mk-wallet small{color:#b9a987;font-size:8px;letter-spacing:1.7px;font-weight:850}
+.app #rpgView .mk-wallet strong{color:#f5d995;font:700 21px Georgia,serif}
+.app #rpgView .mk-metrics{gap:10px;margin:13px 0 19px}
+.app #rpgView .mk-metrics>div{
+  padding:14px 17px;
+  border:1px solid rgba(140,151,197,.2);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(28,31,53,.83),rgba(14,20,38,.9));
+}
+.app #rpgView .mk-metrics small{color:#a6a7bd;font-size:9px;letter-spacing:.5px}
+.app #rpgView .mk-metrics b{color:#e7d5ac;font:700 22px Georgia,serif}
+.app #rpgView .mk-daily{
+  padding:14px 17px;
+  border:1px solid rgba(193,157,103,.25);
+  border-radius:13px;
+  background:linear-gradient(100deg,rgba(80,58,51,.26),rgba(37,31,51,.72));
+}
+.app #rpgView .mk-daily b{color:#f0dfbf;font:600 14px Georgia,serif}
+.app #rpgView .mk-daily small{color:#b9b4c1;font-size:10px}
+.app #rpgView .mk-daily button{
+  border:1px solid rgba(226,193,132,.4);
+  border-radius:9px;
+  background:linear-gradient(135deg,#d4b77d,#a9844f);
+  color:#1d1a20;
+  font-size:10px;font-weight:900;
+}
+.app #rpgView .mk-daily button:disabled{opacity:.5;filter:saturate(.5)}
+.app #rpgView .mk-toolbar{margin:26px 0 12px}
+.app #rpgView .mk-toolbar h3,.app #rpgView .mk-panel h3{color:#efe2cb;font:600 21px Georgia,serif}
+.app #rpgView .mk-toolbar .search{
+  min-height:40px;
+  border:1px solid rgba(154,150,190,.27);
+  border-radius:10px;
+  background:rgba(11,16,31,.72);
+  color:#eeeafa;
+}
+.app #rpgView .mk-filter{
+  border:1px solid rgba(151,142,183,.2);
+  border-radius:20px;
+  background:rgba(26,26,47,.72);
+  color:#bcb9cd;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.app #rpgView .mk-filter.active{
+  border-color:rgba(220,185,123,.48);
+  background:linear-gradient(100deg,rgba(166,124,74,.23),rgba(111,84,143,.2));
+  color:#f2d9a8;
+}
+.app #rpgView .mk-grid{gap:13px}
+.app #rpgView .mk-item{
+  overflow:hidden;
+  border:1px solid rgba(148,142,180,.2);
+  border-radius:15px;
+  background:linear-gradient(155deg,rgba(31,31,54,.96),rgba(14,19,36,.97));
+  box-shadow:0 10px 25px rgba(0,0,0,.16);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.app #rpgView .mk-item:hover{
+  transform:translateY(-3px);
+  border-color:rgba(205,174,126,.42);
+  box-shadow:0 17px 32px rgba(0,0,0,.24),0 0 20px rgba(149,116,189,.08);
+}
+.app #rpgView .mk-art{background:radial-gradient(circle at 50% 38%,rgba(146,117,192,.2),transparent 58%),linear-gradient(145deg,#262540,#171b31)}
+.app #rpgView .mk-item-background .mk-art{background:#1b2038}
+.app #rpgView .mk-itembody{padding:15px}
+.app #rpgView .mk-itemtitle h4{color:#f0e6d6;font:600 15px Georgia,serif}
+.app #rpgView .mk-itemtitle small{color:#aaa8c0}
+.app #rpgView .mk-itemtitle strong{color:#e9c982;font-size:12px}
+.app #rpgView .mk-item p{color:#aeb4c7;font-size:10px;line-height:1.6}
+.app #rpgView .mk-buy{
+  min-height:37px;
+  border:1px solid rgba(224,190,127,.38);
+  border-radius:9px;
+  background:linear-gradient(120deg,#c7a66e,#9c7950);
+  color:#1b1920;
+  font-size:10px;font-weight:900;
+}
+.app #rpgView .mk-buy:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.app #rpgView .mk-buy.owned,.app #rpgView .mk-buy:disabled{border-color:rgba(138,155,177,.2);background:rgba(95,107,127,.18);color:#9eacc0}
+.app #rpgView .mk-panel{
+  margin-top:17px;
+  padding:20px;
+  border:1px solid rgba(143,151,188,.2);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(21,26,46,.92),rgba(11,18,34,.95));
+}
+.app #rpgView .mk-inv{
+  border-color:rgba(145,150,184,.16);
+  border-radius:10px;
+  background:rgba(6,13,27,.35);
+}
+.app #rpgView .mk-inv-info b{color:#e8e4ed}
+.app #rpgView .mk-inv-info small{color:#999eb4}
+.app #rpgView .mk-inv button{
+  border:1px solid rgba(157,155,192,.28);
+  border-radius:8px;
+  background:rgba(100,91,143,.16);
+  color:#d5c9ed;
+}
+.app #rpgView .mk-profile{
+  padding:14px;
+  border:1px solid rgba(142,150,188,.17);
+  border-radius:12px;
+  background:rgba(6,13,27,.34);
+}
+.app #rpgView .mk-profile h4{color:#f1e5d0;font:600 17px Georgia,serif}
+.app #rpgView .mk-profile p{color:#b4b6c8}
+.app #rpgView .mk-history-row{border-color:rgba(143,150,184,.13);color:#c5c5d4}
+
+/* Ateliê Arcano: oficina de criação, com palco de personagem e navegação lateral */
+.app #rpgView .arc-hero{
+  position:relative;
+  overflow:hidden;
+  min-height:245px;
+  padding:clamp(20px,3vw,32px);
+  border:1px solid rgba(135,154,214,.34);
+  border-radius:19px;
+  background:
+    radial-gradient(ellipse at 82% 42%,rgba(122,101,204,.22),transparent 35%),
+    radial-gradient(ellipse at 0 100%,rgba(77,132,177,.16),transparent 40%),
+    linear-gradient(115deg,#101f38,#1a2141 57%,#201d3d);
+  box-shadow:0 18px 42px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.06);
+}
+.app #rpgView .arc-hero>div:first-child{position:relative;z-index:1;max-width:500px}
+.app #rpgView .arc-eyebrow{color:#b8b0f1;font-size:9px;letter-spacing:2.1px;font-weight:900}
+.app #rpgView .arc-hero h3{color:#f0e9ff;font:600 clamp(24px,3vw,34px)/1.15 Georgia,serif}
+.app #rpgView .arc-hero p{max-width:480px;color:#b8c5df;font-size:11px;line-height:1.7}
+.app #rpgView .arc-wallet{
+  border-color:rgba(223,196,139,.3);
+  border-radius:11px;
+  background:rgba(6,14,29,.48);
+}
+.app #rpgView .arc-wallet small{color:#aab7d1}
+.app #rpgView .arc-wallet b{color:#f0d69d;font:700 18px Georgia,serif}
+.app #rpgView .arc-stage{
+  border:1px solid rgba(177,169,230,.4);
+  border-radius:17px;
+  background:radial-gradient(ellipse at 50% 36%,rgba(121,108,201,.28),transparent 55%),linear-gradient(145deg,rgba(8,17,35,.92),rgba(19,23,48,.96));
+  box-shadow:0 14px 32px rgba(0,0,0,.3),inset 0 0 35px rgba(139,128,223,.08);
+}
+.app #rpgView .arc-stage:before{border-color:rgba(193,184,245,.13)}
+.app #rpgView .arc-stage-caption{
+  border:1px solid rgba(159,155,205,.2);
+  border-radius:11px;
+  background:rgba(7,14,29,.78);
+  backdrop-filter:blur(10px);
+}
+.app #rpgView .arc-stage-caption b{color:#eee7ff}
+.app #rpgView .arc-stage-caption small{color:#9caed0}
+.app #rpgView .arc-toolbar{
+  align-items:flex-end;
+  margin:24px 0 14px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(138,155,207,.17);
+}
+.app #rpgView .arc-toolbar h3{color:#f0e9ff;font:600 22px Georgia,serif}
+.app #rpgView .arc-toolbar p{color:#9eafcc;font-size:10px}
+.app #rpgView .arc-tab{
+  border:1px solid rgba(151,154,205,.22);
+  border-radius:9px;
+  background:rgba(23,29,56,.72);
+  color:#b9c4df;
+}
+.app #rpgView .arc-tab.active{
+  border-color:rgba(202,181,246,.48);
+  background:linear-gradient(110deg,rgba(94,111,183,.32),rgba(133,89,177,.22));
+  color:#f1e7ff;
+  box-shadow:inset 0 -2px rgba(191,174,239,.45);
+}
+.app #rpgView .arc-catalog-layout{gap:16px}
+.app #rpgView .arc-side-nav{
+  border:1px solid rgba(131,151,208,.23);
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(17,29,53,.94),rgba(10,19,37,.95));
+  box-shadow:0 12px 28px rgba(0,0,0,.16);
+}
+.app #rpgView .arc-side-title{color:#aab7d9}
+.app #rpgView .arc-nav-heading{color:#899fc8}
+.app #rpgView .arc-side-nav .arc-filter{
+  border-color:transparent;
+  border-radius:9px;
+  background:transparent;
+  color:#aebbd5;
+}
+.app #rpgView .arc-side-nav .arc-filter:hover{
+  border-color:rgba(145,166,220,.2);
+  background:rgba(104,123,187,.12);
+  color:#e0e6f5;
+}
+.app #rpgView .arc-side-nav .arc-filter.active{
+  border-color:rgba(205,184,244,.3);
+  background:linear-gradient(100deg,rgba(93,117,185,.24),rgba(131,90,177,.16));
+  color:#f0e8ff;
+  box-shadow:inset 3px 0 #bba9ed;
+}
+.app #rpgView .arc-side-nav .arc-filter.active .arc-filter-icon{color:#d2c4ff}
+.app #rpgView .arc-catalog-heading{
+  padding:0 0 11px;
+  border-bottom:1px solid rgba(139,157,207,.16);
+}
+.app #rpgView .arc-catalog-heading span{color:#9badd0;letter-spacing:1.7px}
+.app #rpgView .arc-catalog-heading h4{color:#f0e9ff;font:600 20px Georgia,serif}
+.app #rpgView .arc-item-card{
+  border-color:rgba(136,153,204,.2);
+  border-radius:13px;
+  background:linear-gradient(155deg,rgba(25,34,62,.97),rgba(11,19,39,.98));
+  box-shadow:0 9px 22px rgba(0,0,0,.17);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.app #rpgView .arc-item-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(174,158,234,.45);
+  box-shadow:0 15px 30px rgba(0,0,0,.25),0 0 18px rgba(126,111,207,.09);
+}
+.app #rpgView .arc-item-visual{background:radial-gradient(circle at 50% 40%,rgba(109,124,193,.2),transparent 60%),linear-gradient(145deg,#1a2949,#111a35)}
+.app #rpgView .arc-item-copy{background:transparent}
+.app #rpgView .arc-item-card h4{color:#f0eaff;font:600 15px Georgia,serif}
+.app #rpgView .arc-item-card p{color:#aebbd4;font-size:10px;line-height:1.55}
+.app #rpgView .arc-item-top b{color:#d6c6f3}
+.app #rpgView .arc-preview-btn{
+  border-color:rgba(143,164,220,.28);
+  border-radius:8px;
+  background:rgba(90,113,175,.13);
+  color:#c8d5f1;
+}
+.app #rpgView .arc-preview-btn:hover,.app #rpgView .arc-preview-btn.active{
+  border-color:rgba(179,164,237,.5);
+  background:rgba(116,99,181,.24);
+  color:#f0eaff;
+}
+.app #rpgView .arc-item-main{
+  border-color:rgba(218,188,128,.36);
+  border-radius:8px;
+  background:linear-gradient(120deg,#cbb27e,#9c8058);
+  color:#1b1a20;
+  font-weight:900;
+}
+.app #rpgView .arc-item-main.owned,.app #rpgView .arc-item-main.equipped,.app #rpgView .arc-item-main.locked{
+  border-color:rgba(143,159,191,.2);
+  background:rgba(97,113,147,.17);
+  color:#aab8d2;
+}
+.app #rpgView .arc-footnote{
+  padding:12px 14px;
+  border-left:2px solid rgba(164,151,220,.42);
+  background:rgba(30,33,61,.3);
+  color:#899fbd;
+  font-size:10px;
+  line-height:1.65;
+}
+
+/* Criador de Heróis: separar palco e controles sem apertar a prévia */
+.app #rpgView .arc-creator-head{
+  padding:0 0 16px;
+  border-bottom:1px solid rgba(145,159,210,.18);
+}
+.app #rpgView .arc-creator-head h3{color:#f0eaff;font:600 25px Georgia,serif}
+.app #rpgView .arc-creator-head p{color:#aebbd4}
+.app #rpgView .arc-creator-preview{
+  border:1px solid rgba(144,155,213,.24);
+  border-radius:15px;
+  background:linear-gradient(160deg,rgba(20,31,59,.95),rgba(9,18,37,.97));
+  box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+.app #rpgView .arc-creator-stage{
+  border:1px solid rgba(165,157,221,.3);
+  border-radius:13px;
+  background:radial-gradient(ellipse at 50% 38%,rgba(128,112,207,.23),transparent 60%),linear-gradient(145deg,#0d1b37,#1b2041);
+}
+.app #rpgView .arc-creator-group{
+  overflow:hidden;
+  border:1px solid rgba(139,154,207,.2);
+  border-radius:13px;
+  background:linear-gradient(145deg,rgba(20,31,57,.86),rgba(11,19,39,.9));
+}
+.app #rpgView .arc-creator-group>h4{
+  padding:13px 15px;
+  border-bottom:1px solid rgba(145,157,207,.15);
+  background:rgba(85,99,157,.11);
+  color:#d9d2f4;
+  font:600 14px Georgia,serif;
+}
+.app #rpgView .arc-creator-field>b{color:#dce5f8}
+.app #rpgView .arc-creator-choice{
+  border-color:rgba(141,157,205,.22);
+  border-radius:9px;
+  background:rgba(6,15,32,.48);
+  color:#b9c7e0;
+}
+.app #rpgView .arc-creator-choice:hover{border-color:rgba(164,157,224,.48);background:rgba(98,96,168,.16)}
+.app #rpgView .arc-creator-choice.active{
+  border-color:rgba(198,180,246,.62);
+  background:linear-gradient(120deg,rgba(97,120,186,.28),rgba(134,91,178,.2));
+  color:#f2eaff;
+  box-shadow:inset 0 0 0 1px rgba(190,175,241,.1);
+}
+
+/* Perfil do Aventureiro: ficha de personagem com leitura em camadas */
+.app #rpgView .pf-legend{
+  position:relative;
+  overflow:hidden;
+  gap:20px;
+  padding:clamp(20px,3vw,30px);
+  border:1px solid rgba(194,168,119,.34);
+  border-radius:19px;
+  background:
+    radial-gradient(ellipse at 14% 100%,rgba(60,119,143,.18),transparent 42%),
+    radial-gradient(ellipse at 100% 0,rgba(151,119,183,.17),transparent 38%),
+    linear-gradient(125deg,#14283b,#18243a 58%,#211f39);
+  box-shadow:0 18px 42px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.06);
+}
+.app #rpgView .pf-legend:before{border-color:rgba(224,199,151,.2)}
+.app #rpgView .pf-legend-main{gap:22px}
+.app #rpgView .pf-legend-portrait{
+  border:1px solid rgba(220,194,145,.4);
+  border-radius:15px;
+  background:radial-gradient(ellipse at 50% 36%,rgba(104,139,169,.26),transparent 60%),rgba(5,14,27,.56);
+  box-shadow:0 10px 26px rgba(0,0,0,.24),inset 0 0 24px rgba(152,187,216,.08);
+}
+.app #rpgView .pf-legend-kicker{color:#b9c4d3;letter-spacing:2px;font-size:8px}
+.app #rpgView .pf-legend-info h3{color:#f3e5c9;font:600 clamp(24px,3vw,32px) Georgia,serif}
+.app #rpgView .pf-legend-meta{color:#bdc9d9;line-height:1.8}
+.app #rpgView .pf-legend-actions button{
+  border:1px solid rgba(206,181,131,.35);
+  border-radius:9px;
+  background:rgba(6,16,29,.4);
+  color:#ead7b2;
+}
+.app #rpgView .pf-legend-actions button:hover{background:rgba(165,132,82,.17);border-color:rgba(224,194,142,.58)}
+.app #rpgView .pf-legend-side{
+  border:1px solid rgba(190,176,145,.24);
+  border-radius:13px;
+  background:rgba(5,14,27,.42);
+}
+.app #rpgView .pf-legend-side>small{color:#b7c5d7;letter-spacing:1.4px}
+.app #rpgView .pf-level-numbers{color:#d9e3ef}
+.app #rpgView .pf-level-numbers strong{color:#efd18d}
+.app #rpgView .pf-level-track{background:rgba(2,10,23,.6)}
+.app #rpgView .pf-level-track i{background:linear-gradient(90deg,#6b9fd0,#b49ce9,#e4c17c);box-shadow:0 0 13px rgba(152,172,231,.35)}
+.app #rpgView .pf-next-level{color:#aebdd0}
+.app #rpgView .pf-stat-grid{gap:11px;margin:15px 0 20px}
+.app #rpgView .pf-stat-grid>div,.app #rpgView .pf-stat-grid>article{
+  border:1px solid rgba(130,163,194,.2);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(18,39,58,.9),rgba(11,23,39,.94));
+}
+.app #rpgView .pf-stat-grid small{color:#94abc1}
+.app #rpgView .pf-stat-grid strong{color:#e5cf9f}
+.app #rpgView .pf-tabs{
+  gap:7px;
+  padding:5px;
+  border:1px solid rgba(132,153,191,.19);
+  border-radius:12px;
+  background:rgba(8,18,33,.52);
+}
+.app #rpgView .pf-tabs button{
+  border:1px solid transparent;
+  border-radius:8px;
+  background:transparent;
+  color:#aebbd0;
+}
+.app #rpgView .pf-tabs button.on{
+  border-color:rgba(204,180,133,.3);
+  background:linear-gradient(100deg,rgba(91,128,165,.22),rgba(129,99,164,.17));
+  color:#f0dfbd;
+}
+.app #rpgView .pf,.app #rpgView .pf .panel{
+  border-color:rgba(135,158,190,.2);
+  background:linear-gradient(145deg,rgba(16,31,50,.9),rgba(9,19,34,.94));
+}
+.app #rpgView .pf-info h3{color:#f1e5ce}
+.app #rpgView .pf-info{color:#b5c4d6}
+.app #rpgView .ach{
+  border-color:rgba(139,156,191,.18);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(22,37,58,.86),rgba(11,22,39,.92));
+}
+.app #rpgView .ach b{color:#e9d8b6}
+.app #rpgView .ach small{color:#9caec4}
+
+/* Ajustes de leitura e toque em telas menores */
+@media(max-width:900px){
+  .app #rpgView .mk-hero{grid-template-columns:minmax(0,1fr) auto}
+  .app #rpgView .mk-wallet{min-width:145px}
+  .app #rpgView .arc-catalog-layout{grid-template-columns:190px minmax(0,1fr)}
+}
+@media(max-width:680px){
+  .app #library .toolbar{align-items:stretch;flex-direction:column}
+  .app #library .upload-label{width:100%}
+  .app #library .file-row{align-items:flex-start;flex-wrap:wrap}
+  .app #library .file-info{padding-top:3px}
+  .app #library .file-actions{width:100%;padding-left:56px}
+  .app #library .file-actions button{flex:1}
+  .app #rpgView .mk-hero{display:flex;flex-direction:column;align-items:stretch;gap:13px}
+  .app #rpgView .mk-wallet{order:2;min-width:0}
+  .app #rpgView .mk-atelier-cta{order:3;align-self:stretch}
+  .app #rpgView .mk-rewards{gap:6px}
+  .app #rpgView .mk-daily{align-items:flex-start;flex-direction:column;gap:11px}
+  .app #rpgView .mk-daily button{width:100%}
+  .app #rpgView .mk-toolbar{align-items:stretch;flex-direction:column}
+  .app #rpgView .mk-toolbar .search{width:100%}
+  .app #rpgView .arc-hero{display:flex;flex-direction:column;align-items:stretch;gap:15px}
+  .app #rpgView .arc-stage{min-height:280px}
+  .app #rpgView .arc-toolbar{align-items:stretch;flex-direction:column}
+  .app #rpgView .arc-tabs{display:flex;flex-wrap:wrap}
+  .app #rpgView .arc-tab{flex:1 1 auto}
+  .app #rpgView .pf-legend{grid-template-columns:1fr}
+  .app #rpgView .pf-legend-main{align-items:center}
+}
+@media(max-width:480px){
+  .app #library .panel{padding:13px}
+  .app #library .file-row{gap:10px;padding:10px}
+  .app #library .file-actions{padding-left:0}
+  .app #rpgView .mk-metrics{grid-template-columns:1fr 1fr}
+  .app #rpgView .mk-metrics>div:last-child{grid-column:1/-1}
+  .app #rpgView .mk-itemtitle h4{font-size:13px}
+  .app #rpgView .arc-stage{min-height:250px}
+  .app #rpgView .pf-legend-main{flex-direction:column;text-align:center}
+  .app #rpgView .pf-legend-portrait{width:min(100%,220px);margin:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .app #library .file-row,.app #library .upload-label,
+  .app #rpgView .mk-item,.app #rpgView .arc-item-card{transition:none}
+}
+
+
+/* Perfil: estrutura explícita para a ficha e seus blocos de progresso */
+.app #rpgView .pf-legend{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(245px,.65fr);
+  align-items:stretch;
+}
+.app #rpgView .pf-legend-main{
+  display:flex;
+  align-items:center;
+  min-width:0;
+}
+.app #rpgView .pf-legend-portrait{
+  position:relative;
+  width:clamp(132px,16vw,190px);
+  min-width:132px;
+  min-height:190px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+}
+.app #rpgView .pf-legend-portrait>.arc-avatar{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:185px;
+  height:185px;
+}
+.app #rpgView .pf-legend-info{min-width:0}
+.app #rpgView .pf-legend-info h3{overflow-wrap:anywhere}
+.app #rpgView .pf-legend-title{margin:7px 0}
+.app #rpgView .pf-legend-side{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:12px;
+  min-width:0;
+  padding:18px;
+}
+.app #rpgView .pf-level-numbers{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:10px;
+}
+.app #rpgView .pf-level-track{height:10px;overflow:hidden;border-radius:20px}
+.app #rpgView .pf-level-track i{display:block;height:100%;border-radius:inherit;transition:width .35s ease}
+.app #rpgView .pf-next-level{font-size:10px;line-height:1.6}
+.app #rpgView .pf-stat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.app #rpgView .pf-stat-card{
+  min-width:0;
+  min-height:105px;
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  grid-template-rows:auto 1fr;
+  align-items:center;
+  column-gap:10px;
+  row-gap:5px;
+  padding:15px;
+}
+.app #rpgView .pf-stat-card>span{
+  grid-column:1;
+  grid-row:1 / span 2;
+  width:32px;height:32px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(169,184,212,.2);
+  border-radius:9px;
+  background:rgba(102,139,180,.12);
+  color:#d7d3f1;
+  font-size:17px;
+}
+.app #rpgView .pf-stat-card>small{align-self:end;font-size:9px;letter-spacing:.4px}
+.app #rpgView .pf-stat-card>strong{
+  align-self:start;
+  overflow-wrap:anywhere;
+  color:#e8d3a6;
+  font:700 19px Georgia,serif;
+}
+.app #rpgView .pf-overview-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+  margin-top:14px;
+}
+.app #rpgView .pf-overview-panel{
+  min-width:0;
+  padding:17px;
+  border:1px solid rgba(135,158,190,.2);
+  border-radius:13px;
+  background:linear-gradient(145deg,rgba(16,31,50,.9),rgba(9,19,34,.94));
+}
+.app #rpgView .pf-overview-panel h4{
+  margin:0 0 12px;
+  color:#e8dfcb;
+  font:600 15px Georgia,serif;
+}
+.app #rpgView .pf-overview-list{display:grid;gap:8px}
+.app #rpgView .pf-overview-row{
+  min-width:0;
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  padding:9px 0;
+  border-bottom:1px solid rgba(137,157,190,.12);
+}
+.app #rpgView .pf-overview-row:last-child{border-bottom:0}
+.app #rpgView .pf-overview-row>span{
+  width:27px;height:27px;
+  display:grid;place-items:center;
+  border:1px solid rgba(142,163,199,.18);
+  border-radius:8px;
+  background:rgba(83,120,162,.12);
+}
+.app #rpgView .pf-overview-row>div{min-width:0;display:grid;gap:3px}
+.app #rpgView .pf-overview-row b{color:#dfe8f5;font-size:10px;overflow-wrap:anywhere}
+.app #rpgView .pf-overview-row small{color:#879bb6;font-size:9px}
+.app #rpgView .pf-overview-row .xp-plus{font-size:10px}
+.app #rpgView .pf-overview-empty{padding:17px 5px;color:#91a4bd;font-size:10px;line-height:1.6}
+@media(max-width:900px){
+  .app #rpgView .pf-legend{grid-template-columns:1fr}
+  .app #rpgView .pf-legend-side{margin-top:4px}
+}
+@media(max-width:680px){
+  .app #rpgView .pf-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .app #rpgView .pf-overview-grid{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+  .app #rpgView .pf-stat-card{min-height:90px;padding:11px;grid-template-columns:28px minmax(0,1fr);column-gap:7px}
+  .app #rpgView .pf-stat-card>span{width:27px;height:27px}
+  .app #rpgView .pf-stat-card>strong{font-size:16px}
+}
+
+
+/* =========================================================
+   ETAPA 3 · COMUNIDADE SOCIAL
+   Taverna, guildas, mensagens privadas e visitação.
+   Camada estritamente visual: mantém IDs, estados e eventos.
+   ========================================================= */
+
+/* Taverna — salão acolhedor com arte de ambiente */
+#rpgView .tvn-page{max-width:1260px;padding-top:5px}
+#rpgView .tvn-hero{
+  min-height:224px;
+  border:1px solid rgba(192,164,224,.42);
+  border-radius:20px;
+  background:
+    linear-gradient(90deg,rgba(7,13,27,.94) 0%,rgba(10,17,32,.82) 48%,rgba(13,18,33,.42) 100%),
+    linear-gradient(0deg,rgba(7,12,23,.55),rgba(7,12,23,.08)),
+    url("https://cdn.prod.website-files.com/623c638db44cf48bda21c5e1/62600a42f450426a286b3843_lilian-montmartin-xuhai-tavern20.jpg") center 48%/cover no-repeat;
+  box-shadow:0 22px 54px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.08);
+}
+#rpgView .tvn-hero:before{border-color:rgba(223,202,255,.22)}
+#rpgView .tvn-hero:after{border-color:rgba(196,165,245,.18);box-shadow:0 0 0 26px rgba(196,165,245,.06),0 0 0 60px rgba(196,165,245,.035),0 0 0 100px rgba(196,165,245,.02)}
+#rpgView .tvn-eyebrow{color:#d8c1f7}
+#rpgView .tvn-eyebrow>span{background:#c9a9f4;box-shadow:0 0 12px #b995ef}
+#rpgView .tvn-hero h3{color:#f4eaff;text-shadow:0 3px 18px #080b18}
+#rpgView .tvn-hero p{color:#d2d5e5;text-shadow:0 2px 10px #080b18}
+#rpgView .tvn-hero-art{border-color:#c5a7ed80;background:radial-gradient(circle,#42345d 0%,#1c2540 66%,#111a30 100%);box-shadow:0 0 0 9px #c5a7ed12,0 0 40px #9f7bdc35,inset 0 0 30px #d4b4ff22}
+#rpgView .tvn-hero-rune{border-color:#ddc5ff99;color:#ead9ff;text-shadow:0 0 22px #c7a1ff}
+#rpgView .tvn-hero-art>span,#rpgView .tvn-hero-art>b{color:#e4ccff;text-shadow:0 0 15px #c9a6ff}
+#rpgView .tvn-tab{border-color:rgba(132,151,196,.3);border-radius:13px;background:linear-gradient(135deg,rgba(17,29,52,.94),rgba(13,22,41,.96));box-shadow:inset 0 1px rgba(255,255,255,.035)}
+#rpgView .tvn-tab.is-active{border-color:#aa8bdc;background:linear-gradient(125deg,rgba(55,44,83,.97),rgba(27,37,63,.98));box-shadow:inset 0 0 0 1px #d7baff20,0 10px 25px #0003}
+#rpgView .tvn-tab-icon{border-color:#806ca8;background:#242344;color:#e1caff}
+#rpgView .tvn-tab b{color:#f0e7ff}
+#rpgView .tvn-tab em,#rpgView .tvn-tab.is-active em{border-color:#8d78b6;color:#d7c5f4}
+#rpgView .tvn-chat-card,#rpgView .tvn-side-card{border-color:rgba(127,151,196,.27);border-radius:15px;background:linear-gradient(155deg,rgba(19,31,55,.96),rgba(10,19,36,.97));box-shadow:0 16px 38px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.035)}
+#rpgView .tvn-chat-head{border-bottom-color:rgba(137,156,198,.22);background:linear-gradient(110deg,rgba(31,42,69,.98),rgba(18,29,51,.98))}
+#rpgView .tvn-channel-mark{border-color:#8270ac;background:linear-gradient(145deg,#342e55,#1b2741);color:#e1caff;box-shadow:0 0 22px #a987df18}
+#rpgView .tvn-channel-title h3{color:#f0e8ff}
+#rpgView .tvn-channel-title p{color:#aab8d1}
+#rpgView .tvn-channel-status{border-color:#456b62;background:#142d2a;color:#a9e0c6}
+#rpgView .tvn-feed{background:radial-gradient(ellipse at 50% 0%,rgba(100,82,151,.10),transparent 54%),linear-gradient(180deg,#0b1528,#0a1425)}
+#rpgView .tvn-message{padding:12px 11px;border-bottom-color:rgba(129,151,193,.12)}
+#rpgView .tvn-message-avatar{border-color:#586a91;background:linear-gradient(145deg,#293c5e,#172640);box-shadow:0 5px 14px #0003}
+#rpgView .tvn-message-bubble{border:1px solid rgba(125,149,195,.2);border-radius:4px 13px 13px 13px;background:linear-gradient(145deg,#1b2b49,#14223a);color:#e4eafa;box-shadow:0 6px 18px #0002}
+#rpgView .tvn-message.is-own .tvn-message-bubble{border-color:rgba(157,126,212,.34);border-radius:13px 4px 13px 13px;background:linear-gradient(145deg,#332c52,#222743);color:#f0e8ff}
+#rpgView .tvn-message-meta b{color:#d8c6f6}
+#rpgView .tvn-message-meta time{color:#8192b0}
+#rpgView .tvn-composer{border-top-color:rgba(137,156,198,.2);background:linear-gradient(180deg,#101d34,#0d192d)}
+#rpgView .tvn-emoji-row button{border-color:#344565;background:#1b2b49;color:#e2d5fa}
+#rpgView .tvn-compose-row textarea{border-color:#3c4e70;background:#091528;color:#f0f3ff}
+#rpgView .tvn-compose-row textarea:focus{border-color:#a68bd8;box-shadow:0 0 0 3px #a68bd81c}
+#rpgView .tvn-send{border:1px solid #b49add;background:linear-gradient(135deg,#b69ce5,#8c72c5);color:#151329;box-shadow:0 7px 18px #8d70c533}
+#rpgView .tvn-send:hover{background:linear-gradient(135deg,#c8b2f1,#a087d9)}
+#rpgView .tvn-side-heading h4{color:#eee5ff}
+#rpgView .tvn-side-heading small{color:#bca4e6}
+#rpgView .tvn-side-spark{color:#d9c1ff}
+#rpgView .tvn-online-total strong{color:#c8b2f0}
+#rpgView .tvn-online-person{border-color:rgba(126,150,194,.2);background:#14223a}
+#rpgView .tvn-rules-card li{color:#b9c5d9}
+#rpgView .tvn-rules-foot{border-top-color:rgba(132,151,193,.18);color:#a99bc8}
+
+/* Guildas — salão de bandeiras, brasões e companhias */
+#rpgView .adv-guild-hero{
+  min-height:190px;
+  border-color:rgba(192,160,220,.38);
+  background:
+    linear-gradient(90deg,rgba(8,14,28,.96),rgba(12,18,34,.86) 56%,rgba(18,17,35,.52)),
+    linear-gradient(0deg,rgba(8,13,26,.38),transparent),
+    url("https://cdna.artstation.com/p/assets/images/images/031/442/336/large/nikita-bufatin-.jpg?1603650721") center 48%/cover no-repeat;
+  box-shadow:0 20px 48px #0005,inset 0 1px #fff1;
+}
+#rpgView .adv-guild-hero:after{border-color:#d4b7f22a;box-shadow:0 0 0 26px #b895e00a,0 0 0 60px #b895e008,0 0 0 100px #b895e005}
+#rpgView .adv-guild-hero .adv-kicker{color:#d6baf4}
+#rpgView .adv-guild-hero h3{color:#f4eaff;text-shadow:0 3px 18px #080b18}
+#rpgView .adv-guild-hero p{color:#d0d6e7;text-shadow:0 2px 10px #080b18}
+#rpgView .adv-guild-hero .adv-hero-mark{border-color:#b69bdc;background:radial-gradient(circle,#49375f,#1b2340 72%);color:#e6d3ff;box-shadow:0 0 32px #b08be633}
+#rpgView .adv-guild-tabs{gap:9px;margin:0 0 17px;padding:7px;border:1px solid rgba(130,148,190,.2);border-radius:13px;background:rgba(10,18,34,.8)}
+#rpgView .adv-guild-tabs button{border-color:transparent;border-radius:9px;background:transparent;color:#aebbd3}
+#rpgView .adv-guild-tabs button.active{border-color:#8c75b7;background:linear-gradient(135deg,#3b3159,#202b47);color:#eadfff;box-shadow:inset 0 1px #fff2}
+#rpgView .adv-guild-directory .adv-guild-row{border-color:rgba(135,154,199,.24);border-radius:14px;background:linear-gradient(145deg,rgba(24,37,63,.97),rgba(12,22,41,.98));box-shadow:0 9px 22px #0002}
+#rpgView .adv-guild-directory .adv-guild-row:hover{border-color:#b59bde;box-shadow:0 12px 28px #0004,0 0 0 1px #b59bde22}
+#rpgView .adv-guild-directory .adv-guild-crest{border-color:#b79bdc;border-radius:12px;background:linear-gradient(145deg,#3b3159,#1a2742);color:#eadbff;box-shadow:inset 0 0 20px #b99be21c,0 7px 16px #0003}
+#rpgView .adv-guild-info b{color:#eee5ff}
+#rpgView .adv-guild-info small,#rpgView .adv-guild-info span{color:#aab8d2}
+#rpgView .adv-guild-flag-side{filter:drop-shadow(0 8px 16px #0006)}
+#rpgView .adv-flag{border-color:#c8a9e8;box-shadow:0 8px 24px #0007,inset 0 0 0 2px #0b1425aa}
+#rpgView .adv-flag-editor-mark{border-color:#8d79b4;background:#222844;color:#e1caff}
+#rpgView .adv-flag-preview-wrap{border-color:#51436f;background:linear-gradient(145deg,#171d35,#0d172b)}
+#rpgView .adv-flag-controls select,#rpgView .adv-flag-controls input{border-color:#455579;background:#0b162b;color:#e9e8fa}
+#rpgView .adv-member{border-color:rgba(127,149,192,.2);border-radius:11px;background:linear-gradient(120deg,#172641,#101d33)}
+#rpgView .adv-member .adv-rank-avatar{border-color:#65749b;background:#253453}
+#rpgView .adv-member b{color:#eee8fb}
+#rpgView .adv-member>strong{color:#d7c0fa}
+#rpgView .adv-guild-forms .adv-panel{border-color:rgba(133,151,194,.23);background:linear-gradient(145deg,rgba(20,32,55,.97),rgba(11,20,37,.98))}
+
+/* Mensagens privadas — ambiente mais íntimo e legível */
+#rpgView .tvn-private-layout{grid-template-columns:minmax(245px,320px) minmax(0,1fr);gap:16px;min-height:650px}
+#rpgView .tvn-private-list-card{border-color:rgba(145,132,202,.3);border-radius:16px;background:linear-gradient(160deg,#182541,#101a31);box-shadow:0 16px 36px #0004}
+#rpgView .tvn-private-list-heading{border-bottom-color:#3b3b65;background:linear-gradient(120deg,#302c50,#1b2944)}
+#rpgView .tvn-private-list-heading small{color:#c8b2ef}
+#rpgView .tvn-private-list-heading h3{color:#f0e8ff}
+#rpgView .tvn-private-list-heading p{color:#aab8d2}
+#rpgView .tvn-private-friend{border-radius:11px}
+#rpgView .tvn-private-friend:hover{border-color:#8274b4;background:#242b4a}
+#rpgView .tvn-private-friend.is-selected{border-color:#b59bde;background:linear-gradient(115deg,#3c315c,#202b48);box-shadow:inset 0 0 0 1px #d8c0ff1c,0 7px 18px #0003}
+#rpgView .tvn-private-avatar{border-color:#756aa1;background:linear-gradient(145deg,#39345d,#1b2945);box-shadow:0 5px 14px #0003}
+#rpgView .tvn-private-friend-copy b{color:#eee8ff}
+#rpgView .tvn-private-friend-copy small{color:#9caac7}
+#rpgView .tvn-private-friend>em{background:#9364b8;color:#fff}
+#rpgView .tvn-private-chat-card{border-color:rgba(142,132,197,.3);border-radius:16px;background:linear-gradient(160deg,#17233d,#0d182d)}
+#rpgView .tvn-private-chat-head{background:linear-gradient(110deg,#302d50,#192742)}
+#rpgView .tvn-private-lock{border-color:#657e8a;background:#172f38;color:#b4e3e5}
+#rpgView #tvnPrivateFeed{background:radial-gradient(ellipse at 50% 0%,#7e68b014,transparent 58%),linear-gradient(180deg,#0c172c,#0a1427)}
+#rpgView .tvn-private-no-selection>div{border-color:#a48bcf;background:#8d70c51c;color:#dfcaff;box-shadow:0 0 28px #a98bd52b}
+#rpgView .tvn-private-no-selection h3{color:#eee7ff}
+#rpgView .tvn-private-no-selection p{color:#a8b5cf}
+
+/* Visitação — ficha de personagem e vitrine */
+#rpgView .space-toolbar{margin-bottom:18px}
+#rpgView .space-privacy-indicator{border-color:rgba(130,157,202,.32);background:rgba(12,23,42,.88);color:#c1cce0}
+#rpgView .space-profile-hero{
+  grid-template-columns:minmax(220px,300px) minmax(0,1fr);
+  gap:30px;
+  padding:28px;
+  border-color:rgba(134,157,204,.34);
+  border-radius:20px;
+  background:
+    radial-gradient(ellipse at 12% 52%,rgba(117,105,183,.28),transparent 48%),
+    linear-gradient(110deg,rgba(13,24,45,.97),rgba(13,22,41,.94) 58%,rgba(29,24,49,.88));
+  box-shadow:0 20px 50px #0005,inset 0 1px #fff1;
+}
+#rpgView .space-profile-hero:after{border-color:#c5a9ed28;box-shadow:0 0 0 28px #b79be20a,0 0 0 58px #b79be207}
+#rpgView .space-profile-art{
+  height:320px;
+  border-color:rgba(154,151,216,.45);
+  border-radius:16px;
+  background:
+    linear-gradient(180deg,rgba(10,17,34,.20),rgba(8,15,29,.58)),
+    url("../../1337879.png") center 55%/cover no-repeat,
+    radial-gradient(ellipse at 50% 72%,#8bb6e82c,transparent 54%),#111d32;
+  box-shadow:inset 0 0 45px #0a1028aa,0 12px 28px #0004;
+}
+#rpgView .space-art-orbit{border-color:#d5c4ff55;box-shadow:0 0 0 16px #c8d8f00c,0 0 42px #a98ce944}
+#rpgView .space-character{filter:drop-shadow(0 14px 18px #000b) drop-shadow(0 0 14px #a98ce944)}
+#rpgView .space-profile-info h2{color:#f0e8ff;text-shadow:0 3px 20px #0007}
+#rpgView .space-profile-tags span{border-color:#665b8e;background:linear-gradient(120deg,#292b4b,#1a2943);color:#e1d6fa}
+#rpgView .space-profile-info>p{color:#bac6dc}
+#rpgView .space-profile-stats>div{border-color:rgba(137,155,201,.28);border-radius:11px;background:rgba(9,19,37,.76)}
+#rpgView .space-profile-stats b{color:#d9c3ff}
+#rpgView .space-profile-stats small{color:#a0aec9}
+#rpgView .space-content-grid,#rpgView .space-owner-grid{gap:17px}
+#rpgView .space-showcase,#rpgView .space-achievements,#rpgView .space-guestbook,#rpgView .space-settings,#rpgView .space-visitors{border-color:rgba(131,152,196,.25);border-radius:15px;background:linear-gradient(150deg,rgba(19,31,54,.97),rgba(10,19,36,.98));box-shadow:0 12px 30px #0003}
+#rpgView .space-section-heading h3{color:#eee6ff}
+#rpgView .space-section-heading p{color:#aab8d1}
+#rpgView .space-heading-icon{color:#d5bdf7}
+#rpgView .space-item-card{border-color:#49577b;border-radius:12px;background:linear-gradient(145deg,#202c4b,#121f38)}
+#rpgView .space-item-card>span{color:#d9c3ff}
+#rpgView .space-item-card b{color:#eef0ff}
+#rpgView .space-item-card small{color:#b6a6d8}
+#rpgView .space-achievement-chip{border-color:#75639b;background:linear-gradient(135deg,#302a4d,#1c2941);color:#e4d5ff}
+#rpgView .space-guestbook-form{border-color:#455477;border-radius:12px;background:#0d1930}
+#rpgView .space-guestbook-form textarea{border-color:#48577a;background:#09152a;color:#edf0ff}
+#rpgView .space-message{border-color:rgba(129,151,196,.22);border-radius:11px;background:linear-gradient(120deg,#172641,#101d34)}
+#rpgView .space-message-avatar{background:#303458;color:#e0d2ff}
+#rpgView .space-message-meta b{color:#d9c3ff}
+#rpgView .space-message-body p{color:#d0d8e9}
+#rpgView .space-visitor{border-color:rgba(129,151,196,.2);border-radius:10px;background:#14223a}
+#rpgView .space-visitor b{color:#e2e8f7}
+#rpgView .space-visitor time{color:#9aa9c4}
+#rpgView .space-settings-form select{border-color:#46577a;background:#0c1830;color:#edf0ff}
+#rpgView .space-toggle-label{color:#c4cce0}
+#rpgView .space-toggle-label input{accent-color:#a98bd8}
+
+/* Responsividade e movimento reduzido */
+@media(max-width:900px){
+  #rpgView .tvn-private-layout{grid-template-columns:minmax(210px,260px) minmax(0,1fr)}
+  #rpgView .space-profile-hero{grid-template-columns:minmax(190px,250px) minmax(0,1fr);gap:20px;padding:20px}
+}
+@media(max-width:760px){
+  #rpgView .space-profile-hero{grid-template-columns:1fr}
+  #rpgView .space-profile-art{height:260px}
+  #rpgView .space-content-grid,#rpgView .space-owner-grid{grid-template-columns:1fr}
+  #rpgView .tvn-private-layout{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  #rpgView .tvn-hero{min-height:190px;background-position:58% center}
+  #rpgView .tvn-hero-copy{max-width:100%}
+  #rpgView .tvn-hero h3{font-size:25px}
+  #rpgView .tvn-hero-art{width:76px;height:76px}
+  #rpgView .tvn-private-friends{grid-template-columns:1fr}
+  #rpgView .adv-guild-directory-tools{align-items:stretch;flex-direction:column}
+  #rpgView .adv-guild-directory-tools input{max-width:none}
+  #rpgView .space-profile-hero{padding:15px}
+  #rpgView .space-profile-art{height:230px}
+}
+@media(prefers-reduced-motion:reduce){
+  #rpgView .tvn-hero-art>i{animation:none}
+  #rpgView .tvn-tab,#rpgView .tvn-message,#rpgView .adv-guild-directory .adv-guild-row{transition:none}
+}
