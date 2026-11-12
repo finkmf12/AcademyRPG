@@ -1384,3 +1384,353 @@
   filter: saturate(.65);
   opacity: .58;
 }
+
+
+/* =========================================================
+   ETAPA 1 · PORTAL DE ENTRADA E CENTRO DE COMANDO
+   Reorganização visual real dos componentes existentes.
+   Mantém IDs, ações, autenticação e navegação intactos.
+   ========================================================= */
+
+.login {
+  min-height: 100svh;
+  padding: clamp(28px, 5vh, 64px) clamp(22px, 6vw, 92px);
+  align-items: center;
+  justify-content: flex-start;
+  background:
+    linear-gradient(90deg, rgba(4, 9, 22, .2) 0%, rgba(4, 9, 22, .35) 45%, rgba(4, 9, 22, .72) 100%),
+    url("./1337879.png") center 46% / cover no-repeat,
+    #070d1b;
+}
+.login::before {
+  background:
+    linear-gradient(90deg, rgba(5, 10, 24, .16), rgba(5, 10, 24, .3) 44%, rgba(5, 10, 24, .78) 100%),
+    linear-gradient(0deg, rgba(4, 9, 20, .65), transparent 58%);
+}
+.login::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 18% 52%, rgba(103, 130, 205, .2), transparent 38%);
+}
+.login-layout {
+  width: min(1180px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(340px, .78fr);
+  grid-template-areas:
+    "brand card"
+    "motto card"
+    "categories card"
+    "footer card";
+  align-items: center;
+  justify-items: start;
+  column-gap: clamp(42px, 8vw, 112px);
+  row-gap: 18px;
+  margin: auto;
+}
+.login-brand {
+  grid-area: brand;
+  width: 100%;
+  max-width: 620px;
+  margin: 0;
+  text-align: left;
+}
+.brand-emblem {
+  width: 172px;
+  height: 148px;
+  margin: 0 0 -20px 2px;
+  transform: translateX(-5px);
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .58));
+}
+.brand-title-wrap {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  padding: 18px 25px 17px 23px;
+  border-left: 2px solid rgba(226, 197, 139, .85);
+  background: linear-gradient(90deg, rgba(9, 17, 36, .82), rgba(9, 17, 36, .22) 78%, transparent);
+}
+.brand-title-wrap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(390px, 85%);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(226, 197, 139, .75), transparent);
+}
+.brand-plaque {
+  border-radius: 0;
+  clip-path: none;
+}
+.brand-title-wrap h1 {
+  margin: 0;
+  color: #f5e8c9;
+  font-family: var(--arc-display);
+  font-size: clamp(38px, 5.4vw, 67px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: .015em;
+  text-shadow: 0 5px 24px rgba(0, 0, 0, .7);
+}
+.brand-title-wrap p {
+  margin: 10px 0 0;
+  color: #c7b9f4;
+  font-family: var(--arc-serif);
+  font-size: clamp(17px, 2vw, 23px);
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.brand-motto {
+  grid-area: motto;
+  max-width: 520px;
+  margin: 0;
+  color: #d3dced;
+  font-family: var(--arc-serif);
+  font-size: clamp(19px, 2vw, 25px);
+  line-height: 1.45;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .8);
+}
+.login-card {
+  grid-area: card;
+  width: 100%;
+  max-width: 430px;
+  justify-self: end;
+  margin: 0;
+  padding: 30px;
+  border: 1px solid rgba(163, 151, 220, .48);
+  border-radius: 20px;
+  background: linear-gradient(155deg, rgba(13, 23, 46, .94), rgba(7, 14, 29, .92));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .5), inset 0 1px rgba(255, 255, 255, .08);
+  backdrop-filter: blur(22px) saturate(.85);
+  -webkit-backdrop-filter: blur(22px) saturate(.85);
+  text-align: left;
+}
+.login-card::before {
+  content: "PORTAL DO AVENTUREIRO";
+  display: block;
+  margin-bottom: 18px;
+  color: #b8a8ec;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .22em;
+}
+.login-card .login-lead {
+  margin-bottom: 22px;
+  color: #f0ecfb;
+  font-family: var(--arc-serif);
+  font-size: 23px;
+  line-height: 1.3;
+}
+.login-card .google-login,
+.login-card .chatgpt-login,
+.login-card .guest-login {
+  min-height: 52px;
+  border-radius: 11px;
+  font-size: 13px;
+}
+.login-card .google-login {
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+}
+.login-card .login-divider {
+  margin: 17px 0;
+  color: #8999b8;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+}
+.login-card .chatgpt-login {
+  justify-content: center;
+  border-color: rgba(151, 139, 207, .42);
+  background: rgba(22, 34, 62, .78);
+}
+.login-card .guest-login {
+  margin-top: 9px;
+  border-color: rgba(226, 197, 139, .42);
+  background: linear-gradient(110deg, rgba(119, 95, 181, .24), rgba(24, 36, 63, .96));
+  color: #e9ddff;
+}
+.login-card .login-note {
+  margin-top: 17px !important;
+  color: #94a4c0 !important;
+  font-size: 10px !important;
+}
+.login-categories {
+  grid-area: categories;
+  width: min(580px, 100%);
+  margin: 8px 0 0;
+  padding: 16px 0;
+  border: 0;
+  border-top: 1px solid rgba(145, 163, 205, .28);
+  border-bottom: 1px solid rgba(145, 163, 205, .2);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.login-categories span {
+  color: #d1d9e9;
+  font-size: 10px;
+  line-height: 1.55;
+}
+.login-categories span + span {
+  border-left-color: rgba(145, 163, 205, .28);
+}
+.login-categories .category-icon {
+  color: #bca9f3;
+  font-size: 20px;
+}
+.login-footer {
+  grid-area: footer;
+  margin-top: 2px;
+  color: #e3d1a7;
+  font-family: var(--arc-serif);
+  font-size: 16px;
+  letter-spacing: .12em;
+}
+.author-credit {
+  right: clamp(18px, 4vw, 56px);
+  bottom: 18px;
+  left: auto;
+  border-radius: 30px;
+  padding: 8px 14px;
+  font-size: 9px;
+}
+
+/* Centro de comando: mais espaço para a jornada, menos aparência de painel genérico */
+.app .main {
+  padding-top: clamp(24px, 3vw, 42px);
+}
+.app .topbar {
+  margin-bottom: 30px;
+}
+.app .realm-hero {
+  min-height: 310px;
+  padding: clamp(34px, 4vw, 54px);
+  border-radius: 8px 22px 8px 22px;
+  background-position: center 48%;
+}
+.app .realm-hero-content {
+  position: relative;
+  z-index: 2;
+}
+.app .realm-hero h3 {
+  max-width: 570px;
+  font-size: clamp(30px, 3.5vw, 46px);
+  line-height: 1.12;
+}
+.app .realm-hero-actions button {
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid rgba(226, 197, 139, .7);
+  border-radius: 4px 13px 4px 13px;
+  background: linear-gradient(110deg, rgba(117, 94, 185, .82), rgba(50, 79, 126, .88));
+  box-shadow: 0 9px 25px rgba(0, 0, 0, .25), inset 0 1px rgba(255, 255, 255, .15);
+  color: #fff8e9;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+.app .realm-hero-actions button:hover {
+  transform: translateY(-2px);
+  border-color: #f0dcae;
+  box-shadow: 0 13px 30px rgba(0, 0, 0, .32), 0 0 22px rgba(156, 131, 235, .2);
+}
+.app .home-player-grid {
+  gap: 18px;
+  align-items: stretch;
+}
+.app .home-player-card-legend {
+  border-radius: 7px 18px 7px 18px;
+  background:
+    linear-gradient(110deg, rgba(16, 28, 54, .98), rgba(19, 31, 57, .94) 65%, rgba(39, 35, 72, .9)),
+    url("../../1337879.png") center / cover;
+}
+.app .home-daily-card {
+  border-radius: 18px 7px 18px 7px;
+}
+.app .section-head {
+  margin-top: 36px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(126, 153, 195, .18);
+}
+.app .home-quick-card {
+  border-radius: 5px 15px 5px 15px;
+}
+.app .home-quick-card > span:first-child {
+  color: #c5b2ff;
+  text-shadow: 0 0 18px rgba(156, 131, 235, .45);
+}
+
+@media (max-width: 900px) {
+  .login-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .85fr);
+    column-gap: 30px;
+  }
+  .brand-title-wrap h1 { font-size: clamp(34px, 5vw, 52px); }
+  .login-card { padding: 24px; }
+}
+@media (max-width: 680px) {
+  .login {
+    min-height: 100svh;
+    padding: 24px 17px 64px;
+    background-position: 43% center;
+  }
+  .login::before {
+    background: linear-gradient(180deg, rgba(5, 10, 24, .38), rgba(5, 10, 24, .76));
+  }
+  .login-layout {
+    width: min(480px, 100%);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "brand" "motto" "card" "categories" "footer";
+    justify-items: stretch;
+    gap: 15px;
+  }
+  .login-brand { text-align: center; }
+  .brand-emblem {
+    width: 118px;
+    height: 104px;
+    margin: 0 auto -12px;
+    transform: none;
+  }
+  .brand-title-wrap {
+    width: 100%;
+    padding: 12px 8px 14px;
+    border-left: 0;
+    border-bottom: 1px solid rgba(226, 197, 139, .42);
+    background: linear-gradient(180deg, transparent, rgba(8, 16, 33, .5));
+  }
+  .brand-title-wrap::after { left: 15%; width: 70%; }
+  .brand-title-wrap h1 { font-size: clamp(31px, 9vw, 43px); }
+  .brand-title-wrap p { font-size: 13px; }
+  .brand-motto {
+    max-width: 100%;
+    text-align: center;
+    font-size: 18px;
+  }
+  .login-card {
+    max-width: none;
+    justify-self: stretch;
+    padding: 23px 20px;
+  }
+  .login-categories {
+    width: 100%;
+    margin-top: 2px;
+    padding: 12px 0;
+  }
+  .login-categories span { font-size: 9px; }
+  .login-footer { text-align: center; font-size: 14px; }
+  .author-credit {
+    right: 50%;
+    bottom: 12px;
+    transform: translateX(50%);
+    white-space: nowrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app::before { animation: none; }
+  .app button { transition: none; }
+}
