@@ -453,6 +453,18 @@ h2{font-family:Georgia,serif;font-size:30px;margin:7px 0}
 <link rel="stylesheet" href="./assets/css/academia-frosted-wallpaper.css?v=20261111-frosted-wallpaper-v1">
 
 <link rel="stylesheet" href="./assets/css/academia-redesign-2026.css?v=20261112-stage3-v1">
+
+<!-- Perfil leve automático para computadores com hardware mais limitado. -->
+<script>
+(() => {
+  const cores = Number(navigator.hardwareConcurrency || 0);
+  const memory = Number(navigator.deviceMemory || 0);
+  if ((memory > 0 && memory <= 4) || (cores > 0 && cores <= 4)) {
+    document.documentElement.classList.add('academia-low-power');
+  }
+})();
+</script>
+<link rel="stylesheet" href="./assets/css/academia-performance.css?v=20261112-low-power-v1">
 </head>
 <body>
 <section class="login" id="login" aria-label="Tela inicial da Academia RPG">

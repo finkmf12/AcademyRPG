@@ -1,0 +1,73 @@
+/* Perfil adaptativo para computadores com poucos recursos.
+   Mantém o layout, as cores e as imagens; reduz apenas efeitos caros de renderização. */
+html.academia-low-power .app {
+  background-attachment: scroll !important;
+  background-position: center top !important;
+}
+
+html.academia-low-power .app::before {
+  background: rgba(8, 17, 30, .12) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+html.academia-low-power .app *,
+html.academia-low-power .app *::before,
+html.academia-low-power .app *::after {
+  animation: none !important;
+  transition-duration: .01ms !important;
+  scroll-behavior: auto !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.academia-low-power .app .sidebar,
+html.academia-low-power .app .stat,
+html.academia-low-power .app .panel,
+html.academia-low-power .app .subject-card,
+html.academia-low-power .app .hero,
+html.academia-low-power .app .user-pill,
+html.academia-low-power .app .home-player-card-legend {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.academia-low-power .app .sidebar {
+  background: rgba(8, 17, 30, .97) !important;
+}
+
+html.academia-low-power .app .stat,
+html.academia-low-power .app .panel,
+html.academia-low-power .app .subject-card,
+html.academia-low-power .app .home-world-panel {
+  background-color: rgba(14, 27, 43, .96) !important;
+}
+
+html.academia-low-power .app .home-quick-card,
+html.academia-low-power .app .realm-location,
+html.academia-low-power .app .subject-card {
+  transform: none !important;
+}
+
+html.academia-low-power .login-effects {
+  display: none !important;
+}
+
+html.academia-low-power .app .realm-map-path,
+html.academia-low-power .app .home-player-seal,
+html.academia-low-power .app .home-player-card-legend::after {
+  animation: none !important;
+  filter: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.academia-low-power *,
+  html.academia-low-power *::before,
+  html.academia-low-power *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
