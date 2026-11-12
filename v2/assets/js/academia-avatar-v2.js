@@ -646,7 +646,7 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
   }
   function renderBackgroundGallery(){
     const root=document.querySelector('.page.active #rpgView, .page.active #atelierView');if(!root)return;
-    const previewId=S.backgroundPreviewId||S.background;
+    const previewId=S.backgroundPreviewId||S.background||S.backgroundCatalog[0]?.id;
     const selected=S.backgroundCatalog.find(x=>x.id===previewId)||S.backgroundCatalog[0];
     const cards=S.backgroundCatalog.map(x=>{
       const owned=S.ownedBackgrounds.some(v=>v.item_id===x.id),equippedNow=S.background===x.id,previewing=S.backgroundPreviewId===x.id;
