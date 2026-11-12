@@ -827,7 +827,7 @@
 .login {
   background:
     linear-gradient(180deg, rgba(5, 11, 23, .23), rgba(5, 11, 23, .62)),
-    url("./1337879.png") center center / cover no-repeat,
+    url("../../1337879.png") center center / cover no-repeat,
     #101b31;
 }
 
@@ -1399,7 +1399,7 @@
   justify-content: flex-start;
   background:
     linear-gradient(90deg, rgba(4, 9, 22, .2) 0%, rgba(4, 9, 22, .35) 45%, rgba(4, 9, 22, .72) 100%),
-    url("./1337879.png") center 46% / cover no-repeat,
+    url("../../1337879.png") center 46% / cover no-repeat,
     #070d1b;
 }
 .login::before {
