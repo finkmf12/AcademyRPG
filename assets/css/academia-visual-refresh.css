@@ -390,7 +390,15 @@
   .app .realm-hero-rune{animation:none}
 }
 
-/* Evita manter a camada animada ativa quando o usuário não está vendo a página. */
-@media (prefers-reduced-motion: no-preference){
-  .app.is-page-hidden:before{animation-play-state:paused}
+/* Suspende animações CSS de todo o aplicativo fora de foco, sem alterar estados ou layout. */
+.app.is-page-hidden *,
+.app.is-page-hidden *:before,
+.app.is-page-hidden *:after{
+  animation-play-state:paused!important;
+}
+
+/* Também evita manter a camada decorativa em composição enquanto a aba está oculta. */
+.app.is-page-hidden:before{
+  animation-play-state:paused;
+  will-change:auto;
 }
