@@ -4,7 +4,7 @@
   'use strict';
   const C=()=>window.AcademiaCtx, $=id=>document.getElementById(id);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const S={catalog:[],owned:[],appearance:{},creatorDraft:null,hideArmorPreview:false,background:null,balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
+  const S={catalog:[],owned:[],backgroundCatalog:[],ownedBackgrounds:[],backgroundPreviewId:null,appearance:{},creatorDraft:null,hideArmorPreview:false,background:null,balance:0,playerClass:'mago',tab:'shop',filter:'all',previewId:null,guest:false,busy:false,error:null};
   const SLOTS=[
     ['all','Todos'],['nameColor','Cores neon'],['hair','Cabelos'],['hat','Chapéus e elmos'],['outfit','Armaduras'],
     ['shoulders','Ombreiras'],['cloak','Capas'],['mask','Máscaras'],['wings','Asas'],['accessory','Acessórios'],['weapon','Armas'],
@@ -601,14 +601,16 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       const synced=await sb.rpc('avatar_sync_achievement_rewards');
       if(synced.error)console.warn('Ateliê: sincronização de recompensas adiada:',synced.error.message);
     }catch(syncError){console.warn('Ateliê: sincronização de recompensas indisponível:',syncError?.message||syncError);}
-    const [catalog,owned,profile,wallet,background]=await Promise.all([
+    const [catalog,owned,profile,wallet,background,backgroundCatalog,cosmetics]=await Promise.all([
       sb.from('avatar_items').select('id,name,slot,rarity,icon,description,asset_key,unlock_type,price,achievement_id').eq('active',true).order('price'),
       sb.from('user_avatar_items').select('item_id,unlock_source,unlocked_at').order('unlocked_at',{ascending:false}),
       sb.from('player_profiles').select('appearance,class').maybeSingle(),
       sb.from('coin_wallets').select('balance').maybeSingle(),
-      sb.from('user_cosmetics').select('item_id').eq('equipped',true).like('item_id','bg-%').limit(1)
+      sb.from('user_cosmetics').select('item_id').eq('equipped',true).like('item_id','bg-%').limit(1),
+      sb.from('market_items').select('id,name,category,rarity,icon,description,price').eq('active',true).eq('category','backgrounds').order('price',{ascending:false}),
+      sb.from('user_cosmetics').select('item_id,equipped,purchased_at')
     ]);
-    const failed=[['catálogo',catalog],['inventário',owned],['perfil',profile],['carteira',wallet],['fundo',background]].find(([,x])=>x.error);
+    const failed=[['catálogo',catalog],['inventário',owned],['perfil',profile],['carteira',wallet],['fundo equipado',background],['cenários',backgroundCatalog],['coleção de fundos',cosmetics]].find(([,x])=>x.error);
     if(failed)throw new Error('Falha ao carregar '+failed[0]+': '+failed[1].error.message);
     const slotOrder=SLOTS.reduce((map,row,index)=>{map[row[0]]=index;return map;},{});
     S.catalog=(catalog.data||[]).sort((a,b)=>
@@ -618,6 +620,9 @@ return wrap+'<path d="M151 184 Q143 166 156 157 Q159 170 166 174 Q172 160 184 16
       a.name.localeCompare(b.name,'pt-BR'));
     S.owned=owned.data||[];S.appearance=profile.data?.appearance||{};
     S.background=background.data?.[0]?.item_id||null;
+    S.backgroundCatalog=backgroundCatalog.data||[];
+    const backgroundIds=new Set(S.backgroundCatalog.map(x=>x.id));
+    S.ownedBackgrounds=(cosmetics.data||[]).filter(x=>backgroundIds.has(x.item_id));
     S.playerClass=profile.data?.class||'mago';S.balance=wallet.data?.balance||0;
   }
   function card(x){
