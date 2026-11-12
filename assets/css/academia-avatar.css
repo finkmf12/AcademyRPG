@@ -1047,3 +1047,7 @@
 .arc-creator-group>h4{margin:0 0 11px;padding-bottom:8px;border-bottom:1px solid #46536a;color:#e6c991;font:600 14px Georgia,serif}
 .arc-creator-group .arc-creator-field{margin-top:9px;padding:10px;border-color:#2f4157;background:#101b2a}
 .arc-creator-group .arc-creator-field:first-of-type{margin-top:0}
+
+/* Alternância temporária da armadura na prévia do Criador de Heróis */
+.arc-creator-preview>.arc-creator-armor-toggle{margin:0 0 8px;border-color:#9c8055;color:#f0d7a4;background:linear-gradient(135deg,#3a3040,#26364a)}
+.arc-creator-preview>.arc-creator-armor-toggle:hover{border-color:#e4c58e;background:linear-gradient(135deg,#51405a,#30445b)}
