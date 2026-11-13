@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=5">
+  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=6">
   <link rel="stylesheet" href="./assets/css/academia-avatar-v2.css?v=4">
 </head>
 <body>
@@ -89,6 +89,39 @@
 </section>
 <section class="character-identity"><div class="identity-heading"><span>01 · FICHA DO AVENTUREIRO</span><small>Informações públicas do personagem</small></div><div class="identity-fields"><label>Nome do aventureiro<input id="character-name" type="text" minlength="3" maxlength="20" placeholder="Ex.: Guardião Arcano" autocomplete="off"></label><label>Classe<select id="character-class"><option value="guerreiro">Guerreiro</option><option value="mago">Mago</option><option value="arqueiro">Arqueiro</option><option value="assassino">Assassino</option></select></label><button id="save-character" class="identity-save" type="button">Salvar ficha <span>→</span></button></div><p id="character-status" class="identity-status" role="status"></p></section><div class="creator-section-title"><span>02 · APARÊNCIA</span><h3>Ateliê de personalização</h3><p>Pré-visualize seu herói, ajuste rosto, cabelo e detalhes, e salve quando estiver satisfeito.</p></div><div id="rpgView" class="character-atelier"></div></section>
         <section id="page-atelier" class="page"><div id="atelierView" class="character-atelier"></div></section>
+        <section id="page-mapa" class="page">
+  <div class="realm-intro"><div><p class="eyebrow">ATLAS DA ACADEMIA <span>✦</span></p><h2>Mapa do <em>Reino.</em></h2><p>Quatro territórios guardam os caminhos do conhecimento. Escolha um portal para descobrir o que existe além do horizonte.</p></div><div class="atlas-seal"><span>⌖</span><small>ATLAS<br>ARCANO</small></div></div>
+  <div class="realm-map-layout">
+    <section class="realm-map-panel" aria-label="Mapa interativo dos quatro territórios">
+      <div class="realm-map-top"><span><i></i> CARTA GEOGRÁFICA · ACADEMIA</span><small>SELECIONE UM TERRITÓRIO</small></div>
+      <div class="realm-map-canvas">
+        <div class="map-mist map-mist-one"></div><div class="map-mist map-mist-two"></div>
+        <svg class="map-routes" viewBox="0 0 900 570" preserveAspectRatio="none" aria-hidden="true"><path d="M190 175 C300 80 390 120 455 245 S620 365 730 205" /><path d="M190 175 C260 320 330 390 455 390 S620 365 730 205" /><path d="M455 245 C470 300 470 340 455 390" /></svg>
+        <div class="map-island island-north"></div><div class="map-island island-west"></div><div class="map-island island-east"></div><div class="map-island island-south"></div>
+        <div class="map-landmark landmark-castle">♜</div><div class="map-landmark landmark-tree">♣</div><div class="map-landmark landmark-tower">♙</div><div class="map-landmark landmark-crystal">✧</div>
+        <button class="map-region-node node-code active" type="button" data-realm="programacao" style="--x:21%;--y:30%"><span class="node-icon">⌘</span><b>Programação</b><small>REGIÃO I</small></button>
+        <button class="map-region-node node-data" type="button" data-realm="banco" style="--x:50%;--y:67%"><span class="node-icon">▤</span><b>Banco de Dados</b><small>REGIÃO II</small></button>
+        <button class="map-region-node node-model" type="button" data-realm="modelagem" style="--x:81%;--y:36%"><span class="node-icon">◇</span><b>Modelagem</b><small>REGIÃO III</small></button>
+        <button class="map-region-node node-tech" type="button" data-realm="tecnologia" style="--x:50%;--y:16%"><span class="node-icon">✧</span><b>Tecnologia</b><small>REGIÃO IV</small></button>
+        <div class="map-compass"><span>N</span><b>✥</b><small>S</small></div>
+        <div class="map-scale"><i></i> REINO DO CONHECIMENTO</div>
+      </div>
+      <div class="realm-map-legend"><span><i class="legend-dot legend-violet"></i> Lógica e código</span><span><i class="legend-dot legend-blue"></i> Dados e conexões</span><span><i class="legend-dot legend-pink"></i> Projetos e estrutura</span><span><i class="legend-dot legend-gold"></i> Inovação</span></div>
+    </section>
+    <aside class="realm-detail-panel" aria-live="polite">
+      <div class="realm-detail-kicker"><span>PORTAL SELECIONADO</span><b id="realm-detail-number">I</b></div>
+      <div class="realm-detail-emblem" id="realm-detail-emblem">⌘</div>
+      <p class="eyebrow" id="realm-detail-category">TERRITÓRIO I · FUNDAMENTOS</p>
+      <h3 id="realm-detail-title">Terras da Programação</h3>
+      <p class="realm-detail-description" id="realm-detail-description">Onde a lógica ganha forma e cada linha de código abre uma nova possibilidade.</p>
+      <div class="realm-detail-divider"></div>
+      <div class="realm-detail-section-title"><span>ROTAS DE CONHECIMENTO</span><small id="realm-detail-count">03 ROTAS</small></div>
+      <div id="realm-detail-topics" class="realm-topic-list"></div>
+      <div class="realm-detail-footer"><p id="realm-detail-note">Explore os materiais disponíveis neste território.</p><button id="realm-detail-action" type="button" class="realm-enter-button">Abrir biblioteca <span>→</span></button></div>
+    </aside>
+  </div>
+  <div class="realm-map-footnote"><span>✧</span><p>O mapa apresenta os caminhos de estudo da Academia. As atividades, desafios e desbloqueios serão conectados a cada território nas próximas etapas da reformulação.</p></div>
+</section>
         <section id="page-biblioteca" class="page"><div class="library-intro"><div><p class="eyebrow">ARQUIVO DO AVENTUREIRO</p><h2>Biblioteca do <em>reino.</em></h2><p>Seus materiais de estudo, organizados por território e sincronizados com sua conta.</p></div><div class="library-count"><b id="library-total">0</b><small>ARQUIVOS<br>NA NUVEM</small></div></div><div class="library-subjects"><button class="library-subject active" data-subject="programacao"><span>⌘</span><small>TERRITÓRIO I</small><b>Programação</b><i>Projetos, códigos e exercícios</i></button><button class="library-subject" data-subject="banco"><span>▤</span><small>TERRITÓRIO II</small><b>Banco de Dados</b><i>SQL, consultas e anotações</i></button><button class="library-subject" data-subject="modelagem"><span>◇</span><small>TERRITÓRIO III</small><b>Modelagem</b><i>Diagramas, requisitos e documentação</i></button></div><section class="library-vault"><div class="vault-heading"><div><span>COFRE PESSOAL</span><h3 id="library-subject-title">Programação</h3><p id="library-subject-description">Projetos, códigos, exercícios e materiais da disciplina.</p></div><label class="vault-upload">＋ Adicionar arquivos<input id="library-upload" type="file" multiple></label></div><div class="vault-toolbar"><label class="vault-search"><span>⌕</span><input id="library-search" type="search" placeholder="Buscar nos seus arquivos..."></label><span id="library-sync-state" class="vault-sync">◈ Sincronização privada</span></div><div id="library-file-list" class="library-file-list"><div class="library-loading">Preparando seu cofre de conhecimento…</div></div></section></section>
         <section id="page-generic" class="page"><div class="generic-hero"><p class="eyebrow" id="generic-kicker">ACADEMIA RPG · 2.0</p><h2 id="generic-title">Seu próximo capítulo.</h2><p id="generic-description">Este território está sendo preparado para sua jornada.</p><span class="generic-rune">✧</span></div><div class="generic-content"><div class="generic-icon" id="generic-icon">✦</div><div><h3 id="generic-card-title">Um novo espaço está tomando forma.</h3><p id="generic-card-description">A nova Academia está sendo construída por etapas, mantendo seus dados e sua conta protegidos.</p></div></div></section>
       </div>
@@ -96,6 +129,6 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
   <script defer src="./assets/js/academia-avatar-v2.js?v=4"></script>
-  <script type="module" src="./assets/js/academy-v2.js?v=5"></script>
+  <script type="module" src="./assets/js/academy-v2.js?v=6"></script>
 </body>
 </html>

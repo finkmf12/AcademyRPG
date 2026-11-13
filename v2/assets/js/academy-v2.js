@@ -18,6 +18,30 @@ const titles={
  mercado:['MERCADO ARCANO','Personalize sua jornada.','Fundos, visuais, efeitos e itens para deixar seu personagem único.','◇'],
  conquistas:['CONQUISTAS','Cada passo merece ser registrado.','Seu livro de conquistas e marcos importantes da jornada.','✧']
 };
+
+const realmData={
+ programacao:{number:'I',category:'TERRITÓRIO I · FUNDAMENTOS',emblem:'⌘',title:'Terras da Programação',description:'Onde a lógica ganha forma e cada linha de código abre uma nova possibilidade.',tone:'code',topics:[['Lógica e algoritmos','Raciocínio lógico, sequência e resolução de problemas.'],['Portugol e estruturas','Variáveis, decisões, laços e vetores.'],['Java e orientação a objetos','Classes, objetos, métodos e encapsulamento.']],subject:'programacao',note:'A biblioteca já possui um espaço para seus códigos, projetos e exercícios.'},
+ banco:{number:'II',category:'TERRITÓRIO II · INFORMAÇÃO',emblem:'▤',title:'Domínios dos Dados',description:'Um território de registros, relações e descobertas, onde a informação encontra sua estrutura.',tone:'data',topics:[['Fundamentos de banco de dados','Tabelas, registros, atributos e SGBD.'],['Linguagem SQL','SELECT, INSERT, UPDATE, DELETE e consultas.'],['Modelagem relacional','Chaves primárias, estrangeiras e relacionamentos.']],subject:'banco',note:'Organize scripts SQL, consultas e anotações no cofre da biblioteca.'},
+ modelagem:{number:'III',category:'TERRITÓRIO III · ARQUITETURA',emblem:'◇',title:'Vales da Modelagem',description:'Transforme ideias em estruturas claras. Aqui nascem os projetos, requisitos e diagramas.',tone:'model',topics:[['Requisitos e regras de negócio','Entenda necessidades e defina o comportamento do sistema.'],['Diagramas e processos','Casos de uso, atividades e fluxos.'],['DER e modelagem de dados','Entidades, atributos, cardinalidade e relacionamentos.']],subject:'modelagem',note:'Guarde diagramas, documentos e especificações na biblioteca.'},
+ tecnologia:{number:'IV',category:'TERRITÓRIO IV · INOVAÇÃO',emblem:'✧',title:'Fronteiras da Tecnologia',description:'Uma região dedicada às ferramentas, tendências e possibilidades que conectam o mundo digital.',tone:'tech',topics:[['Hardware e sistemas','Componentes, arquitetura e sistemas operacionais.'],['Redes e conectividade','Comunicação, protocolos e infraestrutura.'],['Inovação e ferramentas','Tecnologias emergentes e soluções digitais.']],subject:null,note:'Este território está mapeado. A trilha de atividades será construída em uma próxima etapa.'}
+};
+function renderRealmDetail(key){
+ const realm=realmData[key]||realmData.programacao;
+ document.querySelectorAll('.map-region-node').forEach(node=>node.classList.toggle('active',node.dataset.realm===key));
+ $('realm-detail-number').textContent=realm.number;
+ $('realm-detail-emblem').textContent=realm.emblem;
+ $('realm-detail-emblem').className='realm-detail-emblem tone-'+realm.tone;
+ $('realm-detail-category').textContent=realm.category;
+ $('realm-detail-title').textContent=realm.title;
+ $('realm-detail-description').textContent=realm.description;
+ $('realm-detail-count').textContent=String(realm.topics.length).padStart(2,'0')+' ROTAS';
+ $('realm-detail-topics').innerHTML=realm.topics.map((topic,index)=>'<article class="realm-topic"><span>0'+(index+1)+'</span><div><b>'+topic[0]+'</b><small>'+topic[1]+'</small></div><i>✧</i></article>').join('');
+ $('realm-detail-note').textContent=realm.note;
+ const action=$('realm-detail-action');
+ if(realm.subject){action.disabled=false;action.textContent='Abrir biblioteca →';action.dataset.subject=realm.subject;}
+ else{action.disabled=true;action.textContent='Trilha em preparação';delete action.dataset.subject;}
+}
+
 function status(message){$('login-status').textContent=message||''}
 function notify(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3500)}
 function displayName(user){return user?.user_metadata?.full_name||user?.email?.split('@')[0]||'Aventureiro'}
@@ -103,6 +127,12 @@ async function navigate(page){
   syncContext();
   if(window.AcademiaAvatar)await window.AcademiaAvatar.open('shop');
   else $('atelierView').innerHTML='<div class="identity-status">O Ateliê Arcano ainda está carregando. Tente novamente em instantes.</div>';
+ }else if(page==='mapa'){
+  $('page-mapa').classList.add('active');
+  renderRealmDetail(window.selectedAcademyRealm||'programacao');
+ }else if(page==='biblioteca'){
+  $('page-biblioteca').classList.add('active');
+  if(!libraryLoaded)await loadLibrary();else renderLibrary();
  }else{
   $('page-generic').classList.add('active');
   $('generic-kicker').textContent='ACADEMIA RPG · 2.0 / '+data[0];
@@ -113,6 +143,10 @@ async function navigate(page){
  $('breadcrumb-page').textContent=data[0];$('sidebar').classList.remove('open');
 }
 document.addEventListener('click',e=>{
+ const region=e.target.closest('[data-realm]');
+ if(region){window.selectedAcademyRealm=region.dataset.realm;renderRealmDetail(region.dataset.realm);return;}
+ const openLibrary=e.target.closest('#realm-detail-action');
+ if(openLibrary&&!openLibrary.disabled){librarySubject=openLibrary.dataset.subject;navigate('biblioteca');return;}
  const nav=e.target.closest('[data-page]');
  if(nav){e.preventDefault();navigate(nav.dataset.page);}
 });
