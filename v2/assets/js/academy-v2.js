@@ -130,9 +130,6 @@ async function navigate(page){
  }else if(page==='mapa'){
   $('page-mapa').classList.add('active');
   renderRealmDetail(window.selectedAcademyRealm||'programacao');
- }else if(page==='biblioteca'){
-  $('page-biblioteca').classList.add('active');
-  if(!libraryLoaded)await loadLibrary();else renderLibrary();
  }else{
   $('page-generic').classList.add('active');
   $('generic-kicker').textContent='ACADEMIA RPG · 2.0 / '+data[0];
