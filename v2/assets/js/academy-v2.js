@@ -119,9 +119,15 @@ async function finishTraining(){
  const area=$('training-play-area');area.innerHTML='<div class="training-loading"><span class="training-loader">✧</span><b>Registrando seu resultado…</b><small>O servidor está validando a conclusão e as recompensas.</small></div>';
  try{
   const {data,error}=await supabase.rpc('finish_quiz',{p_session:s.id});if(error)throw error;
-  const total=s.questions.length,correct=Number(data.correct??s.correct),pct=Math.round(correct/total*100),xp=Number(data.xp||0)+Number(data.streak_xp||0);
+  const total=s.questions.length,correct=Number(data.correct??s.correct),pct=Math.round(correct/total*100);
+  let xp=data.duplicate?0:Number(data.xp||0)+Number(data.streak_xp||0),coinTotal=0;
+  if(sessionUser&&!data.duplicate){
+   const keys=['quiz:'+s.id,'quiz-streak:'+s.id];
+   const {data:coinRows}=await supabase.from('coin_transactions').select('amount,event_key').in('event_key',keys);
+   coinTotal=(coinRows||[]).reduce((sum,row)=>sum+Math.max(0,Number(row.amount)||0),0);
+  }
   const headline=pct>=85?'Desempenho extraordinário!':pct>=60?'Bom trabalho, aventureiro!':'Treino concluído. Continue evoluindo!';
-  const rewards=guest?'<p class="training-guest-note">Modo visitante: o resultado foi validado, mas XP e histórico não são salvos. Entre com Google para registrar sua jornada.</p>':(xp?'<div class="training-reward"><b>+'+xp.toLocaleString('pt-BR')+' XP</b><span>Experiência adicionada ao personagem</span></div>':'<p class="training-guest-note">Resultado registrado. A recompensa diária desta categoria pode já ter sido recebida ou o limite diário de XP pode ter sido atingido.</p>');
+  const rewards=guest?'<p class="training-guest-note">Modo visitante: o resultado foi validado, mas XP, Coins e histórico não são salvos. Entre com Google para registrar sua jornada.</p>':(xp||coinTotal?'<div class="training-reward"><b>'+(xp?'+'+xp.toLocaleString('pt-BR')+' XP':'')+(xp&&coinTotal?' · ':'')+(coinTotal?'+'+coinTotal.toLocaleString('pt-BR')+' Coins':'')+'</b><span>Recompensas adicionadas ao personagem</span></div>':'<p class="training-guest-note">Resultado registrado. A recompensa diária desta categoria pode já ter sido recebida ou o limite diário de XP pode ter sido atingido.</p>');
   const bossWin=s.boss&&pct>=60;
   area.innerHTML='<div class="training-result"><div class="training-result-seal">'+(bossWin?'♜':pct>=85?'✧': '⚔')+'</div><small>'+(s.boss?'BATALHA ENCERRADA':'DESAFIO CONCLUÍDO')+'</small><h3>'+(bossWin?'Guardião derrotado!':headline)+'</h3><p>'+correct+' de '+total+' respostas corretas · '+pct+'% de aproveitamento</p><div class="training-result-bar"><i style="width:'+pct+'%"></i></div><div class="training-result-stats"><div><b>'+correct+'/'+total+'</b><span>ACERTOS</span></div><div><b>'+s.best+'</b><span>MELHOR SEQUÊNCIA</span></div><div><b>'+pct+'%</b><span>APROVEITAMENTO</span></div></div>'+rewards+(Array.isArray(data.achievements)&&data.achievements.length?'<p class="training-achievement-note">Conquistas desbloqueadas: '+data.achievements.map(trainingEscape).join(', ')+'</p>':'')+'<div class="training-result-actions"><button type="button" data-training-retry="'+s.category+'">Treinar novamente</button><button type="button" class="secondary" data-training-close>Voltar à sala</button></div></div>';
   trainingSession=null;
@@ -130,7 +136,7 @@ async function finishTraining(){
  finally{trainingBusy=false;}
 }
 function closeTraining(){
- if(trainingSession&&!trainingSession.answered){const ok=confirm('Encerrar este desafio? As respostas já enviadas não serão convertidas em recompensa.');if(!ok)return;}
+ if(trainingSession){const ok=confirm('Encerrar este desafio? A sessão será descartada e não haverá recompensa por ela.');if(!ok)return;}
  trainingSession=null;const area=$('training-play-area');area.hidden=true;area.innerHTML='';
 }
 function handleTrainingClick(target){
