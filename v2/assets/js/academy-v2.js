@@ -42,6 +42,107 @@ function renderRealmDetail(key){
  else{action.disabled=true;action.textContent='Trilha em preparação';delete action.dataset.subject;}
 }
 
+
+const trainingCategories={
+ programacao:{name:'Programação',icon:'⌘',tone:'code'},
+ banco:{name:'Banco de Dados',icon:'▤',tone:'data'},
+ modelagem:{name:'Modelagem',icon:'◇',tone:'model'},
+ geral:{name:'Tecnologia',icon:'✧',tone:'tech'},
+ simulado:{name:'Grande Simulado',icon:'♛',tone:'exam'}
+};
+let trainingSession=null,trainingMode='quiz',trainingBusy=false;
+function trainingEscape(value){return escapeText(value);}
+function renderTrainingHistory(rows){
+ const root=$('training-history');if(!root)return;
+ if(!sessionUser){root.innerHTML='<div class="training-history-empty">Entre com Google para salvar e consultar seu histórico.</div>';return;}
+ if(!rows?.length){root.innerHTML='<div class="training-history-empty">Nenhum treinamento concluído ainda. Sua primeira vitória começa em uma das trilhas acima.</div>';return;}
+ root.innerHTML=rows.map(row=>{const cat=trainingCategories[row.category]||trainingCategories.geral;const pct=Math.round((Number(row.correct||0)/Math.max(1,Number(row.total||0)))*100);return '<article class="training-history-row"><span class="training-history-icon">'+cat.icon+'</span><div><b>'+cat.name+'</b><small>'+new Date(row.created_at).toLocaleDateString('pt-BR')+' · '+row.correct+'/'+row.total+' acertos</small></div><strong>'+pct+'%</strong></article>';}).join('');
+}
+async function loadTrainingHistory(){
+ const root=$('training-history');if(!root)return;
+ if(!sessionUser){renderTrainingHistory([]);return;}
+ root.innerHTML='<div class="training-history-empty">Carregando seu histórico…</div>';
+ const {data,error}=await supabase.from('quiz_attempts').select('id,category,correct,total,created_at').order('created_at',{ascending:false}).limit(8);
+ if(error){root.innerHTML='<div class="training-history-empty">Não foi possível carregar o histórico agora.</div>';return;}
+ renderTrainingHistory(data||[]);
+}
+function trainingHomeMessage(message){
+ const area=$('training-play-area');area.hidden=false;area.innerHTML='<div class="training-feedback-panel"><span>✧</span><p>'+trainingEscape(message)+'</p><button type="button" data-training-close>Voltar às trilhas</button></div>';
+}
+async function startTraining(category,mode='quiz'){
+ if(trainingBusy)return;
+ if(!trainingCategories[category])return;
+ trainingBusy=true;trainingMode=mode;
+ const area=$('training-play-area');area.hidden=false;area.innerHTML='<div class="training-loading"><span class="training-loader">✧</span><b>Preparando seu desafio…</b><small>Selecionando questões e embaralhando as alternativas.</small></div>';
+ area.scrollIntoView({behavior:'smooth',block:'start'});
+ try{
+  const {data,error}=await supabase.rpc('start_quiz',{p_category:category});
+  if(error)throw error;
+  trainingSession={id:data.session_id,category,questions:(data.questions||[]).map(q=>({id:q.id,prompt:q.prompt,options:q.options})),index:0,correct:0,streak:0,best:0,answered:false,history:[],boss:mode==='boss'?({programacao:'Sentinela do Código',banco:'Guardião dos Dados',modelagem:'Oráculo UML'}[category]):null};
+  if(!trainingSession.questions.length)throw new Error('Nenhuma questão foi disponibilizada para esta trilha.');
+  renderTrainingQuestion();
+ }catch(error){trainingSession=null;trainingHomeMessage(error.message||'Não foi possível iniciar o treinamento.');}
+ finally{trainingBusy=false;}
+}
+function renderTrainingQuestion(){
+ const s=trainingSession;if(!s)return;
+ const area=$('training-play-area'),q=s.questions[s.index],total=s.questions.length,pct=Math.round(s.index/total*100);
+ const boss=s.boss;
+ const options=q.options.map((option,i)=>'<button type="button" class="training-option" data-training-answer="'+i+'" '+(s.answered?'disabled':'')+'><span>'+String.fromCharCode(65+i)+'</span><b>'+trainingEscape(option)+'</b></button>').join('');
+ area.innerHTML='<div class="training-quiz-shell '+(boss?'is-boss':'')+'"><div class="training-quiz-top"><div><small>'+(boss?'BATALHA CONTRA O GUARDIÃO': 'SALA DE TREINAMENTO')+'</small><h3>'+(boss?trainingEscape(boss):trainingCategories[s.category].name)+'</h3></div><button type="button" class="training-quit" data-training-close>Encerrar</button></div>'+(boss?'<div class="boss-health"><div><span>ENERGIA DO GUARDIÃO</span><b>'+(total-s.correct)+' / '+total+'</b></div><i><span style="width:'+Math.max(0,100-s.correct/total*100)+'%"></span></i></div>':'')+'<div class="training-progress-meta"><span>QUESTÃO '+(s.index+1)+' DE '+total+'</span><b>'+s.correct+' ACERTOS</b></div><div class="training-progress"><i style="width:'+pct+'%"></i></div><div class="training-question-card"><span class="training-question-number">0'+(s.index+1)+'</span><h4>'+trainingEscape(q.prompt)+'</h4><div class="training-options">'+options+'</div><div id="training-answer-feedback" class="training-answer-feedback" aria-live="polite"></div></div><div class="training-quiz-foot"><span>✧ Uma resposta por etapa · validação segura</span><span>SEQUÊNCIA '+s.streak+'</span></div></div>';
+}
+async function answerTraining(index){
+ const s=trainingSession;if(!s||s.answered||trainingBusy)return;
+ const q=s.questions[s.index],selected=q.options[index];if(typeof selected!=='string')return;
+ trainingBusy=true;s.answered=true;
+ const buttons=[...document.querySelectorAll('[data-training-answer]')];buttons.forEach(b=>b.disabled=true);
+ const feedback=$('training-answer-feedback');if(feedback)feedback.innerHTML='<div class="training-answer-wait">Verificando resposta…</div>';
+ try{
+  const {data,error}=await supabase.rpc('answer_quiz_question',{p_session:s.id,p_question_id:q.id,p_answer:selected});
+  if(error)throw error;
+  s.correct=Number(data.correct_count||0);s.streak=Number(data.current_streak||0);s.best=Number(data.best_streak||0);s.history.push(!!data.is_correct);
+  buttons.forEach((button,i)=>{if(q.options[i]===selected)button.classList.add(data.is_correct?'chosen-correct':'chosen-wrong');});
+  if(feedback)feedback.innerHTML='<div class="training-answer-result '+(data.is_correct?'answer-correct':'answer-wrong')+'"><b>'+(data.is_correct?'Resposta correta':'Resposta incorreta')+'</b><p>'+trainingEscape(data.explanation||'Continue avançando para a próxima questão.')+'</p><button type="button" data-training-next>'+(s.index===s.questions.length-1?'Concluir desafio':'Próxima questão')+' <span>→</span></button></div>';
+ }catch(error){
+  s.answered=false;buttons.forEach(b=>b.disabled=false);
+  if(feedback)feedback.innerHTML='<div class="training-answer-result answer-wrong"><b>Não foi possível validar.</b><p>'+trainingEscape(error.message||'Tente novamente.')+'</p></div>';
+ }finally{trainingBusy=false;}
+}
+async function nextTrainingQuestion(){
+ const s=trainingSession;if(!s||!s.answered||trainingBusy)return;
+ if(s.index<s.questions.length-1){s.index++;s.answered=false;renderTrainingQuestion();return;}
+ await finishTraining();
+}
+async function finishTraining(){
+ const s=trainingSession;if(!s||trainingBusy)return;
+ trainingBusy=true;
+ const area=$('training-play-area');area.innerHTML='<div class="training-loading"><span class="training-loader">✧</span><b>Registrando seu resultado…</b><small>O servidor está validando a conclusão e as recompensas.</small></div>';
+ try{
+  const {data,error}=await supabase.rpc('finish_quiz',{p_session:s.id});if(error)throw error;
+  const total=s.questions.length,correct=Number(data.correct??s.correct),pct=Math.round(correct/total*100),xp=Number(data.xp||0)+Number(data.streak_xp||0);
+  const headline=pct>=85?'Desempenho extraordinário!':pct>=60?'Bom trabalho, aventureiro!':'Treino concluído. Continue evoluindo!';
+  const rewards=guest?'<p class="training-guest-note">Modo visitante: o resultado foi validado, mas XP e histórico não são salvos. Entre com Google para registrar sua jornada.</p>':(xp?'<div class="training-reward"><b>+'+xp.toLocaleString('pt-BR')+' XP</b><span>Experiência adicionada ao personagem</span></div>':'<p class="training-guest-note">Resultado registrado. A recompensa diária desta categoria pode já ter sido recebida ou o limite diário de XP pode ter sido atingido.</p>');
+  const bossWin=s.boss&&pct>=60;
+  area.innerHTML='<div class="training-result"><div class="training-result-seal">'+(bossWin?'♜':pct>=85?'✧': '⚔')+'</div><small>'+(s.boss?'BATALHA ENCERRADA':'DESAFIO CONCLUÍDO')+'</small><h3>'+(bossWin?'Guardião derrotado!':headline)+'</h3><p>'+correct+' de '+total+' respostas corretas · '+pct+'% de aproveitamento</p><div class="training-result-bar"><i style="width:'+pct+'%"></i></div><div class="training-result-stats"><div><b>'+correct+'/'+total+'</b><span>ACERTOS</span></div><div><b>'+s.best+'</b><span>MELHOR SEQUÊNCIA</span></div><div><b>'+pct+'%</b><span>APROVEITAMENTO</span></div></div>'+rewards+(Array.isArray(data.achievements)&&data.achievements.length?'<p class="training-achievement-note">Conquistas desbloqueadas: '+data.achievements.map(trainingEscape).join(', ')+'</p>':'')+'<div class="training-result-actions"><button type="button" data-training-retry="'+s.category+'">Treinar novamente</button><button type="button" class="secondary" data-training-close>Voltar à sala</button></div></div>';
+  trainingSession=null;
+  if(sessionUser){await loadProfile().catch(()=>{});await loadTrainingHistory();}
+ }catch(error){area.innerHTML='<div class="training-feedback-panel"><span>!</span><p>Não foi possível finalizar: '+trainingEscape(error.message||'erro inesperado')+'</p><button type="button" data-training-close>Voltar à sala</button></div>';}
+ finally{trainingBusy=false;}
+}
+function closeTraining(){
+ if(trainingSession&&!trainingSession.answered){const ok=confirm('Encerrar este desafio? As respostas já enviadas não serão convertidas em recompensa.');if(!ok)return;}
+ trainingSession=null;const area=$('training-play-area');area.hidden=true;area.innerHTML='';
+}
+function handleTrainingClick(target){
+ const start=target.closest('[data-training-start]');if(start){startTraining(start.dataset.trainingStart);return true;}
+ const boss=target.closest('[data-training-boss]');if(boss){startTraining(boss.dataset.trainingBoss,'boss');return true;}
+ const answer=target.closest('[data-training-answer]');if(answer){answerTraining(Number(answer.dataset.trainingAnswer));return true;}
+ if(target.closest('[data-training-next]')){nextTrainingQuestion();return true;}
+ const retry=target.closest('[data-training-retry]');if(retry){startTraining(retry.dataset.trainingRetry,trainingMode);return true;}
+ if(target.closest('[data-training-close]')){closeTraining();return true;}
+ return false;
+}
+
 function status(message){$('login-status').textContent=message||''}
 function notify(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3500)}
 function displayName(user){return user?.user_metadata?.full_name||user?.email?.split('@')[0]||'Aventureiro'}
@@ -127,6 +228,9 @@ async function navigate(page){
   syncContext();
   if(window.AcademiaAvatar)await window.AcademiaAvatar.open('shop');
   else $('atelierView').innerHTML='<div class="identity-status">O Ateliê Arcano ainda está carregando. Tente novamente em instantes.</div>';
+ }else if(page==='treinamento'){
+  $('page-treinamento').classList.add('active');
+  await loadTrainingHistory();
  }else if(page==='mapa'){
   $('page-mapa').classList.add('active');
   renderRealmDetail(window.selectedAcademyRealm||'programacao');
@@ -140,6 +244,7 @@ async function navigate(page){
  $('breadcrumb-page').textContent=data[0];$('sidebar').classList.remove('open');
 }
 document.addEventListener('click',e=>{
+ if(handleTrainingClick(e.target))return;
  const region=e.target.closest('[data-realm]');
  if(region){window.selectedAcademyRealm=region.dataset.realm;renderRealmDetail(region.dataset.realm);return;}
  const openLibrary=e.target.closest('#realm-detail-action');

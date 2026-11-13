@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=6">
+  <link rel="stylesheet" href="./assets/css/academy-v2.css?v=7">
   <link rel="stylesheet" href="./assets/css/academia-avatar-v2.css?v=4">
 </head>
 <body>
@@ -123,12 +123,30 @@
   <div class="realm-map-footnote"><span>✧</span><p>O mapa apresenta os caminhos de estudo da Academia. As atividades, desafios e desbloqueios serão conectados a cada território nas próximas etapas da reformulação.</p></div>
 </section>
         <section id="page-biblioteca" class="page"><div class="library-intro"><div><p class="eyebrow">ARQUIVO DO AVENTUREIRO</p><h2>Biblioteca do <em>reino.</em></h2><p>Seus materiais de estudo, organizados por território e sincronizados com sua conta.</p></div><div class="library-count"><b id="library-total">0</b><small>ARQUIVOS<br>NA NUVEM</small></div></div><div class="library-subjects"><button class="library-subject active" data-subject="programacao"><span>⌘</span><small>TERRITÓRIO I</small><b>Programação</b><i>Projetos, códigos e exercícios</i></button><button class="library-subject" data-subject="banco"><span>▤</span><small>TERRITÓRIO II</small><b>Banco de Dados</b><i>SQL, consultas e anotações</i></button><button class="library-subject" data-subject="modelagem"><span>◇</span><small>TERRITÓRIO III</small><b>Modelagem</b><i>Diagramas, requisitos e documentação</i></button></div><section class="library-vault"><div class="vault-heading"><div><span>COFRE PESSOAL</span><h3 id="library-subject-title">Programação</h3><p id="library-subject-description">Projetos, códigos, exercícios e materiais da disciplina.</p></div><label class="vault-upload">＋ Adicionar arquivos<input id="library-upload" type="file" multiple></label></div><div class="vault-toolbar"><label class="vault-search"><span>⌕</span><input id="library-search" type="search" placeholder="Buscar nos seus arquivos..."></label><span id="library-sync-state" class="vault-sync">◈ Sincronização privada</span></div><div id="library-file-list" class="library-file-list"><div class="library-loading">Preparando seu cofre de conhecimento…</div></div></section></section>
+        <section id="page-treinamento" class="page">
+  <div class="training-intro"><div><p class="eyebrow">CÂMARA DE APRENDIZADO <span>✦</span></p><h2>Sala de <em>Treinamento.</em></h2><p>Afie sua lógica, fortaleça seus conhecimentos e enfrente desafios protegidos por validação no servidor.</p></div><div class="training-seal"><span>⚔</span><small>CAMPO DE<br>PROVAS</small></div></div>
+  <section class="training-hero"><div class="training-hero-copy"><span class="training-kicker">✦ SEU PRÓXIMO DESAFIO COMEÇA AQUI</span><h3>Conhecimento é a<br><em>verdadeira força.</em></h3><p>Responda, aprenda com as explicações e acompanhe sua evolução a cada sessão.</p><div class="training-hero-meta"><span>◈ Questões verificadas</span><span>✧ Progresso registrado</span></div></div><div class="training-hero-art"><div class="training-rune">✧</div><div class="training-sword">⚔</div><div class="training-orbit"></div></div></section>
+  <div class="training-section-head"><div><span>01 · ESCOLHA SUA TRILHA</span><h3>Treinamento por disciplina</h3><p>Seis questões por sessão, com alternativas embaralhadas.</p></div><span class="training-count">4 TRILHAS</span></div>
+  <div class="training-path-grid">
+    <article class="training-path path-code"><div class="training-path-icon">⌘</div><small>TRILHA I</small><h4>Programação</h4><p>Algoritmos, Portugol, Java e orientação a objetos.</p><button type="button" data-training-start="programacao">Iniciar treino <span>→</span></button></article>
+    <article class="training-path path-data"><div class="training-path-icon">▤</div><small>TRILHA II</small><h4>Banco de Dados</h4><p>SQL, tabelas, consultas, chaves e relacionamentos.</p><button type="button" data-training-start="banco">Iniciar treino <span>→</span></button></article>
+    <article class="training-path path-model"><div class="training-path-icon">◇</div><small>TRILHA III</small><h4>Modelagem</h4><p>DER, UML, requisitos e processos de sistemas.</p><button type="button" data-training-start="modelagem">Iniciar treino <span>→</span></button></article>
+    <article class="training-path path-tech"><div class="training-path-icon">✧</div><small>TRILHA IV</small><h4>Tecnologia</h4><p>Hardware, redes, sistemas operacionais e fundamentos digitais.</p><button type="button" data-training-start="geral">Iniciar treino <span>→</span></button></article>
+  </div>
+  <div class="training-section-head training-second-head"><div><span>02 · PROVAS ESPECIAIS</span><h3>Desafios do reino</h3><p>Prove seu domínio em uma jornada mais longa ou enfrente um guardião.</p></div></div>
+  <div class="training-special-grid">
+    <article class="training-special training-exam"><div class="special-emblem">♛</div><div><small>PROVA COMPLETA</small><h4>Grande Simulado</h4><p>10 questões sorteadas entre todas as disciplinas.</p><button type="button" data-training-start="simulado">Começar simulado <span>→</span></button></div><span class="special-side-label">EXAME</span></article>
+    <article class="training-special training-boss"><div class="special-emblem">♜</div><div><small>BATALHA DE CONHECIMENTO</small><h4>Guardiões do Saber</h4><p>Escolha um guardião. Cada resposta correta reduz sua energia; conclua as seis etapas para vencer.</p><div class="boss-actions"><button type="button" data-training-boss="programacao">Sentinela do Código</button><button type="button" data-training-boss="banco">Guardião dos Dados</button><button type="button" data-training-boss="modelagem">Oráculo UML</button></div></div></article>
+  </div>
+  <section class="training-play-area" id="training-play-area" hidden aria-live="polite"></section>
+  <section class="training-history-panel"><div><span>03 · SUA JORNADA</span><h3>Registro de treinamento</h3><p>Seu histórico pessoal de sessões concluídas.</p></div><div id="training-history" class="training-history-list"><div class="training-history-empty">Entre com Google para consultar seu histórico sincronizado.</div></div></section>
+</section>
         <section id="page-generic" class="page"><div class="generic-hero"><p class="eyebrow" id="generic-kicker">ACADEMIA RPG · 2.0</p><h2 id="generic-title">Seu próximo capítulo.</h2><p id="generic-description">Este território está sendo preparado para sua jornada.</p><span class="generic-rune">✧</span></div><div class="generic-content"><div class="generic-icon" id="generic-icon">✦</div><div><h3 id="generic-card-title">Um novo espaço está tomando forma.</h3><p id="generic-card-description">A nova Academia está sendo construída por etapas, mantendo seus dados e sua conta protegidos.</p></div></div></section>
       </div>
     </main>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </div>
   <script defer src="./assets/js/academia-avatar-v2.js?v=4"></script>
-  <script type="module" src="./assets/js/academy-v2.js?v=6"></script>
+  <script type="module" src="./assets/js/academy-v2.js?v=7"></script>
 </body>
 </html>
