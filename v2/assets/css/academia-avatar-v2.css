@@ -1294,3 +1294,25 @@
 .character-loadout-empty b{margin-bottom:4px;color:#c9c2e8;font-size:10px}
 @media(max-width:1000px){.character-overview{grid-template-columns:1fr}.character-showcase-card{min-height:330px}.character-visual-preview{height:210px}}
 @media(max-width:600px){.character-overview{gap:10px}.character-showcase-card{min-height:320px;padding:14px}.character-stat{min-height:94px;padding:12px}.character-stat b{font-size:20px}.character-loadout{padding:13px}.character-equipped-list{grid-template-columns:1fr}.character-loadout-heading{align-items:flex-start;flex-direction:column}.character-loadout-heading button{padding:0}}
+
+/* Coleção Lendária reformulada — seis conjuntos com silhuetas e coroas exclusivas */
+.atelier-v2-catalog .arc-skin-card-armor-astral-tempest .arc-item-visual{background:radial-gradient(ellipse at 50% 36%,rgba(169,140,255,.34),transparent 55%),radial-gradient(ellipse at 50% 92%,rgba(78,105,205,.22),transparent 60%),linear-gradient(155deg,#171d45,#090f25 82%)}
+.atelier-v2-catalog .arc-skin-card-armor-crystal-seraph .arc-item-visual{background:radial-gradient(ellipse at 50% 36%,rgba(125,234,255,.34),transparent 55%),radial-gradient(ellipse at 50% 92%,rgba(194,231,255,.18),transparent 60%),linear-gradient(155deg,#17334b,#0a172b 82%)}
+.atelier-v2-catalog .arc-skin-card-armor-abyssal-king .arc-item-visual{background:radial-gradient(ellipse at 50% 36%,rgba(56,230,212,.3),transparent 55%),radial-gradient(ellipse at 50% 92%,rgba(27,111,132,.2),transparent 60%),linear-gradient(155deg,#102f42,#071521 82%)}
+.atelier-v2-catalog .arc-skin-card-armor-verdant-warden .arc-item-visual{background:radial-gradient(ellipse at 50% 36%,rgba(131,237,154,.28),transparent 55%),radial-gradient(ellipse at 50% 92%,rgba(62,137,87,.2),transparent 60%),linear-gradient(155deg,#173b36,#091b20 82%)}
+.atelier-v2-catalog .arc-skin-card-armor-bloodmoon-regent .arc-item-visual{background:radial-gradient(ellipse at 50% 36%,rgba(255,111,158,.32),transparent 55%),radial-gradient(ellipse at 50% 92%,rgba(129,42,83,.2),transparent 60%),linear-gradient(155deg,#3b1d3b,#170f25 82%)}
+.atelier-v2-catalog .arc-skin-card-armor-chrono-archon .arc-item-visual{background:radial-gradient(ellipse at 50% 36%,rgba(214,182,255,.32),transparent 55%),radial-gradient(ellipse at 50% 92%,rgba(224,177,112,.17),transparent 60%),linear-gradient(155deg,#302443,#100f26 82%)}
+.atelier-v2-catalog .arc-new-skin .arc-item-visual .arc-avatar{width:210px;height:222px;filter:drop-shadow(0 12px 14px #000b) drop-shadow(0 0 13px rgba(181,158,255,.25))}
+.atelier-v2-catalog .arc-new-skin .arc-item-copy h4{font-size:15px;color:#fff5e7}
+.atelier-v2-catalog .arc-new-skin{border-color:rgba(190,164,255,.32)}
+.atelier-v2-catalog .arc-new-skin .arc-item-top .arc-item-new-tag{margin-left:auto}
+.atelier-feature-art .arc-avatar{width:245px;height:250px;max-width:94%;filter:drop-shadow(0 12px 15px #0009) drop-shadow(0 0 16px rgba(171,145,255,.3))}
+.atelier-v2-feature:has(.arc-skin-helm-astral){border-color:rgba(169,140,255,.48)}
+.atelier-v2-feature:has(.arc-skin-helm-seraph){border-color:rgba(125,234,255,.48)}
+.atelier-v2-feature:has(.arc-skin-helm-abyss){border-color:rgba(56,230,212,.48)}
+.atelier-v2-feature:has(.arc-skin-helm-verdant){border-color:rgba(131,237,154,.48)}
+.atelier-v2-feature:has(.arc-skin-helm-bloodmoon){border-color:rgba(255,111,158,.48)}
+.atelier-v2-feature:has(.arc-skin-helm-chrono){border-color:rgba(214,182,255,.48)}
+.arc-skin-helm{filter:drop-shadow(0 0 5px rgba(205,190,255,.25))}
+@media(max-width:760px){.atelier-v2-catalog .arc-new-skin .arc-item-visual{height:190px;min-height:190px}.atelier-v2-catalog .arc-new-skin .arc-item-visual .arc-avatar{width:175px;height:184px}}
+@media(prefers-reduced-motion:reduce){.atelier-v2-stage-shimmer,.atelier-hero-float{animation:none}.arc-skin-helm animate,.arc-skin-helm animateTransform{display:none}}
